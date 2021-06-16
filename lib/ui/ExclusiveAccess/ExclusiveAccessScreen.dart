@@ -116,7 +116,7 @@ class _ExclusiveAccessScreenState extends State<ExclusiveAccessScreen> {
                           style: BorderStyle.solid,
                         ),
                         backgroundColor: Colors.black,
-                        fixedSize: Size.fromWidth(120)
+                        //fixedSize: Size.fromWidth(120)
                       ),
                   ),
                 ],

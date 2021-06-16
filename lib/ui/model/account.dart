@@ -2,6 +2,7 @@
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/config/server/fcbToken.dart';
 import 'package:tomo_app/ui/model/pref.dart';
+import 'package:tomo_app/ui/server/login.dart';
 
 import '../../main.dart';
 
@@ -84,12 +85,13 @@ class Account{
     var pass = pref.get(Pref.userPassword);
     print("Login: email=$email pass=$pass");
     if (email.isNotEmpty && pass.isNotEmpty) {
-     /* login(email, pass, (String name, String password, String avatar, String email, String token, String phone, int unreadNotify, String userId){
+      /*login(email, pass, (String name, String password, String avatar, String email, String token, String phone, int unreadNotify, String userId){
         callback(true);
         okUserEnter(name, password, avatar, email, token, phone, unreadNotify, userId);
       }, (String err) {
         callback(false);
       });*/
+      callback(true);
     }else
       callback(false);
   }

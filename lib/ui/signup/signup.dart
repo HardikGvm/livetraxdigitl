@@ -121,8 +121,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
   _okUserEnter(String name, String password, String avatar, String email, String token, String typeReg){
     _waits(false);
+    print("CHeck Response Done ==> " + name);
     account.okUserEnter(name, password, avatar, email, token, "", 0, typeReg);
-    Navigator.pushNamedAndRemoveUntil(context, "/main", (r) => false);
+    Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
   bool _wait = false;
@@ -135,6 +136,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   }
 
   _error(String error){
+    print("CHeck Response Error ==> " + error);
     _waits(false);
     if (error == "login_canceled")
       return;
@@ -209,7 +211,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                       ))else(Container()),
 
                   IEasyDialog2(setPosition: (double value){_show = value;}, getPosition: () {return _show;}, color: theme.colorGrey,
-                    body: _dialogBody, backgroundColor: theme.colorBackground,),
+                    body: _dialogBody, backgroundColor: Colors.white,),
 
                   IAppBar(context: context, text: "", color: Colors.white),
 

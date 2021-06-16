@@ -8,14 +8,19 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tomo_app/ui/artist/data.dart';
+import 'package:tomo_app/ui/artist/userlist.dart';
+import 'package:tomo_app/ui/call/SampletList.dart';
 import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/model/message.dart';
 import 'package:tomo_app/widgets/HearAnim.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
+import 'package:tomo_app/widgets/ibutton10.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
 
 import '../../main.dart';
+import 'Productlist.dart';
 
 class CallScreen extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -498,7 +503,7 @@ class _CallPageState extends State<CallScreen> {
     setState(() {
 
     });
-    return openDialog("Virtual Gift");
+    return openVirtualDialog("Virtual Gift");
   }
 
   void _onMerchandise() {
@@ -1095,33 +1100,46 @@ class _CallPageState extends State<CallScreen> {
     });*/
   }
 
+  int _languageIndex = -1;
+  Map sample;
+
   Widget _dialogBody = Container();
   double _show = 0;
 
   openDialog(String _text) {
-    _dialogBody = Column(
-      children: [
-        Text(
-          _text,
-          style: theme.text14,
-        ),
-        SizedBox(
-          height: 40,
-        ),
-        IButton3(
-            color: theme.colorPrimary,
-            text: strings.get(66), // Cancel
-            textStyle: theme.text14boldWhite,
-            pressButton: () {
-              setState(() {
-                _show = 0;
-              });
-            }),
-      ],
-    );
-
+    _dialogBody=SingleChildScrollView();
     setState(() {
       _show = 1;
     });
   }
+
+  openVirtualDialog(String _text) {
+    _dialogBody=SampleList();
+    setState(() {
+      _show = 1;
+    });
+  }
+
+  Widget SingleChildScrollView(){
+    return Container(
+      color: Colors.white,
+      height: MediaQuery.of(context).size.height * 0.5,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            child: ListView.builder(
+                itemCount: details.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ProductList(context, index);
+                }),
+          ),
+        ],
+      ),
+    );
+
+  }
+
 }

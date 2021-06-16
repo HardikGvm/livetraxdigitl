@@ -19,10 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
     //Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
 
     account.isAuth((bool auth) {
+      print("CHeck Response Auth ==> " + auth.toString());
       if (!auth)
         Navigator.pushNamedAndRemoveUntil(context, "/login", (r) => false);
       else
-        Navigator.pushNamedAndRemoveUntil(context, "/main", (r) => false);
+        Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
     });
   }
 

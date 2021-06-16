@@ -368,6 +368,7 @@ class Lang {
     2238 : "Sign Up",
     2239 : "Agree to the Terms of Service & Privacy Policy",
     2240 : "Account Registration",
+    2241 : "GIFTS",
 
   };
 

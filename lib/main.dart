@@ -9,6 +9,7 @@ import 'package:tomo_app/ui/login/login.dart';
 import 'package:tomo_app/ui/model/account.dart';
 import 'package:tomo_app/ui/model/pref.dart';
 import 'package:tomo_app/ui/server/mainwindowdata.dart';
+import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
 import 'package:tomo_app/widgets/route.dart';
 
@@ -63,11 +64,11 @@ class LiveStreamApp extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (BuildContext context) => SplashScreen(),
-        '/home': (BuildContext context) => Home(),
         '/login': (BuildContext context) => Login(),
-        '/signup': (BuildContext context) => MyApp(),
+        '/signup': (BuildContext context) => CreateAccountScreen(),
         '/forgot': (BuildContext context) => ForgotScreen(),
         '/message': (BuildContext context) => RealTimeMessaging(),
+        '/home': (BuildContext context) => Home(),
       },
     );
   }

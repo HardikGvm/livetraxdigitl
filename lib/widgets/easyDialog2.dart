@@ -105,7 +105,8 @@ class _IEasyDialog2State extends State<IEasyDialog2>{
 
         AnimatedPositioned(
             duration: Duration(milliseconds: 300),
-            height: widget.getPosition(),
+            height: widget.getPosition() - 60,
+
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
@@ -158,7 +159,7 @@ class _IEasyDialog2State extends State<IEasyDialog2>{
                               ),
                               Container(
                                 height: 40,
-                                margin : EdgeInsets.only( top: 2),
+                                margin : EdgeInsets.only( top: 0),
                                 width: windowWidth,
                                 decoration: BoxDecoration(
                                   color: widget.backgroundColor,
@@ -186,7 +187,7 @@ class _IEasyDialog2State extends State<IEasyDialog2>{
 
                           )),
                       Container(
-                        margin: EdgeInsets.only(left: 20, right: 20),
+                        margin: EdgeInsets.only(left: 0, right: 0,top: 0,bottom: 0),
                         child: Container(
                           key: _rowKey,
                           child: widget.body,
