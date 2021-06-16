@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:tomo_app/main.dart';
+import 'package:tomo_app/ui/Artist/ArtistList.dart';
+import 'package:tomo_app/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
 import 'package:tomo_app/widgets/background_image.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
@@ -13,10 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<Home> {
-  //////////////////////////////////////////////////////////////////////////////////////////////////////
-  //
-  //
-  //
+
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
     print(
@@ -28,13 +27,11 @@ class _HomeScreenState extends State<Home> {
     if (editControllerPassword.text.isEmpty)
       return openDialog(strings.get(12)); // "Enter Password",
     _waits(true);
-    // login(editControllerName.text, editControllerPassword.text, _okUserEnter, _error);
   }
 
   _okUserEnter(String name, String password, String avatar, String email,
       String token, String _phone, int i, String id) {
     _waits(false);
-    //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
     Navigator.pushNamedAndRemoveUntil(context, "/main", (r) => false);
   }
 
@@ -43,8 +40,6 @@ class _HomeScreenState extends State<Home> {
     Navigator.pushNamed(context, "/forgot");
   }
 
-  //
-  //////////////////////////////////////////////////////////////////////////////////////////////////////
   var windowWidth;
   var windowHeight;
   final editControllerName = TextEditingController();
@@ -73,6 +68,7 @@ class _HomeScreenState extends State<Home> {
   void initState() {
     super.initState();
   }
+
 
   @override
   void dispose() {
@@ -106,9 +102,11 @@ class _HomeScreenState extends State<Home> {
                     crossAxisCount: 3,
                     padding: EdgeInsets.all(3.0),
                     children: <Widget>[
-                      makeDashboardItem("Artist", Icons.supervised_user_circle_sharp),
+                      makeDashboardItem(
+                          "Artist", Icons.supervised_user_circle_sharp),
                       makeDashboardItem("Live Event", Icons.music_note),
-                      makeDashboardItem("Exclusive\nAccess", Icons.verified_user),
+                      makeDashboardItem(
+                          "Exclusive\nAccess", Icons.verified_user),
                     ],
                   ),
                 )),
@@ -237,7 +235,22 @@ class _HomeScreenState extends State<Home> {
           alignment: Alignment.topCenter,
           decoration: BoxDecoration(color: Colors.transparent),
           child: new InkWell(
-            onTap: () {},
+            onTap: () {
+              if (title == 'Artist') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ArtistList()),
+                );
+              }else if(title=='Exclusive\nAccess')
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ExclusiveAccessScreen()),
+                  );
+                }
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,

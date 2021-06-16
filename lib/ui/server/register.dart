@@ -25,6 +25,7 @@ register(String email, String password, String name, String type, String photoUr
           'photoUrl' : "$photoUrl"
         }
     );
+
     var url = "${serverPath}regUser";
     var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
 
@@ -51,6 +52,7 @@ register(String email, String password, String name, String type, String photoUr
   } catch (ex) {
     callbackError(ex.toString());
   }
+
 }
 
 class Response {
@@ -58,7 +60,9 @@ class Response {
   UserData data;
   String accessToken;
   //String errorMsg;
+
   Response({this.error, this.data, this.accessToken});
+
   factory Response.fromJson(Map<String, dynamic> json){
     var a;
     if (json['user'] != null)
