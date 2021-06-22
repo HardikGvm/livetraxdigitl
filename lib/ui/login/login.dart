@@ -48,14 +48,21 @@ class _LoginScreenState extends State<Login> {
     if (editControllerPassword.text.isEmpty)
       return openDialog(strings.get(12)); // "Enter Password",
     _waits(true);
-    // login(editControllerName.text, editControllerPassword.text, _okUserEnter, _error);
+     login(editControllerName.text, editControllerPassword.text, _okUserEnter, _error);
   }
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String _phone, int i, String id) {
+      String token, String _phone, int i, String typeReg, String role) {
     _waits(false);
+    if(role == "2"){
+      role="artist";
+    }else{
+      role="fan";
+    }
+    print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
-    Navigator.pushNamedAndRemoveUntil(context, "/main", (r) => false);
+    account.okUserEnter(name, password, avatar, email, token, "", 0, "",typeReg,role);
+    Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
   _pressForgotPasswordButton() {
@@ -63,7 +70,7 @@ class _LoginScreenState extends State<Login> {
     Navigator.pushNamed(context, "/forgot");
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////
   var windowWidth;
   var windowHeight;
   final editControllerName = TextEditingController();
@@ -315,7 +322,8 @@ class _LoginScreenState extends State<Login> {
 
   _pressSignupScreen() {
     print("User press \"Signup\" button");
-    Navigator.pushNamed(context, "/signup");
+    //Navigator.pushNamed(context, "/signup");
+    Navigator.pushNamed(context, "/userselection");
   }
 
   void pressGoogleAuthentication() {

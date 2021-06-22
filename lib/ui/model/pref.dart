@@ -7,6 +7,9 @@ class Pref{
   static String userEmail = "userEmail";
   static String userPassword = "userPassword";
   static String userAvatar = "userAvatar";
+  static String userRole = "userRole";
+  static String typeReg = "typeReg";
+
 
   static String uiDarkMode = "uiDarkMode";
 
@@ -41,5 +44,6 @@ class Pref{
     set(Pref.userEmail, "");
     set(Pref.userPassword, "");
     set(Pref.userAvatar, "");
+    set(Pref.userRole, "");
   }
 }

@@ -369,6 +369,8 @@ class Lang {
     2239 : "Agree to the Terms of Service & Privacy Policy",
     2240 : "Account Registration",
     2241 : "GIFTS",
+    2242 : "Artist/Band Name",
+    2243 : "Referral Code",
 
   };
 

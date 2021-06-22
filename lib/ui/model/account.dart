@@ -1,13 +1,10 @@
-
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/config/server/fcbToken.dart';
 import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/server/login.dart';
 
 import '../../main.dart';
 
-class Account{
-
+class Account {
   String _fcbToken;
   String userName = "";
   String userId = "";
@@ -15,6 +12,8 @@ class Account{
   String phone = "";
   String userAvatar = "";
   String token = "";
+  String role = "";
+  String typeReg = "";
 
   int notifyCount = 0;
   String currentOrder = "";
@@ -24,53 +23,63 @@ class Account{
 
   bool _initUser = true;
 
-  okUserEnter(String name, String password, String avatar, String _email, String _token, String _phone, int unreadNotify, String _userId){
+  okUserEnter(
+      String name,
+      String password,
+      String avatar,
+      String _email,
+      String _token,
+      String _phone,
+      int unreadNotify,
+      String _userId,
+      String _typeReg,
+      String _role) {
     _initUser = true;
     userName = name;
     userAvatar = avatar;
-    if (userAvatar == null)
-      userAvatar = serverImgNoUserPath;
-    if (userAvatar.isEmpty)
-      userAvatar = serverImgNoUserPath;
+    if (userAvatar == null) userAvatar = serverImgNoUserPath;
+    if (userAvatar.isEmpty) userAvatar = serverImgNoUserPath;
     email = _email;
-    if (_phone != null)
-      phone = _phone;
+    if (_phone != null) phone = _phone;
+    if (_role != null) role = _role;
+    if (_typeReg != null) typeReg = _typeReg;
     token = _token;
     userId = _userId;
     notifyCount = unreadNotify;
     pref.set(Pref.userEmail, _email);
     pref.set(Pref.userPassword, password);
     pref.set(Pref.userAvatar, avatar);
+    pref.set(Pref.userRole, role);
+    pref.set(Pref.typeReg, typeReg);
     print("User Auth! Save email=$email pass=$password");
     _callAll(true);
-    if (_fcbToken != null)
-      addNotificationToken(account.token, _fcbToken);
+    if (_fcbToken != null) addNotificationToken(account.token, _fcbToken);
     chatGetUnread();
   }
 
-  _callAll(bool value){
+  _callAll(bool value) {
     for (var callback in callbacks.values) {
       try {
         callback(value);
-      } catch(ex){}
+      } catch (ex) {}
     }
   }
 
   var callbacks = Map<String, Function(bool)>();
 
-  addCallback(String name, Function(bool) callback){
+  addCallback(String name, Function(bool) callback) {
     callbacks.addAll({name: callback});
   }
 
-  removeCallback(String name){
+  removeCallback(String name) {
     callbacks.remove(name);
   }
 
-  redraw(){
+  redraw() {
     _callAll(_initUser);
   }
 
-  logOut(){
+  logOut() {
     _initUser = false;
     pref.clearUser();
     userName = "";
@@ -80,7 +89,7 @@ class Account{
     _callAll(false);
   }
 
-  isAuth(Function(bool) callback){
+  isAuth(Function(bool) callback) {
     var email = pref.get(Pref.userEmail);
     var pass = pref.get(Pref.userPassword);
     print("Login: email=$email pass=$pass");
@@ -92,7 +101,7 @@ class Account{
         callback(false);
       });*/
       callback(true);
-    }else
+    } else
       callback(false);
   }
 
@@ -100,7 +109,8 @@ class Account{
   // Orders screen
   //
   Function() callbackOrdersReload;
-  addOrdersCallback(Function() callback){
+
+  addOrdersCallback(Function() callback) {
     callbackOrdersReload = callback;
   }
 
@@ -108,31 +118,27 @@ class Account{
   // notifications
   //
 
-  setFcbToken(String token){
+  setFcbToken(String token) {
     _fcbToken = token;
-    if (_initUser)
-      addNotificationToken(account.token, _fcbToken);
+    if (_initUser) addNotificationToken(account.token, _fcbToken);
   }
 
-  addNotify(){
+  addNotify() {
     notifyCount++;
     _callAll(_initUser);
-    if (callbackNotifyReload != null)
-      callbackNotifyReload();
-    if (callbackOrdersReload != null)
-      callbackOrdersReload();
+    if (callbackNotifyReload != null) callbackNotifyReload();
+    if (callbackOrdersReload != null) callbackOrdersReload();
   }
 
-  notifyRefresh(){
+  notifyRefresh() {
     _callAll(_initUser);
-    if (callbackNotifyReload != null)
-      callbackNotifyReload();
-    if (callbackOrdersReload != null)
-      callbackOrdersReload();
+    if (callbackNotifyReload != null) callbackNotifyReload();
+    if (callbackOrdersReload != null) callbackOrdersReload();
   }
 
   Function() callbackNotifyReload;
-  addNotifyCallback(Function() callback){
+
+  addNotifyCallback(Function() callback) {
     callbackNotifyReload = callback;
   }
 
@@ -142,23 +148,22 @@ class Account{
 
   int chatCount = 0;
   Function() callbackChatReload;
-  addChatCallback(Function() callback){
+
+  addChatCallback(Function() callback) {
     callbackChatReload = callback;
   }
 
-  addChat(){
+  addChat() {
     chatGetUnread();
     _callAll(_initUser);
-    if (callbackChatReload != null)
-      callbackChatReload();
+    if (callbackChatReload != null) callbackChatReload();
   }
 
-  chatRefresh(){
-    if (callbackChatReload != null)
-      callbackChatReload();
+  chatRefresh() {
+    if (callbackChatReload != null) callbackChatReload();
   }
 
-  chatGetUnread(){
+  chatGetUnread() {
     /*chatUnread(token, (int count){
       chatCount = count;
       _callAll(true);
@@ -168,7 +173,7 @@ class Account{
   //
   //
   //
-  setUserAvatar(String _avatar){
+  setUserAvatar(String _avatar) {
     userAvatar = _avatar;
     _callAll(true);
   }

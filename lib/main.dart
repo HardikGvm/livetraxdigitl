@@ -4,6 +4,7 @@ import 'package:tomo_app/ui/config/lang.dart';
 import 'package:tomo_app/ui/config/theme.dart';
 import 'package:tomo_app/ui/home/home.dart';
 import 'package:tomo_app/ui/login/MyApp.dart';
+import 'package:tomo_app/ui/login/UserSelection.dart';
 import 'package:tomo_app/ui/login/forgot.dart';
 import 'package:tomo_app/ui/login/login.dart';
 import 'package:tomo_app/ui/model/account.dart';
@@ -69,9 +70,12 @@ class LiveStreamApp extends StatelessWidget {
         '/forgot': (BuildContext context) => ForgotScreen(),
         '/message': (BuildContext context) => RealTimeMessaging(),
         '/home': (BuildContext context) => Home(),
+        '/userselection': (BuildContext context) => UserSelection(),
+
       },
     );
   }
 
 
 }
+

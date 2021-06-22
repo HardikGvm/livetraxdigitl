@@ -1,9 +1,13 @@
 import 'dart:developer';
 
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tomo_app/main.dart';
 import 'package:tomo_app/ui/Artist/ArtistList.dart';
 import 'package:tomo_app/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
+import 'package:tomo_app/ui/call/call.dart';
+import 'package:tomo_app/ui/server/getagoratoken.dart';
 import 'package:tomo_app/widgets/background_image.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
@@ -15,7 +19,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<Home> {
-
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
     print(
@@ -45,6 +48,9 @@ class _HomeScreenState extends State<Home> {
   final editControllerName = TextEditingController();
   final editControllerPassword = TextEditingController();
   bool _wait = false;
+  String _Token;
+  ClientRole _role = ClientRole.Audience;
+  final _formKey = GlobalKey<FormState>();
 
   _waits(bool value) {
     _wait = value;
@@ -68,7 +74,6 @@ class _HomeScreenState extends State<Home> {
   void initState() {
     super.initState();
   }
-
 
   @override
   void dispose() {
@@ -239,17 +244,22 @@ class _HomeScreenState extends State<Home> {
               if (title == 'Artist') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => ArtistList()),
+                  MaterialPageRoute(builder: (context) => ArtistList()),
                 );
-              }else if(title=='Exclusive\nAccess')
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ExclusiveAccessScreen()),
-                  );
-                }
+              } else if (title == 'Exclusive\nAccess') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ExclusiveAccessScreen()),
+                );
+              } else if (title == 'Live Event') {
+                AgoraToken();
+                /*Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AgoraToken()),
+                );*/
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -273,5 +283,46 @@ class _HomeScreenState extends State<Home> {
             ),
           ),
         ));
+  }
+
+  AgoraToken() async {
+    //if (_formKey.currentState.validate()) {
+    await _handleMicPermission();
+
+    _waits(true);
+    GetAgoraToken("asd", "Azims", token_success, token_error);
+    //}
+  }
+
+  token_success(String channelname, String username, String _response) {
+    _waits(false);
+    _Token = _response;
+    print("CALL _success Done ---> " + _response.toString());
+
+    if (account.role == "artist") {
+      _role = ClientRole.Broadcaster;
+    }
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CallScreen(
+              channelName: channelname,
+              userName: username,
+              role: _role,
+              userImage:
+                  "https://image.flaticon.com/icons/png/128/3135/3135715.png",
+              token: _response,
+            )));
+  }
+
+  token_error(String error) {
+    _waits(false);
+    print("CALL ERROR _success >>> " + error.toString());
+    if (error == "5000") {}
+    if (error == "5001") {}
+  }
+
+  Future<void> _handleMicPermission() {
+    final status = Permission.microphone.request();
+    print(status);
   }
 }

@@ -9,15 +9,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tomo_app/ui/artist/data.dart';
-import 'package:tomo_app/ui/artist/userlist.dart';
 import 'package:tomo_app/ui/call/SampletList.dart';
-import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
+import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/model/message.dart';
 import 'package:tomo_app/widgets/HearAnim.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/ibutton10.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
 
 import '../../main.dart';
 import 'Productlist.dart';
@@ -25,7 +22,7 @@ import 'Productlist.dart';
 class CallScreen extends StatefulWidget {
   /// non-modifiable channel name of the page
   final String channelName;
-
+  final String token;
   final String userName;
   final String userImage;
 
@@ -34,7 +31,7 @@ class CallScreen extends StatefulWidget {
 
   /// Creates a call page with given channel name.
   const CallScreen(
-      {Key key, this.channelName, this.userName, this.role, this.userImage})
+      {Key key, this.channelName, this.userName, this.role, this.userImage,this.token})
       : super(key: key);
 
   @override
@@ -219,7 +216,8 @@ class _CallPageState extends State<CallScreen> {
     //configuration.dimensions = VideoDimensions(1920, 1080);
     //await _engine.setVideoEncoderConfiguration(configuration);
     //await _engine.joinChannel(Token, widget.channelName, null, 0);
-    await _engine.joinChannel(Token, widget.channelName, null, 0);
+    print("CALL _success Done TOKEN   ---> " + widget.token);
+    await _engine.joinChannel(widget.token, widget.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize
