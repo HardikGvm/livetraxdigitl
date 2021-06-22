@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tomo_app/ui/server/ArtistListAPI.dart';
+import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
 import '../../main.dart';
 import 'ArtistDetailScreen.dart';
@@ -17,13 +18,17 @@ class _ArtistListState extends State<ArtistList> {
   List<UserData> list = new List();
   bool isLoadMore = false;
   static int pagination_index = 1;
+  var windowWidth;
+  var windowHeight;
 
   @override
   void initState() {
     super.initState();
+    _waits(true);
     int pagination_index = 1;
     _artist('artist', pagination_index, 2);
   }
+
   @override
   void dispose() {
     print(":::Dispose:::");
@@ -33,6 +38,8 @@ class _ArtistListState extends State<ArtistList> {
   @override
   Widget build(BuildContext context) {
     final title = 'Artists';
+    windowWidth = MediaQuery.of(context).size.width;
+    windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -44,9 +51,12 @@ class _ArtistListState extends State<ArtistList> {
             image: DecorationImage(
                 image: AssetImage("assets/images/sample.png"),
                 fit: BoxFit.cover)),
-        child: Stack(
+        child:
+
+        Stack(
           children: [
-            Center(
+            Container(
+              margin: EdgeInsets.only(top: 16),
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
@@ -54,7 +64,7 @@ class _ArtistListState extends State<ArtistList> {
                 shrinkWrap: true,
                 children: List.generate(
                   list == null || list.isEmpty ? 0 : list.length,
-                  (index) {
+                      (index) {
                     return GestureDetector(
                       child: Column(
                         children: [
@@ -65,8 +75,8 @@ class _ArtistListState extends State<ArtistList> {
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: new NetworkImage((list == null ||
-                                            list.isEmpty ||
-                                            list[index].image == null)
+                                        list.isEmpty ||
+                                        list[index].image == null)
                                         ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
                                         : list[index].image),
                                     fit: BoxFit.cover,
@@ -83,11 +93,11 @@ class _ArtistListState extends State<ArtistList> {
                                 left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
                             child: Text(
                               list == null && list.isEmpty ||
-                                      list[index].artist_name == null
+                                  list[index].artist_name == null
                                   ? 'Artist'
                                   : list[index].artist_name,
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                              TextStyle(color: Colors.white, fontSize: 20),
                             ),
                           ),
                         ],
@@ -96,7 +106,10 @@ class _ArtistListState extends State<ArtistList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ArtistDetailScreen()),
+                              builder: (context) => ArtistDetailScreen(
+                                  artist_name: list[index].artist_name,
+                                  artist_description: list[index].description,
+                                  artist_image: list[index].image)),
                         );
                         pagination_index = 1;
                       },
@@ -105,11 +118,26 @@ class _ArtistListState extends State<ArtistList> {
                 ),
               ),
             ),
+            if (_wait)
+              (Container(
+                color: Color(0x80000000),
+                width: windowWidth,
+                height: windowHeight,
+                child: Center(
+                  child: ColorLoader2(
+                    color1: theme.colorPrimary,
+                    color2: theme.colorCompanion,
+                    color3: theme.colorPrimary,
+                  ),
+                ),
+              ))
+            else
+              (Container()),
             Align(
               alignment: Alignment.bottomRight,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: FlatButton(
+                child: MaterialButton(
                   child: Text('More Artist', style: TextStyle(fontSize: 16)),
                   onPressed: () => {
                     _artist('artist', pagination_index++, 2),
