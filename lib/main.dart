@@ -14,7 +14,6 @@ import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
 import 'package:tomo_app/widgets/route.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   pref.init().then((instance) {
@@ -62,7 +61,7 @@ class LiveStreamApp extends StatelessWidget {
       // "Food Delivery Flutter App UI Kit",
       debugShowCheckedModeBanner: false,
       theme: _theme,
-      initialRoute: '/splash',
+      initialRoute: '/login',
       routes: {
         '/splash': (BuildContext context) => SplashScreen(),
         '/login': (BuildContext context) => Login(),
@@ -71,7 +70,6 @@ class LiveStreamApp extends StatelessWidget {
         '/message': (BuildContext context) => RealTimeMessaging(),
         '/home': (BuildContext context) => Home(),
         '/userselection': (BuildContext context) => UserSelection(),
-
       },
     );
   }
