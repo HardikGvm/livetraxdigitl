@@ -1,6 +1,6 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/Music/MusicPlayList.dart';
+
 
 class ArtistDetailScreen extends StatefulWidget {
   final String artist_name, artist_description, artist_image;
@@ -111,10 +111,10 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               iconSize: 28,
               onPressed: () {
                 fabKey.currentState.close();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MusicPlayList()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => MusicPlayList()),
+                // );
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart, color: Colors.red),
