@@ -14,41 +14,44 @@ register(
     Function(String name, String password, String avatar, String email,
             String token, String)
         callback,
-    Function(String) callbackError,String userType) async {
+    Function(String) callbackError,
+    String userType) async {
   try {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': "application/json",
     };
+
+    //if (photoUrl.toString() == "null") {
+    photoUrl = "";
+    //}
     /*
     * Role-1 Admin
       Role-2 Artist
       Role-4 Fan*/
-    String role="4";
+    String role = "4";
     var body;
-    if(userType == "artist"){
-      role="2";
-      body= json.encoder.convert({
+    if (userType == "artist") {
+      role = "2";
+      body = json.encoder.convert({
         'email': '$email',
         'password': '$password',
         'artistName': '$name',
         'name': '$name',
         'typeReg': '$type',
         'photoUrl': "$photoUrl",
-        'role':"$role",
+        'role': "$role",
       });
-    }else{
-      body= json.encoder.convert({
+    } else {
+      body = json.encoder.convert({
         'email': '$email',
         'password': '$password',
         'name': '$name',
         'typeReg': '$type',
         'photoUrl': "$photoUrl",
-        'role':"$role",
+        'role': "$role",
       });
     }
-
-
 
     var url = "${serverPath}regUser";
     var response = await http

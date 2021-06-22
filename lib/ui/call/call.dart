@@ -413,21 +413,6 @@ class _CallPageState extends State<CallScreen> {
                     padding: const EdgeInsets.all(12.0),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: RawMaterialButton(
-                    onPressed: _onSwitchCamera,
-                    child: Icon(
-                      Icons.switch_camera,
-                      color: Colors.blueAccent,
-                      size: 20.0,
-                    ),
-                    shape: CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    padding: const EdgeInsets.all(12.0),
-                  ),
-                ),
               ],
             ),
           ),

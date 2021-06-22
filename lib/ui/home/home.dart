@@ -99,22 +99,8 @@ class _HomeScreenState extends State<Home> {
             child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: Container(
-                  color: Colors.transparent,
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    crossAxisCount: 3,
-                    padding: EdgeInsets.all(3.0),
-                    children: <Widget>[
-                      makeDashboardItem(
-                          "Artist", Icons.supervised_user_circle_sharp),
-                      makeDashboardItem("Live Event", Icons.music_note),
-                      makeDashboardItem(
-                          "Exclusive\nAccess", Icons.verified_user),
-                    ],
-                  ),
-                )),
+                    child: Stack(
+                        children: <Widget>[ _toolbar(),GetBottomOption()]))),
           ),
           if (_wait)
             (Container(
@@ -145,6 +131,78 @@ class _HomeScreenState extends State<Home> {
         ],
       ),
     );
+  }
+
+  Widget GetBottomOption() {
+    return Container(
+      color: Colors.transparent,
+      alignment: Alignment.bottomCenter,
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 3,
+        padding: EdgeInsets.all(3.0),
+        children: <Widget>[
+          makeDashboardItem("Artist", Icons.supervised_user_circle_sharp),
+          makeDashboardItem("Live Event", Icons.music_note),
+          makeDashboardItem("Exclusive\nAccess", Icons.verified_user),
+        ],
+      ),
+    );
+  }
+
+  Widget _toolbar() {
+
+    return GestureDetector(
+        child: Container(
+          height: 200,
+          alignment: Alignment.centerRight,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+              alignment: Alignment.topRight,
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              constraints: BoxConstraints(maxHeight: 400),
+              child: Container(
+                height: 200,
+                color: Colors.transparent,
+                alignment: Alignment.topRight,
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(
+                            top: 10, bottom: 0, left: 20, right: 20),
+                        child: Icon(
+                          Icons.person,
+                          size: 40.0,
+                          color: Colors.white,
+                        )),
+                    SizedBox(height: 5.0),
+                    GestureDetector(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: new Text("My Profile",
+                              textAlign: TextAlign.center,
+                              style:
+                              new TextStyle(fontSize: 16.0, color: Colors.white)),
+                        ),
+                        onTap: () {
+                          print("Press Profile");
+                          //Navigator.pushNamed(context, "/account");
+                        })
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        onTap: () {
+          print("Press Profile");
+          //Navigator.pushNamed(context, "/account");
+        });
+
   }
 
   _body() {
@@ -290,7 +348,8 @@ class _HomeScreenState extends State<Home> {
     await _handleMicPermission();
 
     _waits(true);
-    GetAgoraToken("asd", "Azims", token_success, token_error);
+    print("User Name > " + account.userName.trim().replaceAll(" ", ""));
+    GetAgoraToken("asd", account.userName.trim().replaceAll(" ", ""), token_success, token_error);
     //}
   }
 

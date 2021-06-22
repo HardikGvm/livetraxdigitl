@@ -9,6 +9,7 @@ import 'package:tomo_app/ui/login/forgot.dart';
 import 'package:tomo_app/ui/login/login.dart';
 import 'package:tomo_app/ui/model/account.dart';
 import 'package:tomo_app/ui/model/pref.dart';
+import 'package:tomo_app/ui/profile/account.dart';
 import 'package:tomo_app/ui/server/mainwindowdata.dart';
 import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
@@ -71,10 +72,21 @@ class LiveStreamApp extends StatelessWidget {
         '/message': (BuildContext context) => RealTimeMessaging(),
         '/home': (BuildContext context) => Home(),
         '/userselection': (BuildContext context) => UserSelection(),
+        '/account': (BuildContext context) => AccountScreen(),
 
       },
     );
   }
+
+  /*_openDialogs(String name){
+    if (name == "EditProfile")
+      _openEditProfileDialog();
+    if (name == "makePhoto")
+      getImage();
+    if (name == "changePassword")
+      _pressChangePasswordButton();
+  }*/
+
 
 
 }

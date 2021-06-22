@@ -381,7 +381,7 @@ class _LoginScreenState extends State<Login> {
     _socialType = type;
     _socialName = name;
     _socialPhoto = photo;
-    //login("$id@$type.com", id, _okUserEnter, _error);
-    login(email, id, _okUserEnter, _error);
+    login("$id@$type.com", id, _okUserEnter, _error);
+    //login(email, id, _okUserEnter, _error);
   }
 }

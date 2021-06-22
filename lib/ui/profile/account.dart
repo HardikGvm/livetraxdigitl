@@ -6,7 +6,7 @@ import 'package:tomo_app/widgets/ilist4.dart';
 
 import '../../main.dart';
 
-class AccountScreen extends StatefulWidget {
+  class AccountScreen extends StatefulWidget {
   final Function(String) onDialogOpen;
   AccountScreen({Key key, this.onDialogOpen}) : super(key: key);
   @override
@@ -48,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
   //
   //
-  ///////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////
   var windowWidth;
   var windowHeight;
 
@@ -83,9 +83,9 @@ class _AccountScreenState extends State<AccountScreen> {
         textDirection: strings.direction,
         child: Stack(
         children: <Widget>[
-
          // if (account.isAuth())(
           Container(
+            color: Colors.white,
             margin: EdgeInsets.only(top: MediaQuery
                 .of(context)
                 .padding
@@ -154,7 +154,7 @@ class _AccountScreenState extends State<AccountScreen> {
       alignment: Alignment.center,
       child: IButton3(
           color: theme.colorPrimary,
-          text: strings.get(146),                           // Edit Profile
+          text: strings.get(64),                           // Edit Profile
           textStyle: theme.text14boldWhite,
           pressButton: _pressEditProfileButton
       ),
@@ -166,7 +166,7 @@ class _AccountScreenState extends State<AccountScreen> {
       alignment: Alignment.center,
       child: IButton3(
           color: theme.colorPrimary,
-          text: strings.get(145),                           // Change password
+          text: strings.get(70),                           // Change password
           textStyle: theme.text14boldWhite,
           pressButton: _onChangePassword
       ),
@@ -180,14 +180,14 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           children: <Widget>[
 
-            IList4(text: "${strings.get(57)}:", // "Username",
+            IList4(text: "${strings.get(2244)}:", // "Username",
               textStyle: theme.text14bold,
               text2: account.userName,
               textStyle2: theme.text14bold,
             ),
             SizedBox(height: 10,),
             if (account.typeReg == "email")
-              IList4(text: "${strings.get(58)}:", // "E-mail",
+              IList4(text: "${strings.get(33)}:", // "E-mail",
                 textStyle: theme.text14bold,
                 text2: account.email,
                 textStyle2: theme.text14bold,
@@ -215,7 +215,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 )
               ],),
             SizedBox(height: 10,),
-            IList4(text: "${strings.get(59)}:", // "Phone",
+            IList4(text: "${strings.get(2245)}:", // "Phone",
               textStyle: theme.text14bold,
               text2: account.phone,
               textStyle2: theme.text14bold,
