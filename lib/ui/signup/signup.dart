@@ -345,12 +345,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
         Container(
           margin: EdgeInsets.only(left: 10, right: 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 onPressed: pressGoogleAuthentication,
                 iconSize: 30,
                 icon: Image.asset('assets/twitter.png'),
               ),
+              SizedBox(width: 10),
               IButton4(
                   color: Colors.blue,
                   text: strings.get(304), // Change
@@ -358,6 +360,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                   pressButton: () {
                     _pressCreateAccountButton();
                   }),
+              SizedBox(width: 10),
               IconButton(
                 onPressed: pressFacebookAuthentication,
                 iconSize: 30,
@@ -369,7 +372,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
         /*if (appSettings.googleLogin == "true" || appSettings.facebookLogin == "true")
           _buttoniOS(),*/
-
         SizedBox(
           height: 30,
         ),

@@ -8,7 +8,7 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tomo_app/ui/artist/data.dart';
+import 'package:tomo_app/ui/Artist/data.dart';
 import 'package:tomo_app/ui/call/SampletList.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/config/settings.dart';
@@ -540,7 +540,10 @@ class _CallPageState extends State<CallScreen> {
         child: SafeArea(
           child: Scaffold(
             body: Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/sample.png"),
+                      fit: BoxFit.cover)),
               child: Center(
                 child: Stack(
                   children: <Widget>[

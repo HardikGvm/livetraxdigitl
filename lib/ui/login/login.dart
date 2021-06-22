@@ -214,42 +214,42 @@ class _LoginScreenState extends State<Login> {
         SizedBox(
           height: 30,
         ),
-        Container(
-          margin: EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: pressGoogleAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/twitter.png'),
-              ),
-              IButton4(
-                  color: Colors.blue,
-                  text: strings.get(16), // Change
-                  textStyle: theme.text14boldWhite,
-                  pressButton: () {
-                    setState(() {
-                      _show = 0;
-                      _pressLoginButton();
-                    });
-                  }),
-              IconButton(
-                onPressed: pressFacebookAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/facebook.png'),
-              ),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: pressGoogleAuthentication,
+              iconSize: 30,
+              icon: Image.asset('assets/twitter.png'),
+            ),
+            SizedBox(width: 10),
+            IButton4(
+                color: Colors.blue,
+                text: strings.get(16), // Change
+                textStyle: theme.text14boldWhite,
+                pressButton: () {
+                  setState(() {
+                    _show = 0;
+                    _pressLoginButton();
+                  });
+                }),
+            SizedBox(width: 10),
+            IconButton(
+              onPressed: pressFacebookAuthentication,
+              iconSize: 30,
+              icon: Image.asset('assets/facebook.png'),
+            ),
+          ],
         ),
         SizedBox(
-          height: 10,
+          height: 15,
         ),
         new Center(
           child: new Text("- OR -",
               style: new TextStyle(fontSize: 15.0, color: Colors.white)),
         ),
         SizedBox(
-          height: 10,
+          height: 15,
         ),
         InkWell(
             onTap: () {
