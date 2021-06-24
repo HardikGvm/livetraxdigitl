@@ -41,6 +41,7 @@ dependencies:
   agora_rtm: ^0.9.14
   random_color: ^1.0.5
   font_awesome_flutter: 8.8.1
+  image_picker: ^0.7.5+2
 
 
 

@@ -104,7 +104,7 @@ class Lang {
     56 : "Order Details",
     57 : "Subtotal",
     58 : "Shopping costs",
-    59 : "Taxes",
+    59 : "Phone",
     60 : "Total",
     61 : "Back to Map",
     62 : "Online/Offline",
@@ -195,21 +195,21 @@ class Lang {
     154 : "Enter your E-mail",
     //155 : "You E-mail is incorrect",
     155 : "Cancel",
-    156 : "User with this Email was not found!",
-    157 : "Failed to send Email. Please try again later.",
-    158 : "Something went wrong.",
-    159 : "A letter with a new password has been sent to the specified E-mail",
-    160 : "Categories",
-    161 : "VIEW ALL",
-    162 : "Total Count:",
-    163 : "ID:",
-    164 : "Last update:",
-    165 : "EDIT",
-    166 : "DELETE",
-    167 : "Enter Category name",
-    168 : "Add New Category",
-    169 : "Description",
-    170 : "Enter description",
+    156 : "Edit profile",
+    157 : "User Name",
+    158 : "Enter your User Name",
+    159 : "E-mail",
+    160 : "Enter your User E-mail",
+    161 : "Enter your User Phone",
+    162 : "Change",
+    163 : "Open Gallery",
+    164 : "Open Camera",
+    165 : "Change password",
+    166 : "Password change",
+    167 : "Passwords don't equals",
+    168 : "Old password is incorrect",
+    169 : "The password length must be more than 5 chars",
+    170 : "Enter New Password",
     171 : "User Profile change",
     172 : "Enter Login",
     173 : "Enter Password",
@@ -219,7 +219,7 @@ class Lang {
     177 : "Enter your password",
     178 : "You E-mail is incorrect",
     179 : "Not Have Favorites Products",
-    180 : "All",
+    180 : "Not Have Orders",
     181 : "Add New Food",
     182 : "Enter Product name",
     183 : "Price",
@@ -373,7 +373,7 @@ class Lang {
     2242 : "Artist/Band Name",
     2243 : "Referral Code",
     2244 : "Username",
-    2245 : "Phone Number",
+    2245 : "Phone",
 
   };
 
@@ -403,7 +403,7 @@ class Lang {
   String get(int id){
     if (!init) return "";
 
-    if (theme.appType == "multivendor"){
+    /*if (theme.appType == "multivendor"){
       switch (id){
         case 105: id = 252; break; // Restaurants -> Shop
         case 208: id = 254; break; // Edit Restaurant -> Edit Shop
@@ -427,8 +427,8 @@ class Lang {
           case 210: id = 1210; break;
           case 237: id = 1237; break;
         }
-      }
-      if (theme.appTypePre == "markets")
+      }*/
+     /* if (theme.appTypePre == "markets")
         switch (id){
           case 92: id = 2092; break;
           case 105: id = 2105; break;
@@ -444,7 +444,7 @@ class Lang {
           case 210: id = 2210; break;
           case 237: id = 2237; break;
         }
-    }
+    }*/
 
     var str = defaultLang[id];
     if (str == null)

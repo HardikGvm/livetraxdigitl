@@ -8,7 +8,7 @@ login(
     String email,
     String password,
     Function(String name, String password, String avatar, String email,
-            String token, String phone, int unreadNotify, String, String role)
+            String token, String phone, int unreadNotify, String, String role, String uid)
         callback,
     Function(String) callbackError) async {
   try {
@@ -41,7 +41,7 @@ login(
         if (ret.data.avatar != null && ret.data.avatar.toLowerCase() != "null")
           path = "$serverImages${ret.data.avatar}";
         callback(ret.data.name, password, path, email, ret.accessToken,
-            ret.data.phone, ret.notify, ret.data.typeReg, ret.data.role);
+            ret.data.phone, ret.notify, ret.data.typeReg, ret.data.role, ret.data.uid);
         /*}else
           callbackError("error:ret.data=null");*/
       } else
@@ -59,16 +59,16 @@ class Response {
   String accessToken;
   int notify;
 
-  Response({this.error, this.data, this.accessToken, this.notify});
+  Response({this.data, this.notify, this.accessToken});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
     if (json['data'] != null) a = UserData.fromJson(json['data']);
     return Response(
       //error: json['error'].toString(),
-      accessToken: json['access_token'].toString(),
       notify: toInt(json['notify'].toString()),
       data: a,
+      accessToken: a.access_token,
     );
   }
 }
@@ -79,8 +79,10 @@ class UserData {
   String avatar;
   String typeReg;
   String role;
+  String uid;
+  String access_token;
 
-  UserData({this.name, this.avatar, this.phone, this.typeReg,this.role});
+  UserData({this.name, this.avatar, this.phone, this.typeReg,this.role,this.uid,this.access_token});
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
@@ -89,6 +91,8 @@ class UserData {
       phone: json['phone'].toString(),
       typeReg: json['typeReg'].toString(),
       role: json['role'].toString(),
+      uid: json['id'].toString(),
+      access_token: json['access_token'].toString(),
     );
   }
 }

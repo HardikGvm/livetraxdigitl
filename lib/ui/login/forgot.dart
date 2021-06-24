@@ -36,11 +36,11 @@ class _ForgotScreenState extends State<ForgotScreen>
     _waits(false);
     if (error == "5000")
       return openDialog(
-          strings.get(136)); //  "User with this Email was not found!",
+          strings.get(156)); //  "User with this Email was not found!",
     if (error == "5001")
       return openDialog(strings
-          .get(137)); //  "Failed to send Email. Please try again later.",
-    openDialog("${strings.get(128)} $error"); // "Something went wrong. ",
+          .get(157)); //  "Failed to send Email. Please try again later.",
+    openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
   }
 
   _waits(bool value) {
@@ -51,7 +51,7 @@ class _ForgotScreenState extends State<ForgotScreen>
   _success() {
     _waits(false);
     openDialog(strings.get(
-        135)); // "A letter with a new password has been sent to the specified E-mail",
+        159)); // "A letter with a new password has been sent to the specified E-mail",
   }
 
   @override

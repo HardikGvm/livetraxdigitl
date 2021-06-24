@@ -525,7 +525,10 @@ class _CallPageState extends State<CallScreen> {
         child: SafeArea(
           child: Scaffold(
             body: Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/sample.png"),
+                      fit: BoxFit.cover)),
               child: Center(
                 child: Stack(
                   children: <Widget>[

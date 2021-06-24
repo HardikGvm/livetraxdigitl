@@ -122,11 +122,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   }*/
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String typeReg) {
+      String token, String typeReg, String uid) {
     _waits(false);
-    print("CHeck Response Done ==> " + name);
+    print("CHeck Response Done ==> " + name + " uid " + uid + " TOK " + token);
     account.okUserEnter(
-        name, password, avatar, email, token, "", 0, "", typeReg, userRole);
+        name, password, avatar, email, token, "", 0, uid, typeReg, userRole);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
@@ -345,11 +345,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
         Container(
           margin: EdgeInsets.only(left: 10, right: 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 onPressed: pressGoogleAuthentication,
                 iconSize: 30,
                 icon: Image.asset('assets/twitter.png'),
+              ),
+              SizedBox(
+                height: 10,
               ),
               IButton4(
                   color: Colors.blue,
@@ -358,6 +362,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
                   pressButton: () {
                     _pressCreateAccountButton();
                   }),
+              SizedBox(
+                height: 30,
+              ),
               IconButton(
                 onPressed: pressFacebookAuthentication,
                 iconSize: 30,

@@ -62,8 +62,8 @@ class _HomeScreenState extends State<Home> {
     if (error == "1")
       return openDialog(strings.get(11)); // "Login or Password in incorrect"
     if (error == "2") {
-      if (theme.appType == "multivendor")
-        return openDialog(strings.get(251)); // "Need user with role Vendor",
+      /*if (theme.appType == "multivendor")
+        return openDialog(strings.get(251));*/ // "Need user with role Vendor",
       return openDialog(
           strings.get(13)); // "Need user with role Administrator or Manager",
     }
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<Home> {
                 backgroundColor: Colors.transparent,
                 body: Container(
                     child: Stack(
-                        children: <Widget>[ _toolbar(),GetBottomOption()]))),
+                        children: <Widget>[ GetBottomOption(),_toolbar()]))),
           ),
           if (_wait)
             (Container(
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<Home> {
                         ),
                         onTap: () {
                           print("Press Profile");
-                          //Navigator.pushNamed(context, "/account");
+                          Navigator.pushNamed(context, "/account");
                         })
                   ],
                 ),
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<Home> {
         ),
         onTap: () {
           print("Press Profile");
-          //Navigator.pushNamed(context, "/account");
+          Navigator.pushNamed(context, "/account");
         });
 
   }

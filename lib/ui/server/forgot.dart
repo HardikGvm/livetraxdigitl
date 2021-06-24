@@ -22,10 +22,10 @@ forgotPassword(String email, Function() callback, Function(String) callbackError
       return callbackError(jsonResult["message"].toString());
 
     if (response.statusCode == 200) {
-      if (jsonResult["error"] == "0")
+      if (jsonResult["status"] == 200)
         callback();
       else
-        callbackError(jsonResult["error"]);
+        callbackError(jsonResult["message"]);
     }else
       callbackError("statusCode=${response.statusCode}");
 

@@ -52,16 +52,16 @@ class _LoginScreenState extends State<Login> {
   }
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String _phone, int i, String typeReg, String role) {
+      String token, String _phone, int i, String typeReg, String role, String uid) {
     _waits(false);
     if(role == "2"){
       role="artist";
     }else{
       role="fan";
     }
-    print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role);
+    print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
-    account.okUserEnter(name, password, avatar, email, token, "", 0, "",typeReg,role);
+    account.okUserEnter(name, password, avatar, email, token, "", 0, uid,typeReg,role);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
@@ -87,8 +87,8 @@ class _LoginScreenState extends State<Login> {
     if (error == "1")
       return openDialog(strings.get(11)); // "Login or Password in incorrect"
     if (error == "2") {
-      if (theme.appType == "multivendor")
-        return openDialog(strings.get(251)); // "Need user with role Vendor",
+      /*if (theme.appType == "multivendor")
+        return openDialog(strings.get(251));*/ // "Need user with role Vendor",
       return openDialog(
           strings.get(13)); // "Need user with role Administrator or Manager",
     }
@@ -217,11 +217,15 @@ class _LoginScreenState extends State<Login> {
         Container(
           margin: EdgeInsets.only(left: 10, right: 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 onPressed: pressGoogleAuthentication,
                 iconSize: 30,
                 icon: Image.asset('assets/twitter.png'),
+              ),
+              SizedBox(
+                height: 10,
               ),
               IButton4(
                   color: Colors.blue,
@@ -233,6 +237,9 @@ class _LoginScreenState extends State<Login> {
                       _pressLoginButton();
                     });
                   }),
+              SizedBox(
+                height: 10,
+              ),
               IconButton(
                 onPressed: pressFacebookAuthentication,
                 iconSize: 30,
@@ -242,14 +249,14 @@ class _LoginScreenState extends State<Login> {
           ),
         ),
         SizedBox(
-          height: 10,
+          height: 15,
         ),
         new Center(
           child: new Text("- OR -",
               style: new TextStyle(fontSize: 15.0, color: Colors.white)),
         ),
         SizedBox(
-          height: 10,
+          height: 15,
         ),
         InkWell(
             onTap: () {

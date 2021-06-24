@@ -3,7 +3,6 @@ import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/config/lang.dart';
 import 'package:tomo_app/ui/config/theme.dart';
 import 'package:tomo_app/ui/home/home.dart';
-import 'package:tomo_app/ui/login/MyApp.dart';
 import 'package:tomo_app/ui/login/UserSelection.dart';
 import 'package:tomo_app/ui/login/forgot.dart';
 import 'package:tomo_app/ui/login/login.dart';
@@ -78,14 +77,6 @@ class LiveStreamApp extends StatelessWidget {
     );
   }
 
-  /*_openDialogs(String name){
-    if (name == "EditProfile")
-      _openEditProfileDialog();
-    if (name == "makePhoto")
-      getImage();
-    if (name == "changePassword")
-      _pressChangePasswordButton();
-  }*/
 
 
 

@@ -11,6 +11,7 @@ class Pref{
   static String typeReg = "typeReg";
 
 
+  static String uiMainColor = "uiMainColor";
   static String uiDarkMode = "uiDarkMode";
 
   static String language = "language";

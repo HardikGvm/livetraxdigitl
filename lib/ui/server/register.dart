@@ -12,7 +12,7 @@ register(
     String type,
     String photoUrl,
     Function(String name, String password, String avatar, String email,
-            String token, String)
+            String token, String, String uid)
         callback,
     Function(String) callbackError,
     String userType) async {
@@ -66,12 +66,12 @@ register(
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
       //if (ret.error == "0") {
-      print("CHeck Response DATT ==> " + (ret.data != null).toString());
+      print("CHeck Response DATT ==> " + (ret.data != null).toString() + " TOK " + ret.accessToken);
       if (ret.data != null) {
         var path = "";
         if (ret.data.avatar != null) path = "$serverImages${ret.data.avatar}";
         callback(ret.data.name, password, path, email, ret.accessToken,
-            ret.data.typeReg);
+            ret.data.typeReg,ret.data.uid);
       } else {
         print("CHeck Response DATT ==> 1");
         callbackError("error:ret.data=null");
@@ -97,15 +97,15 @@ class Response {
 
   //String errorMsg;
 
-  Response({this.error, this.data, this.accessToken});
+  Response({ this.data, this.accessToken});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
     if (json['data'] != null) a = UserData.fromJson(json['data']);
     return Response(
       //error: json['error'].toString(),
-      accessToken: json['access_token'].toString(),
       data: a,
+      accessToken: a.access_token,
     );
   }
 }
