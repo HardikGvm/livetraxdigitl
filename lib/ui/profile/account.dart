@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tomo_app/ui/model/pref.dart';
+import 'package:tomo_app/ui/server/changePassword.dart';
 import 'package:tomo_app/ui/server/changeProfile.dart';
 import 'package:tomo_app/ui/server/uploadavatar.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
@@ -401,8 +403,8 @@ class _AccountScreenState extends State<AccountScreen> {
     }
     if (name == "makePhoto")
       getImage();
-    /*if (name == "changePassword")
-      _pressChangePasswordButton();*/
+    if (name == "changePassword")
+      _pressChangePasswordButton();
   }
 
   final editControllerName = TextEditingController();
@@ -676,5 +678,95 @@ class _AccountScreenState extends State<AccountScreen> {
       });
     }else
       waits(false);
+  }
+
+  _pressChangePasswordButton(){
+    _dialogBody = Directionality(
+        textDirection: strings.direction,
+        child: Container(
+          margin: EdgeInsets.only(left: 20, right: 20),
+          width: double.maxFinite,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.center,
+                  child: Text(strings.get(147), textAlign: TextAlign.center, style: theme.text18boldPrimary,) // "Change password",
+              ), // "Reason to Reject",
+              SizedBox(height: 20,),
+              Text("${strings.get(148)}:", style: theme.text12bold,),  // "Old password",
+              _edit(editControllerOldPassword, strings.get(149), true),                //  "Enter your old password",
+              SizedBox(height: 20,),
+              Text("${strings.get(150)}:", style: theme.text12bold,),  // "New password",
+              _edit(editControllerNewPassword1, strings.get(152), true),                //  "Enter your new password",
+              SizedBox(height: 20,),
+              Text("${strings.get(153)}:", style: theme.text12bold,),  // "Confirm New password",
+              _edit(editControllerNewPassword2, strings.get(154), true),                //  "Enter your new password",
+              SizedBox(height: 30,),
+              Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: windowWidth/2-45,
+                          child: IButton3(
+                              color: theme.colorPrimary,
+                              text: strings.get(162),                  // Change
+                              textStyle: theme.text14boldWhite,
+                              pressButton: (){
+                                setState(() {
+                                  _show = 0;
+                                });
+                                _callbackChange();
+                              }
+                          )),
+                      SizedBox(width: 10,),
+                      Container(
+                          width: windowWidth/2-45,
+                          child: IButton3(
+                              color: theme.colorPrimary,
+                              text: strings.get(155),              // Cancel
+                              textStyle: theme.text14boldWhite,
+                              pressButton: (){
+                                setState(() {
+                                  _show = 0;
+                                });
+                              }
+                          )),
+                    ],
+                  )),
+
+            ],
+          ),
+        ));
+
+    setState(() {
+      _show = 1;
+    });
+  }
+
+  _callbackChange(){
+    print("User pressed Change password");
+    print("Old password: ${editControllerOldPassword.text}, New password: ${editControllerNewPassword1.text}, "
+        "New password 2: ${editControllerNewPassword2.text}");
+    if (editControllerNewPassword1.text != editControllerNewPassword2.text)
+      return _openDialogError(strings.get(167)); // "Passwords don't equals",
+    if (editControllerNewPassword1.text.isEmpty || editControllerNewPassword2.text.isEmpty)
+      return _openDialogError(strings.get(170)); // "Enter New Password",
+    changePassword(account.token, editControllerOldPassword.text, editControllerNewPassword1.text,
+        _successChangePassword, _errorChangePassword);
+  }
+
+  _successChangePassword(){
+    _openDialogError(strings.get(166)); // "Password change",
+    pref.set(Pref.userPassword, editControllerNewPassword1.text);
+  }
+
+  _errorChangePassword(String error){
+    if (error == "1")
+      return _openDialogError(strings.get(168)); // Old password is incorrect
+    if (error == "2")
+      return _openDialogError(strings.get(169)); // The password length must be more than 5 chars
+    _openDialogError("${strings.get(128)} $error"); // "Something went wrong. ",
   }
 }
