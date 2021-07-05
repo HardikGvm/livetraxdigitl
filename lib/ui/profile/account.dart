@@ -26,7 +26,6 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   ///////////////////////////////////////////////////////////////////////////////
   //
-
   _makePhoto() {
     print("Make photo");
     _openDialogs("makePhoto");
@@ -86,66 +85,61 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
-    return  Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(children: <Widget>[
-
-          Directionality(
-              textDirection: strings.direction,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.only(
-                        top: MediaQuery
-                            .of(context)
-                            .padding
-                            .top),
-                    child: Container(
-                        child: ListView(
-                      padding: EdgeInsets.only(top: 10),
-                      shrinkWrap: true,
-                      children: _getList(),
-                    )),
-                  ),
-
-                ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(children: <Widget>[
+        Directionality(
+            textDirection: strings.direction,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  margin:
+                      EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  child: Container(
+                      child: ListView(
+                    padding: EdgeInsets.only(top: 10),
+                    shrinkWrap: true,
+                    children: _getList(),
+                  )),
+                ),
+              ],
+            )),
+        IAppBar(context: context, text: "", color: Colors.black),
+        if (wait)
+          Container(
+              color: Color(0x80000000),
+              width: windowWidth,
+              height: windowHeight,
+              child: Center(
+                child: ColorLoader2(
+                  color1: theme.colorPrimary,
+                  color2: theme.colorCompanion,
+                  color3: theme.colorPrimary,
+                ),
               )),
-          IAppBar(context: context, text: "", color: Colors.black),
-          if (wait)
-            Container(
-                color: Color(0x80000000),
-                width: windowWidth,
-                height: windowHeight,
-                child: Center(
-                  child: ColorLoader2(
-                    color1: theme.colorPrimary,
-                    color2: theme.colorCompanion,
-                    color3: theme.colorPrimary,
-                  ),
-                )),
-          IEasyDialog2(
-              setPosition: (double value) {
-                mainDialogShow = value;
-              },
-              getPosition: () {
-                return mainDialogShow;
-              },
-              color: theme.colorGrey,
-              body: mainDialogBody,
-              backgroundColor: theme.colorBackground),
-          IEasyDialog2(
+        IEasyDialog2(
             setPosition: (double value) {
-              _show = value;
+              mainDialogShow = value;
             },
             getPosition: () {
-              return _show;
+              return mainDialogShow;
             },
             color: theme.colorGrey,
-            body: _dialogBody,
-            backgroundColor: theme.colorBackground,
-          ),
-        ]),
+            body: mainDialogBody,
+            backgroundColor: theme.colorBackground),
+        IEasyDialog2(
+          setPosition: (double value) {
+            _show = value;
+          },
+          getPosition: () {
+            return _show;
+          },
+          color: theme.colorGrey,
+          body: _dialogBody,
+          backgroundColor: theme.colorBackground,
+        ),
+      ]),
     );
   }
 
@@ -311,9 +305,11 @@ class _AccountScreenState extends State<AccountScreen> {
                     fit: BoxFit.contain,
                     color: Colors.black.withAlpha(80),
                   ))),
+
           SizedBox(
             height: 30,
           ),
+
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.15, right: windowWidth * 0.15),
@@ -322,9 +318,11 @@ class _AccountScreenState extends State<AccountScreen> {
               textAlign: TextAlign.center,
             ), // "You must sign-in to access to this section",
           ),
+
           SizedBox(
             height: 40,
           ),
+
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.1, right: windowWidth * 0.1),
@@ -336,6 +334,7 @@ class _AccountScreenState extends State<AccountScreen> {
               textStyle: theme.text16boldWhite,
             ),
           ),
+
           Container(
             padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
             child: InkWell(
@@ -401,10 +400,8 @@ class _AccountScreenState extends State<AccountScreen> {
       print("Come HERE");
       _openEditProfileDialog();
     }
-    if (name == "makePhoto")
-      getImage();
-    if (name == "changePassword")
-      _pressChangePasswordButton();
+    if (name == "makePhoto") getImage();
+    if (name == "changePassword") _pressChangePasswordButton();
   }
 
   final editControllerName = TextEditingController();
@@ -601,7 +598,7 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  getImage(){
+  getImage() {
     _dialogBody = Column(
       children: [
         InkWell(
@@ -618,8 +615,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 color: theme.colorBackgroundGray,
                 child: Center(
                   child: Text(strings.get(163)), // "Open Gallery",
-                )
-            )),
+                ))),
         InkWell(
             onTap: () {
               getImage2(ImageSource.camera);
@@ -636,17 +632,18 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Text(strings.get(164)), //  "Open Camera",
               ),
             )),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         IButton3(
             color: theme.colorPrimary,
-            text: strings.get(155),              // Cancel
+            text: strings.get(155), // Cancel
             textStyle: theme.text14boldWhite,
-            pressButton: (){
+            pressButton: () {
               setState(() {
                 _show = 0;
               });
-            }
-        ),
+            }),
       ],
     );
     setState(() {
@@ -654,11 +651,9 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  waits(bool value){
+  waits(bool value) {
     wait = value;
-    if (mounted)
-      setState(() {
-      });
+    if (mounted) setState(() {});
   }
 
   Future getImage2(ImageSource source) async {
@@ -670,17 +665,17 @@ class _AccountScreenState extends State<AccountScreen> {
       uploadAvatar(pickedFile.path, account.token, (String avatar) {
         account.setUserAvatar(avatar);
         waits(false);
-        setState(() {
-        });
+        setState(() {});
       }, (String error) {
         waits(false);
-        _openDialogError("${strings.get(128)} $error"); // "Something went wrong. ",
+        _openDialogError(
+            "${strings.get(128)} $error"); // "Something went wrong. ",
       });
-    }else
+    } else
       waits(false);
   }
 
-  _pressChangePasswordButton(){
+  _pressChangePasswordButton() {
     _dialogBody = Directionality(
         textDirection: strings.direction,
         child: Container(
@@ -691,51 +686,78 @@ class _AccountScreenState extends State<AccountScreen> {
             children: <Widget>[
               Container(
                   alignment: Alignment.center,
-                  child: Text(strings.get(147), textAlign: TextAlign.center, style: theme.text18boldPrimary,) // "Change password",
-              ), // "Reason to Reject",
-              SizedBox(height: 20,),
-              Text("${strings.get(148)}:", style: theme.text12bold,),  // "Old password",
-              _edit(editControllerOldPassword, strings.get(149), true),                //  "Enter your old password",
-              SizedBox(height: 20,),
-              Text("${strings.get(150)}:", style: theme.text12bold,),  // "New password",
-              _edit(editControllerNewPassword1, strings.get(152), true),                //  "Enter your new password",
-              SizedBox(height: 20,),
-              Text("${strings.get(153)}:", style: theme.text12bold,),  // "Confirm New password",
-              _edit(editControllerNewPassword2, strings.get(154), true),                //  "Enter your new password",
-              SizedBox(height: 30,),
+                  child: Text(
+                    strings.get(147),
+                    textAlign: TextAlign.center,
+                    style: theme.text18boldPrimary,
+                  ) // "Change password",
+                  ),
+              // "Reason to Reject",
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "${strings.get(148)}:",
+                style: theme.text12bold,
+              ),
+              // "Old password",
+              _edit(editControllerOldPassword, strings.get(149), true),
+              //  "Enter your old password",
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "${strings.get(150)}:",
+                style: theme.text12bold,
+              ),
+              // "New password",
+              _edit(editControllerNewPassword1, strings.get(152), true),
+              //  "Enter your new password",
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "${strings.get(153)}:",
+                style: theme.text12bold,
+              ),
+              // "Confirm New password",
+              _edit(editControllerNewPassword2, strings.get(154), true),
+              //  "Enter your new password",
+              SizedBox(
+                height: 30,
+              ),
               Container(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          width: windowWidth/2-45,
-                          child: IButton3(
-                              color: theme.colorPrimary,
-                              text: strings.get(162),                  // Change
-                              textStyle: theme.text14boldWhite,
-                              pressButton: (){
-                                setState(() {
-                                  _show = 0;
-                                });
-                                _callbackChange();
-                              }
-                          )),
-                      SizedBox(width: 10,),
-                      Container(
-                          width: windowWidth/2-45,
-                          child: IButton3(
-                              color: theme.colorPrimary,
-                              text: strings.get(155),              // Cancel
-                              textStyle: theme.text14boldWhite,
-                              pressButton: (){
-                                setState(() {
-                                  _show = 0;
-                                });
-                              }
-                          )),
-                    ],
-                  )),
-
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      width: windowWidth / 2 - 45,
+                      child: IButton3(
+                          color: theme.colorPrimary,
+                          text: strings.get(162), // Change
+                          textStyle: theme.text14boldWhite,
+                          pressButton: () {
+                            setState(() {
+                              _show = 0;
+                            });
+                            _callbackChange();
+                          })),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                      width: windowWidth / 2 - 45,
+                      child: IButton3(
+                          color: theme.colorPrimary,
+                          text: strings.get(155), // Cancel
+                          textStyle: theme.text14boldWhite,
+                          pressButton: () {
+                            setState(() {
+                              _show = 0;
+                            });
+                          })),
+                ],
+              )),
             ],
           ),
         ));
@@ -745,28 +767,35 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  _callbackChange(){
+  _callbackChange() {
     print("User pressed Change password");
-    print("Old password: ${editControllerOldPassword.text}, New password: ${editControllerNewPassword1.text}, "
+    print(
+        "Old password: ${editControllerOldPassword.text}, New password: ${editControllerNewPassword1.text}, "
         "New password 2: ${editControllerNewPassword2.text}");
     if (editControllerNewPassword1.text != editControllerNewPassword2.text)
       return _openDialogError(strings.get(167)); // "Passwords don't equals",
-    if (editControllerNewPassword1.text.isEmpty || editControllerNewPassword2.text.isEmpty)
+    if (editControllerNewPassword1.text.isEmpty ||
+        editControllerNewPassword2.text.isEmpty)
       return _openDialogError(strings.get(170)); // "Enter New Password",
-    changePassword(account.token, editControllerOldPassword.text, editControllerNewPassword1.text,
-        _successChangePassword, _errorChangePassword);
+    changePassword(
+        account.token,
+        editControllerOldPassword.text,
+        editControllerNewPassword1.text,
+        _successChangePassword,
+        _errorChangePassword);
   }
 
-  _successChangePassword(){
+  _successChangePassword() {
     _openDialogError(strings.get(166)); // "Password change",
     pref.set(Pref.userPassword, editControllerNewPassword1.text);
   }
 
-  _errorChangePassword(String error){
+  _errorChangePassword(String error) {
     if (error == "1")
       return _openDialogError(strings.get(168)); // Old password is incorrect
     if (error == "2")
-      return _openDialogError(strings.get(169)); // The password length must be more than 5 chars
+      return _openDialogError(
+          strings.get(169)); // The password length must be more than 5 chars
     _openDialogError("${strings.get(128)} $error"); // "Something went wrong. ",
   }
 }

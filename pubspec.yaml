@@ -15,6 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+
 version: 1.0.0+1
 
 environment:
@@ -23,8 +24,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   fab_circular_menu: ^1.0.0
@@ -36,13 +35,16 @@ dependencies:
   #flutter_facebook_login: ^3.0.0
   google_sign_in: "^4.5.1"
   permission_handler: ^5.1.0+2
-  cached_network_image: ^2.2.0+1
+  cached_network_image: ^3.0.0
   agora_rtc_engine: ^3.2.1
   agora_rtm: ^0.9.14
   random_color: ^1.0.5
   font_awesome_flutter: 8.8.1
   image_picker: ^0.7.5+2
-
+  audio_service: ^0.17.1
+  hive: ^2.0.4
+  hive_flutter: ^1.0.0
+  image: ^3.0.2
 
 
 dev_dependencies:
@@ -55,8 +57,6 @@ dev_dependencies:
 # The following section is specific to Flutter.
 
 flutter:
-
-
 
   uses-material-design: true
 

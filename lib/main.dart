@@ -72,7 +72,6 @@ class LiveStreamApp extends StatelessWidget {
         '/home': (BuildContext context) => Home(),
         '/userselection': (BuildContext context) => UserSelection(),
         '/account': (BuildContext context) => AccountScreen(),
-
       },
     );
   }

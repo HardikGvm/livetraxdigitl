@@ -9,6 +9,7 @@ artist_list_api(
     int limit,
     Function(List<UserData> list) callback,
     Function(String) callbackError) async {
+
   try {
 
     Map<String, String> requestHeaders = {
@@ -24,15 +25,11 @@ artist_list_api(
 
     var url = "${serverPath}getUserByType";
 
-    var response = await http
-        .post(Uri.parse(url), headers: requestHeaders, body: body)
-        .timeout(const Duration(seconds: 30));
+    var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
-
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
-
       if (ret.data != null) {
         callback(ret.data);
       } else
@@ -42,6 +39,7 @@ artist_list_api(
   } catch (ex) {
     callbackError(ex.toString());
   }
+
 }
 
 class Response {
@@ -55,7 +53,6 @@ class Response {
     var list = json['data'] as List;
     print(list.runtimeType);
     List<UserData> imagesList = list.map((i) => UserData.fromJson(i)).toList();
-
 
     return Response(
       status: toInt(json['status'].toString()),

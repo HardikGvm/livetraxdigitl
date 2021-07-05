@@ -5,22 +5,21 @@ import 'package:image/image.dart';
 import 'package:tomo_app/ui/config/api.dart';
 
 uploadAvatar(String _avatarFile, String uid, Function(String) callback, Function(String) callbackError) async {
-
   //
   // resize image
   //
-  try{
-    Image image = decodeImage(File(_avatarFile).readAsBytesSync());
+  try {
+    var image = decodeImage(File(_avatarFile).readAsBytesSync());
     print("uploadAvatar decodeImage");
-    Image thumbnail = copyResize(image, width: 300);
-    File(_avatarFile)
-      ..writeAsBytesSync(encodeJpg(thumbnail));
+    var thumbnail = copyResize(image, width: 300);
+    File(_avatarFile).writeAsBytesSync(encodeJpg(thumbnail));
 
     Map<String, String> requestHeaders = {
       'Accept': "application/json",
       'Content-type': 'application/json',
       'Authorization': "Bearer $uid"
     };
+
     var url = "${serverPath}uploadAvatar";
     var request = http.MultipartRequest("POST", Uri.parse(url));
     request.headers.addAll(requestHeaders);
@@ -34,25 +33,26 @@ uploadAvatar(String _avatarFile, String uid, Function(String) callback, Function
     print(responseString);
     var jsonResult = json.decode(responseString);
     Response ret = Response.fromJson(jsonResult);
+
     if (ret.ret == "true") {
       var path = "";
-      if (ret.filename != null)
-        path = "$serverImages${ret.filename}";
+      if (ret.filename != null) path = "$serverImages${ret.filename}";
       callback(path);
-    }
-    else
+    } else
       callbackError(ret.filename);
+
   } catch (ex) {
     callbackError(ex.toString());
   }
-
 }
 
 class Response {
   String ret;
   String filename;
+
   Response({this.ret, this.filename});
-  factory Response.fromJson(Map<String, dynamic> json){
+
+  factory Response.fromJson(Map<String, dynamic> json) {
     return Response(
       ret: json['ret'].toString(),
       filename: json['avatar'],

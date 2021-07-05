@@ -51,9 +51,7 @@ class _ArtistListState extends State<ArtistList> {
             image: DecorationImage(
                 image: AssetImage("assets/images/sample.png"),
                 fit: BoxFit.cover)),
-        child:
-
-        Stack(
+        child: Stack(
           children: [
             Container(
               margin: EdgeInsets.only(top: 16),
@@ -64,7 +62,7 @@ class _ArtistListState extends State<ArtistList> {
                 shrinkWrap: true,
                 children: List.generate(
                   list == null || list.isEmpty ? 0 : list.length,
-                      (index) {
+                  (index) {
                     return GestureDetector(
                       child: Column(
                         children: [
@@ -75,8 +73,8 @@ class _ArtistListState extends State<ArtistList> {
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: new NetworkImage((list == null ||
-                                        list.isEmpty ||
-                                        list[index].image == null)
+                                            list.isEmpty ||
+                                            list[index].image == null)
                                         ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
                                         : list[index].image),
                                     fit: BoxFit.cover,
@@ -93,11 +91,11 @@ class _ArtistListState extends State<ArtistList> {
                                 left: 8.0, right: 8.0, top: 16.0, bottom: 8.0),
                             child: Text(
                               list == null && list.isEmpty ||
-                                  list[index].artist_name == null
+                                      list[index].artist_name == null
                                   ? 'Artist'
                                   : list[index].artist_name,
                               style:
-                              TextStyle(color: Colors.white, fontSize: 20),
+                                  TextStyle(color: Colors.white, fontSize: 20),
                             ),
                           ),
                         ],
@@ -155,7 +153,9 @@ class _ArtistListState extends State<ArtistList> {
   }
 
   _okUserEnter(List<UserData> list) {
+
     _waits(false);
+
     print(":::isLoadMore::" + isLoadMore.toString());
     print(":::list.length::" + list.length.toString());
     print(":::pagination_index::" + pagination_index.toString());
@@ -173,6 +173,7 @@ class _ArtistListState extends State<ArtistList> {
       this.list = list;
       setState(() {});
     }
+
   }
 
   _artist(String type, int page, int limit) {
