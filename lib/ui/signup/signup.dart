@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:tomo_app/main.dart';
+import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
 import 'package:tomo_app/ui/model/utils.dart';
 import 'package:tomo_app/ui/server/register.dart';
 import 'package:tomo_app/ui/social/google.dart';

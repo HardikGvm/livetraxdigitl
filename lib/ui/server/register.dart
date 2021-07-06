@@ -66,11 +66,11 @@ register(
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
       //if (ret.error == "0") {
-      print("CHeck Response DATT ==> " + (ret.data != null).toString() + " TOK " + ret.accessToken);
+      print("CHeck Response DATT ==> " + (ret.data != null).toString() + " TOK " + ret.data.access_token);
       if (ret.data != null) {
         var path = "";
         if (ret.data.avatar != null) path = "$serverImages${ret.data.avatar}";
-        callback(ret.data.name, password, path, email, ret.accessToken,
+        callback(ret.data.name, password, path, email, ret.data.access_token,
             ret.data.typeReg,ret.data.uid);
       } else {
         print("CHeck Response DATT ==> 1");
@@ -82,7 +82,7 @@ register(
       }*/
     } else {
       print("CHeck Response DATT ==> 3");
-      callbackError("statusCode=${response.statusCode}");
+      callbackError("statusCode=${response.body}");
     }
   } catch (ex) {
     print("CHeck Response DATT ==> 4");
@@ -92,20 +92,21 @@ register(
 
 class Response {
   String error;
+  String message;
   UserData data;
-  String accessToken;
+
 
   //String errorMsg;
 
-  Response({ this.data, this.accessToken});
+  Response({ this.message,this.data});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
     if (json['data'] != null) a = UserData.fromJson(json['data']);
     return Response(
       //error: json['error'].toString(),
+      message: json['message'].toString(),
       data: a,
-      accessToken: a.access_token,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
 import 'package:tomo_app/ui/model/pref.dart';
 
 import '../../main.dart';
@@ -314,12 +315,12 @@ class AppThemeData{
     text16UI = TextStyle(
       color: theme.colorDefaultText,
       fontWeight: FontWeight.w400,
-      fontSize: appSettings.restaurantCardTextSize-3,
+      fontSize: 11,
     );
     text16UIWhite = TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.w400,
-      fontSize: appSettings.restaurantCardTextSize-3,
+      fontSize: appSettings.restaurantCardTextSize,
     );
     theme.text18boldPrimaryUI = TextStyle(
       color: appSettings.restaurantCardTextColor,
@@ -331,7 +332,7 @@ class AppThemeData{
       fontWeight: FontWeight.w800,
       fontSize: appSettings.restaurantCardTextSize,
     );
-
+    print("GET VALS > " + appSettings.appLanguage.toString());
     var lid = int.parse(appSettings.appLanguage);
     var user = pref.get(Pref.userSelectLanguage);
     if (user != "true")

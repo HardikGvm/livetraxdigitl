@@ -92,7 +92,7 @@ class _LoginScreenState extends State<Login> {
       return openDialog(
           strings.get(13)); // "Need user with role Administrator or Manager",
     }
-    openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
+    openDialog("$error"); // "Something went wrong. ",
   }
 
   @override

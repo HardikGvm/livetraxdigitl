@@ -20,15 +20,17 @@ class MainWindowDataAPI {
 
     try {
       var url = "${serverPath}getMain";
+      print("Check Main -> " + url);
       var response = await http.get(Uri.parse(url), headers: {
         'Content-type': 'application/json',
         'Accept': "application/json",
       }).timeout(const Duration(seconds: 30));
+      print("Check Main RES> " + response.toString());
 
       print("api/getRestaurants");
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
-
+      print("Check Main BODY> " + response.body.toString());
       if (response.statusCode == 200) {
         var jsonResult = json.decode(response.body);
         MainWindowData ret = MainWindowData.fromJson(jsonResult);
@@ -639,7 +641,7 @@ class AppSettings {
   String oneInLine;
   int categoryCardWidth;
   int categoryCardHeight;
-  double restaurantCardTextSize;
+  double restaurantCardTextSize=14;
   Color dishesBackgroundColor;
   Color searchBackgroundColor;
   Color restaurantTitleColor;
@@ -656,7 +658,7 @@ class AppSettings {
   String walletEnable;
   String typeFoods;
   String distanceUnit;
-  String appLanguage;
+  String appLanguage="1";
   int banner1CardHeight;
   int banner2CardHeight;
   //
@@ -736,7 +738,7 @@ class AppSettings {
     // km or miles
     this.distanceUnit,
     // app language
-    this.appLanguage,
+    this.appLanguage="1",
     // banners
     this.banner1CardHeight,
     this.banner2CardHeight,
@@ -788,6 +790,8 @@ class AppSettings {
       theme.init();
       pref.set(Pref.uiDarkMode, json['darkMode']);
     }
+
+    print("GET VALS >> " + json['appLanguage'].toString());
 
     return AppSettings(
       currency: json['currency'].toString(),

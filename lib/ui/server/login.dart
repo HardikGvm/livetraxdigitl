@@ -40,14 +40,17 @@ login(
         var path = "";
         if (ret.data.avatar != null && ret.data.avatar.toLowerCase() != "null")
           path = "$serverImages${ret.data.avatar}";
-        callback(ret.data.name, password, path, email, ret.accessToken,
+        callback(ret.data.name, password, path, email, ret.data.access_token,
             ret.data.phone, ret.notify, ret.data.typeReg, ret.data.role, ret.data.uid);
         /*}else
           callbackError("error:ret.data=null");*/
-      } else
-        callbackError(ret.error);
-    } else
-      callbackError("statusCode=${response.statusCode}");
+      } else {
+        callbackError(ret.message);
+      }
+    } else {
+      print("CHeck Response DATT ==> 36 > " + response.body);
+      callbackError("statusCode=${response.body}");
+    }
   } catch (ex) {
     callbackError(ex.toString());
   }
@@ -56,10 +59,11 @@ login(
 class Response {
   String error;
   UserData data;
-  String accessToken;
+  String message;
+  //String accessToken;
   int notify;
 
-  Response({this.data, this.notify, this.accessToken});
+  Response({this.data, this.notify,this.message});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
@@ -68,7 +72,7 @@ class Response {
       //error: json['error'].toString(),
       notify: toInt(json['notify'].toString()),
       data: a,
-      accessToken: a.access_token,
+      message: json['message'].toString(),
     );
   }
 }

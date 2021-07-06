@@ -16,6 +16,7 @@ class Pref{
 
   static String language = "language";
   static String userSelectLanguage = "userSelectLanguage";
+  static String bottomBarType = "bottomBarType";
 
   init() async {
     await _init2();

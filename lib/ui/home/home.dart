@@ -191,6 +191,7 @@ class _HomeScreenState extends State<Home> {
                         onTap: () {
                           print("Press Profile");
                           Navigator.pushNamed(context, "/account");
+                          //Navigator.pushNamed(context, "/homescreen");
                         })
                   ],
                 ),
@@ -201,6 +202,8 @@ class _HomeScreenState extends State<Home> {
         onTap: () {
           print("Press Profile");
           Navigator.pushNamed(context, "/account");
+          //Navigator.pushNamed(context, "/homescreen");
+
         });
 
   }

@@ -60,6 +60,7 @@ class Account {
   _callAll(bool value) {
     for (var callback in callbacks.values) {
       try {
+        print("Check callback HERE ---> " + value.toString());
         callback(value);
       } catch (ex) {}
     }
@@ -117,6 +118,16 @@ class Account {
   //
   // notifications
   //
+
+  getFavoritesState(String id){
+    return false;
+  }
+
+  revertFavoriteState(String id){
+    return false;
+  }
+
+
 
   setFcbToken(String token) {
     _fcbToken = token;

@@ -372,7 +372,7 @@ class Lang {
     2243 : "Referral Code",
     2244 : "Username",
     2245 : "Phone",
-
+    2246 : "MERCHANDISE",
   };
 
   //
