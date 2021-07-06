@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/login/login.dart';
 
-
-class AppFoodRoute{
-
-  Map<String, StatefulWidget> routes = {
-
-  };
+class AppFoodRoute {
+  Map<String, StatefulWidget> routes = {};
 
   //MainScreen mainScreen;
   List<StatefulWidget> _stack = List<StatefulWidget>();
 
   int _seconds = 0;
 
-  disposeLast(){
-    if (_stack.isNotEmpty)
-      _stack.removeLast();
+  disposeLast() {
+    if (_stack.isNotEmpty) _stack.removeLast();
     _printStack();
   }
 
-  setDuration(int seconds){
+  setDuration(int seconds) {
     _seconds = seconds;
   }
 
-  push(BuildContext _context, String name){
+  push(BuildContext _context, String name) {
     var _screen = routes[name];
     // if (name == "/main")
     //   mainScreen = _screen;
@@ -53,28 +46,24 @@ class AppFoodRoute{
           transitionDuration: Duration(seconds: _seconds),
           pageBuilder: (_, __, ___) => _screen,
         ),
-        (route) =>route == null
-    );
+        (route) => route == null);
     _seconds = 0;
   }
 
-  _printStack(){
+  _printStack() {
     var str = "Screens Stack: ";
-    for (var item in _stack)
-      str = "$str -> $item";
+    for (var item in _stack) str = "$str -> $item";
     print(str);
   }
 
-  pop(BuildContext context){
+  pop(BuildContext context) {
     Navigator.pop(context);
   }
 
-  popToMain(BuildContext context){
+  popToMain(BuildContext context) {
     var _lenght = _stack.length;
-    for (int i = 0; i < _lenght-1; i++) {
-      if (Navigator.canPop(context))
-        pop(context);
+    for (int i = 0; i < _lenght - 1; i++) {
+      if (Navigator.canPop(context)) pop(context);
     }
   }
-
 }

@@ -19,6 +19,7 @@ class _ExclusiveAccessScreenState extends State<ExclusiveAccessScreen> {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -7,6 +7,7 @@ import 'package:tomo_app/main.dart';
 import 'package:tomo_app/ui/Artist/ArtistList.dart';
 import 'package:tomo_app/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
 import 'package:tomo_app/ui/call/call.dart';
+import 'package:tomo_app/ui/event/EventListScreen.dart';
 import 'package:tomo_app/ui/server/getagoratoken.dart';
 import 'package:tomo_app/widgets/background_image.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<Home> {
                 backgroundColor: Colors.transparent,
                 body: Container(
                     child: Stack(
-                        children: <Widget>[ GetBottomOption(),_toolbar()]))),
+                        children: <Widget>[GetBottomOption(), _toolbar()]))),
           ),
           if (_wait)
             (Container(
@@ -152,7 +153,6 @@ class _HomeScreenState extends State<Home> {
   }
 
   Widget _toolbar() {
-
     return GestureDetector(
         child: Container(
           height: 200,
@@ -185,8 +185,8 @@ class _HomeScreenState extends State<Home> {
                           alignment: Alignment.centerRight,
                           child: new Text("My Profile",
                               textAlign: TextAlign.center,
-                              style:
-                              new TextStyle(fontSize: 16.0, color: Colors.white)),
+                              style: new TextStyle(
+                                  fontSize: 16.0, color: Colors.white)),
                         ),
                         onTap: () {
                           print("Press Profile");
@@ -205,7 +205,6 @@ class _HomeScreenState extends State<Home> {
           //Navigator.pushNamed(context, "/homescreen");
 
         });
-
   }
 
   _body() {
@@ -314,12 +313,11 @@ class _HomeScreenState extends State<Home> {
                       builder: (context) => ExclusiveAccessScreen()),
                 );
               } else if (title == 'Live Event') {
-                AgoraToken();
-                /*Navigator.push(
+                // AgoraToken();
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => AgoraToken()),
-                );*/
+                  MaterialPageRoute(builder: (context) => EventListScreen()),
+                );
               }
             },
             child: Column(
@@ -352,7 +350,8 @@ class _HomeScreenState extends State<Home> {
 
     _waits(true);
     print("User Name > " + account.userName.trim().replaceAll(" ", ""));
-    GetAgoraToken("asd", account.userName.trim().replaceAll(" ", ""), token_success, token_error);
+    GetAgoraToken("asd", account.userName.trim().replaceAll(" ", ""),
+        token_success, token_error);
     //}
   }
 

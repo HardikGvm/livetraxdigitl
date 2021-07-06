@@ -1,15 +1,14 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 
-
 class ArtistDetailScreen extends StatefulWidget {
   final String artist_name, artist_description, artist_image;
 
   const ArtistDetailScreen(
       {Key key,
-        @required this.artist_name,
-        @required this.artist_description,
-        @required this.artist_image})
+      @required this.artist_name,
+      @required this.artist_description,
+      @required this.artist_image})
       : super(key: key);
 
   @override
@@ -17,9 +16,7 @@ class ArtistDetailScreen extends StatefulWidget {
 }
 
 class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
-
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +44,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: new Text(
                       (widget.artist_name != null &&
-                          widget.artist_name.isNotEmpty)
+                              widget.artist_name.isNotEmpty)
                           ? widget.artist_name
                           : "Kiwi time",
                       style: TextStyle(
@@ -64,7 +61,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: new Text(
                         (widget.artist_description != null &&
-                            widget.artist_description.isNotEmpty)
+                                widget.artist_description.isNotEmpty)
                             ? widget.artist_description
                             : 'Kiwi time is San Francisco band of four childhood friends.',
                         style: TextStyle(color: Colors.white, fontSize: 16),
@@ -83,7 +80,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                   color: Colors.green,
                   textColor: Colors.white,
                   padding:
-                  EdgeInsets.only(left: 32, right: 32, top: 12, bottom: 12),
+                      EdgeInsets.only(left: 32, right: 32, top: 12, bottom: 12),
                 ),
               ),
             ),
@@ -111,10 +108,12 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               iconSize: 28,
               onPressed: () {
                 fabKey.currentState.close();
+
                 // Navigator.push(
                 //   context,
-                //   MaterialPageRoute(builder: (context) => MusicPlayList()),
+                //   MaterialPageRoute(builder: (context) => MusicPlayListScreen()),
                 // );
+
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart, color: Colors.red),
