@@ -171,7 +171,7 @@ class Lang {
     128 : "Gallery",
     129 : "Select Place and press OK",
     133 : "Dishes List",
-    134 : "Passwords are different.",
+    134 : "My Dishes",
     //135 : "Category",
     135 : "A letter with a new password has been sent to the specified E-mail",
     136 : "User with this Email was not found!",
@@ -195,7 +195,7 @@ class Lang {
     155 : "Cancel",
     156 : "Edit profile",
     157 : "User Name",
-    158 : "Something went wrong.",
+    158 : "Enter your User Name",
     159 : "E-mail",
     160 : "Enter your User E-mail",
     161 : "Enter your User Phone",
@@ -372,11 +372,14 @@ class Lang {
     2243 : "Referral Code",
     2244 : "Username",
     2245 : "Phone",
-    2246 : "MERCHANDISE",
-    2247 : "BUY IT NOW!",
-    2250 : "1.Include both lower and upper case characters.\n2.Include at least one number or symbol.\n3.Passoword have at-least 8 characters.",
-    2251 : "Please enter Referral Code",
-};
+    2246: "Title",
+    2247: "Description",
+    2248: "Event Date",
+    2249: "Event Time",
+    2250: "Event Type",
+    2251: "Price",
+    2252: "Proceed"
+  };
 
   //
   //
