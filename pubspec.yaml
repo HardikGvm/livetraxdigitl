@@ -24,6 +24,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   fab_circular_menu: ^1.0.0
@@ -45,6 +47,14 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.0.0
   image: ^3.0.2
+  geolocator: ^6.1.13
+  intl: 0.17.0
+  bloc: ^6.0.2
+  flutter_bloc: ^6.0.1
+  connectivity: ^3.0.3
+  webview_flutter: ^2.0.7
+  http_auth: ^1.0.0
+  flutter_braintree: ^0.5.3+1
 
 
 dev_dependencies:
@@ -69,6 +79,15 @@ flutter:
     - assets/twitter.png
     - assets/directorchair.png
     - assets/audience.png
+    - assets/audience.png
+    - assets/popular.png
+    - assets/hot.png
+    - assets/filter.png
+    - assets/addtocart.png
+    - assets/shops.png
+    - assets/visa.png
+    - assets/mastercard.png
+    - assets/amex.png
 
 
 

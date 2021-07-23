@@ -183,7 +183,7 @@ class _HomeScreenState extends State<Home> {
                     GestureDetector(
                         child: Container(
                           alignment: Alignment.centerRight,
-                          child: new Text("My Profile",
+                          child: new Text("My Account",
                               textAlign: TextAlign.center,
                               style: new TextStyle(
                                   fontSize: 16.0, color: Colors.white)),
@@ -313,11 +313,11 @@ class _HomeScreenState extends State<Home> {
                       builder: (context) => ExclusiveAccessScreen()),
                 );
               } else if (title == 'Live Event') {
-                // AgoraToken();
-                Navigator.push(
+                 AgoraToken();
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EventListScreen()),
-                );
+                );*/
               }
             },
             child: Column(

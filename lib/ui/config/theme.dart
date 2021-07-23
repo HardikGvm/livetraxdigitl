@@ -44,6 +44,7 @@ class AppThemeData{
   TextStyle text14bold;
   TextStyle text14boldPimary;
   TextStyle text14boldWhite;
+  TextStyle text14boldBlack;
   TextStyle text14boldWhiteShadow;
   TextStyle text14link = TextStyle(
     color: Colors.blue,
@@ -174,6 +175,12 @@ class AppThemeData{
 
     text14boldWhite = TextStyle(
       color: Colors.white,
+      fontWeight: FontWeight.w800,
+      fontSize: 14,
+    );
+
+    text14boldBlack = TextStyle(
+      color: Colors.black,
       fontWeight: FontWeight.w800,
       fontSize: 14,
     );

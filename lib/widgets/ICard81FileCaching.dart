@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:tomo_app/ui/merchandise/home.dart';
 import 'package:tomo_app/widgets/widgets.dart';
 
+import '../main.dart';
+import 'ibutton11.dart';
+
 // 11.10.2020 radius and shadow
 
-class ICard21FileCaching extends StatefulWidget {
+class ICard81FileCaching extends StatefulWidget {
   final Color color;
   final double width;
   final Color colorProgressBar;
@@ -29,7 +32,7 @@ class ICard21FileCaching extends StatefulWidget {
   final Function(String) onAddToCartClick;
   final bool needAddToCart;
 
-  ICard21FileCaching(
+  ICard81FileCaching(
       {this.color = Colors.white,
       this.width = 100,
       this.height = 100,
@@ -54,10 +57,10 @@ class ICard21FileCaching extends StatefulWidget {
       this.needAddToCart = true});
 
   @override
-  _ICard21FileCachingState createState() => _ICard21FileCachingState();
+  _ICard81FileCachingState createState() => _ICard81FileCachingState();
 }
 
-class _ICard21FileCachingState extends State<ICard21FileCaching> {
+class _ICard81FileCachingState extends State<ICard81FileCaching> {
   var _textStyle = TextStyle(fontSize: 16);
   var _textStyle2 = TextStyle(fontSize: 16);
   var _textStyle3 = TextStyle(fontSize: 16);
@@ -109,7 +112,7 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
       );
 
     Widget _sale = Container();
-    if (widget.discountprice != null && widget.discountprice?.isNotEmpty) {
+    if (widget.discountprice != null && widget.discountprice.isNotEmpty) {
       var t = widget.width;
       if (t == MediaQuery.of(context).size.width) t /= 2;
       _sale =
@@ -173,36 +176,6 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
                               ),
                             ),
                           )),
-                      if (widget.needAddToCart)
-                        Container(
-                            alignment: Alignment.bottomRight,
-                            child: InkWell(
-                                onTap: () {
-                                  widget.onAddToCartClick(widget.id);
-                                },
-                                child: Container(
-                                  width: 45,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(179, 0, 120, 1),
-                                    border: Border.all(
-                                        color:
-                                            Color.fromRGBO(128, 128, 128, 1)),
-                                    borderRadius: new BorderRadius.only(
-                                        topLeft: Radius.circular(30)),
-                                  ),
-                                  child: UnconstrainedBox(
-                                      child: Container(
-                                          margin: EdgeInsets.only(
-                                              top: 10, left: 10),
-                                          height: 30,
-                                          width: 30,
-                                          child: Image.asset(
-                                            "assets/addtocart.png",
-                                            fit: BoxFit.contain,
-                                            color: Colors.white,
-                                          ))),
-                                ))),
                     ],
                   )),
                   InkWell(
@@ -214,26 +187,14 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
                         width: widget.width,
                         margin: EdgeInsets.only(left: 5, right: 5),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
                               widget.text,
                               style: _textStyle,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                            ),
-                            Row(
-                              children: [
-                                /*Expanded(child: Text(widget.text3, style: _textStyle3, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start,)),*/
-                                Text(
-                                  homeScreen.mainWindowData.currency +
-                                      widget.price,
-                                  style: _textStyle2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ],
+                              textAlign: TextAlign.center,
                             ),
                             SizedBox(
                               height: 5,
@@ -241,6 +202,24 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
                           ],
                         ),
                       )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (widget.needAddToCart)
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      child: IButton11(
+                          color: Colors.orangeAccent,
+                          text: strings.get(2247) + "    " + homeScreen.mainWindowData.currency + widget.price, // Change
+                          textStyle: theme.text14boldBlack,
+                          pressButton: () {
+                            Navigator.pushNamed(context, "/address");
+                            setState(() {});
+                          }),
+                    ),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
               _favorites,

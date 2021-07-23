@@ -43,7 +43,13 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _pressLogOutButton() {
     print("User pressed Log Out");
-    account.logOut();
+    account.logOut(PushRedirection);
+
+
+  }
+
+  PushRedirection(){
+    Navigator.pushNamedAndRemoveUntil(context, "/splash", (r) => false);
   }
 
   _pressLoginButton() {
@@ -247,10 +253,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     margin: EdgeInsets.only(top: 10),
                     width: 100,
                     child: IButton5(
-                      color: Color(0xffd9534f),
+                      color: Colors.grey,
                       text: "",
                       textStyle: theme.text14boldWhite,
-                      icon: "assets/google.png",
+                      icon: "assets/twitter.png",
                     ),
                   )
                 ],
@@ -288,6 +294,13 @@ class _AccountScreenState extends State<AccountScreen> {
             SizedBox(
               height: 10,
             ),
+            (account.role == "fan") ?
+            IList4(
+              text: "${strings.get(2243)}:", // "Referral Code",
+              textStyle: theme.text14bold,
+              text2: account.referral_code,
+              textStyle2: theme.text14bold,
+            ) : Container(),
           ],
         ));
   }
@@ -419,6 +432,8 @@ class _AccountScreenState extends State<AccountScreen> {
     editControllerEmail.text = account.email;
     editControllerPhone.text = account.phone;
 
+
+
     _dialogBody = Directionality(
         textDirection: strings.direction,
         child: Container(
@@ -444,7 +459,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "User Name",
-              _edit(editControllerName, strings.get(158), false),
+              _edit(editControllerName, strings.get(67), false,false),
               //  "Enter your User Name",
               SizedBox(
                 height: 20,
@@ -456,7 +471,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // "E-mail",
               if (account.typeReg == "email")
-                _edit(editControllerEmail, strings.get(160), false),
+                _edit(editControllerEmail, strings.get(160), false,false),
               //  "Enter your User E-mail",
               if (account.typeReg == "email")
                 SizedBox(
@@ -469,7 +484,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // Phone
               if (appSettings.otp != "true")
-                _edit(editControllerPhone, strings.get(161), false),
+                _edit(editControllerPhone, strings.get(161), false,true),
               //  "Enter your User Phone",
 
               SizedBox(
@@ -517,7 +532,7 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  _edit(TextEditingController _controller, String _hint, bool _obscure) {
+  _edit(TextEditingController _controller, String _hint, bool _obscure,bool isint) {
     return Container(
         height: 30,
         child: Directionality(
@@ -530,6 +545,7 @@ class _AccountScreenState extends State<AccountScreen> {
             cursorWidth: 1,
             obscureText: _obscure,
             maxLines: 1,
+            keyboardType: isint ? TextInputType.number : TextInputType.name,
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
@@ -702,7 +718,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Old password",
-              _edit(editControllerOldPassword, strings.get(149), true),
+              _edit(editControllerOldPassword, strings.get(149), true,false),
               //  "Enter your old password",
               SizedBox(
                 height: 20,
@@ -712,7 +728,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "New password",
-              _edit(editControllerNewPassword1, strings.get(152), true),
+              _edit(editControllerNewPassword1, strings.get(152), true,false),
               //  "Enter your new password",
               SizedBox(
                 height: 20,
@@ -722,7 +738,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Confirm New password",
-              _edit(editControllerNewPassword2, strings.get(154), true),
+              _edit(editControllerNewPassword2, strings.get(154), true,false),
               //  "Enter your new password",
               SizedBox(
                 height: 30,

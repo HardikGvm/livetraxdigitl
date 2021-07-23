@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:tomo_app/ui/config/api.dart';
 
-forgotPassword(String email, Function() callback, Function(String) callbackError) async {
+forgotPassword(String email, Function(String) callback, Function(String) callbackError) async {
   try {
 
     var url = "${serverPath}forgot?email=$email";
@@ -23,7 +23,7 @@ forgotPassword(String email, Function() callback, Function(String) callbackError
 
     if (response.statusCode == 200) {
       if (jsonResult["status"] == 200)
-        callback();
+        callback(jsonResult["message"].toString());
       else
         callbackError(jsonResult["message"]);
     }else

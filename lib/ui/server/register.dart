@@ -12,10 +12,10 @@ register(
     String type,
     String photoUrl,
     Function(String name, String password, String avatar, String email,
-            String token, String, String uid)
+            String token, String, String uid,String referral_code)
         callback,
     Function(String) callbackError,
-    String userType) async {
+    String userType,String referral_code) async {
   try {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
@@ -41,6 +41,7 @@ register(
         'typeReg': '$type',
         'photoUrl': "$photoUrl",
         'role': "$role",
+        'referral_code':"$referral_code",
       });
     } else {
       body = json.encoder.convert({
@@ -71,7 +72,7 @@ register(
         var path = "";
         if (ret.data.avatar != null) path = "$serverImages${ret.data.avatar}";
         callback(ret.data.name, password, path, email, ret.data.access_token,
-            ret.data.typeReg,ret.data.uid);
+            ret.data.typeReg,ret.data.uid,ret.data.referral_code);
       } else {
         print("CHeck Response DATT ==> 1");
         callbackError("error:ret.data=null");

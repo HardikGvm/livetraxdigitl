@@ -39,7 +39,7 @@ dishList2(List<Widget> list, List<DishesData> _mostPopular, BuildContext context
   var index = 0;
   for (var item in _mostPopular) {
 
-    if (searchByCategory.isNotEmpty && item.category != searchByCategory) {
+    if (searchByCategory?.isNotEmpty && item.category != searchByCategory) {
       var search = false;
       var start = false;
       for (var temp in treeViewCategory){

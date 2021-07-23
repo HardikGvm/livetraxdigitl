@@ -863,10 +863,15 @@ class _CallPageState extends State<CallScreen> {
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8,
                                       ),
-                                      child: Text(
-                                        _infoStrings[index].message,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                      child: Container(
+                                        width: 180,
+                                        child: Text(
+                                          _infoStrings[index].message,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 14),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -909,7 +914,7 @@ class _CallPageState extends State<CallScreen> {
   }
 
   void _toggleSendChannelMessage() async {
-    String text = _channelMessageController.text;
+    String text = _channelMessageController.text.trim();
     print('TAGGGG ------------->>><>>> Send channel SENDING : ' +
         text.isEmpty.toString());
     if (text.isEmpty) {

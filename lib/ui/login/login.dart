@@ -52,7 +52,7 @@ class _LoginScreenState extends State<Login> {
   }
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String _phone, int i, String typeReg, String role, String uid) {
+      String token, String _phone, int i, String typeReg, String role, String uid,String referral_code) {
     _waits(false);
     if(role == "2"){
       role="artist";
@@ -61,7 +61,7 @@ class _LoginScreenState extends State<Login> {
     }
     print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
-    account.okUserEnter(name, password, avatar, email, token, "", 0, uid,typeReg,role);
+    account.okUserEnter(name, password, avatar, email, token, _phone, 0, uid,typeReg,role,referral_code);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 

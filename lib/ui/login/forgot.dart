@@ -48,10 +48,9 @@ class _ForgotScreenState extends State<ForgotScreen>
     if (mounted) setState(() {});
   }
 
-  _success() {
+  _success(String message) {
     _waits(false);
-    openDialog(strings.get(
-        159)); // "A letter with a new password has been sent to the specified E-mail",
+    openDialog(message); // "A letter with a new password has been sent to the specified E-mail",
   }
 
   @override
@@ -210,7 +209,7 @@ class _ForgotScreenState extends State<ForgotScreen>
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
+    if (!regex.hasMatch(value.toString().trim()))
       return false;
     else
       return true;

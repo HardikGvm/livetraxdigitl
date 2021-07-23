@@ -7,8 +7,17 @@ import 'package:tomo_app/ui/model/utils.dart';
 login(
     String email,
     String password,
-    Function(String name, String password, String avatar, String email,
-            String token, String phone, int unreadNotify, String, String role, String uid)
+    Function(
+            String name,
+            String password,
+            String avatar,
+            String email,
+            String token,
+            String phone,
+            int unreadNotify,
+            String,
+            String role,
+            String uid,String referral_code)
         callback,
     Function(String) callbackError) async {
   try {
@@ -40,8 +49,17 @@ login(
         var path = "";
         if (ret.data.avatar != null && ret.data.avatar.toLowerCase() != "null")
           path = "$serverImages${ret.data.avatar}";
-        callback(ret.data.name, password, path, email, ret.data.access_token,
-            ret.data.phone, ret.notify, ret.data.typeReg, ret.data.role, ret.data.uid);
+        callback(
+            ret.data.name,
+            password,
+            path,
+            email,
+            ret.data.access_token,
+            ret.data.phone,
+            ret.notify,
+            ret.data.typeReg,
+            ret.data.role,
+            ret.data.uid,ret.data.referral_code);
         /*}else
           callbackError("error:ret.data=null");*/
       } else {
@@ -52,6 +70,7 @@ login(
       callbackError("statusCode=${response.body}");
     }
   } catch (ex) {
+    print("CHeck Response DATT ==> ex > " + ex.toString());
     callbackError(ex.toString());
   }
 }
@@ -60,10 +79,11 @@ class Response {
   String error;
   UserData data;
   String message;
+
   //String accessToken;
   int notify;
 
-  Response({this.data, this.notify,this.message});
+  Response({this.data, this.notify, this.message});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
@@ -85,8 +105,16 @@ class UserData {
   String role;
   String uid;
   String access_token;
+  String referral_code;
 
-  UserData({this.name, this.avatar, this.phone, this.typeReg,this.role,this.uid,this.access_token});
+  UserData(
+      {this.name,
+      this.avatar,
+      this.phone,
+      this.typeReg,
+      this.role,
+      this.uid,
+      this.access_token, this.referral_code});
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
@@ -97,6 +125,7 @@ class UserData {
       role: json['role'].toString(),
       uid: json['id'].toString(),
       access_token: json['access_token'].toString(),
+      referral_code: json.containsKey('referral_code') ? json['referral_code'].toString() : "",
     );
   }
 }

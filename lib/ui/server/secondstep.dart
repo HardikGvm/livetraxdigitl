@@ -5,14 +5,31 @@ import 'dart:convert';
 
 import 'mainwindowdata.dart';
 
-loadSecondStep(Function(SecondStepData) callback, Function(String) callbackError) async {
+loadSecondStep(String uid,String ArtistID,Function(SecondStepData) callback, Function(String) callbackError) async {
 
     try {
+
       var url = "${serverPath}getSecondStep";
-      var response = await http.get(Uri.parse(url), headers: {
+      //var url = "${serverPath}getSecondStepNew";
+
+      var body = json.encoder.convert({
+      'artist_id': '$ArtistID'});
+      print("Artist ID PAss here URL -->> > " + url + " BODY >" +body.toString());
+
+      Map<String, String> requestHeaders = {
         'Content-type': 'application/json',
         'Accept': "application/json",
-      }).timeout(const Duration(seconds: 30));
+      };
+
+   /*   var response = await http.post(Uri.parse(url), headers: {
+        'Content-type': 'application/json',
+        'Accept': "application/json",
+        //'Authorization' : "Bearer $uid",
+      }).timeout(const Duration(seconds: 30));*/
+
+      var response = await http
+          .post(Uri.parse(url), headers: requestHeaders, body: body)
+          .timeout(const Duration(seconds: 30));
 
       print("api/getSecondStep");
       print('Response status: ${response.statusCode}');

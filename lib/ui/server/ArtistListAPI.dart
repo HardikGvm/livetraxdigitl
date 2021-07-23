@@ -24,7 +24,7 @@ artist_list_api(
     });
 
     var url = "${serverPath}getUserByType";
-
+    print("URL >> " + url + " BODY " + body);
     var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
