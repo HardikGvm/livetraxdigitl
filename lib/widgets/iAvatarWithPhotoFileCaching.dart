@@ -2,21 +2,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class IAvatarWithPhotoFileCaching extends StatelessWidget {
+
   final String avatar;
   final Color color;
   final Color colorBorder;
   final Function callback;
   final Color colorProgressBar;
-  IAvatarWithPhotoFileCaching({this.avatar, this.color = Colors.black, this.colorBorder = Colors.white,
-    this.colorProgressBar = Colors.black,
-    this.callback});
+
+  IAvatarWithPhotoFileCaching(
+      {this.avatar,
+      this.color = Colors.black,
+      this.colorBorder = Colors.white,
+      this.colorProgressBar = Colors.black,
+      this.callback});
 
   @override
   Widget build(BuildContext context) {
-    var windowHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    var windowHeight = MediaQuery.of(context).size.height;
 
     return Container(
         margin: EdgeInsets.only(top: 20, bottom: 20),
@@ -24,12 +26,12 @@ class IAvatarWithPhotoFileCaching extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Container(
-              height: windowHeight*0.2+10,
-              width: windowHeight*0.2+10,
+              height: windowHeight * 0.2 + 10,
+              width: windowHeight * 0.2 + 10,
               child: Container(
-                height: windowHeight*0.2,
+                height: windowHeight * 0.2,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(windowHeight*0.2),
+                  borderRadius: BorderRadius.circular(windowHeight * 0.2),
                   child: Container(
                     child: CachedNetworkImage(
                       placeholder: (context, url) =>
@@ -43,7 +45,8 @@ class IAvatarWithPhotoFileCaching extends StatelessWidget {
                           ),
                         ),
                       ),
-                      errorWidget: (context,url,error) => new Icon(Icons.error),
+                      errorWidget: (context, url, error) =>
+                          new Icon(Icons.error),
                     ),
                   ),
                 ),
@@ -69,8 +72,8 @@ class IAvatarWithPhotoFileCaching extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: windowHeight*0.2-30,
-                  left: windowHeight*0.2-40),
+              margin: EdgeInsets.only(
+                  top: windowHeight * 0.2 - 30, left: windowHeight * 0.2 - 40),
               child: Stack(
                 children: <Widget>[
                   Container(
@@ -88,7 +91,8 @@ class IAvatarWithPhotoFileCaching extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(Icons.photo_camera, color: Colors.white, size: 30),
+                    child:
+                        Icon(Icons.photo_camera, color: Colors.white, size: 30),
                   ),
                   Positioned.fill(
                     child: Material(
@@ -97,17 +101,15 @@ class IAvatarWithPhotoFileCaching extends StatelessWidget {
                         clipBehavior: Clip.hardEdge,
                         child: InkWell(
                           splashColor: Colors.grey[400],
-                          onTap: (){
-                            if (callback != null)
-                              callback();
+                          onTap: () {
+                            if (callback != null) callback();
                           }, // needed
                         )),
                   )
                 ],
-              ),),
-
+              ),
+            ),
           ],
-        )
-    );
+        ));
   }
 }

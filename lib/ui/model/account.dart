@@ -46,12 +46,18 @@ class Account {
     token = _token;
     userId = _userId;
     notifyCount = unreadNotify;
+
+    pref.set(Pref.userId, userId);
     pref.set(Pref.userEmail, _email);
     pref.set(Pref.userPassword, password);
     pref.set(Pref.userAvatar, avatar);
     pref.set(Pref.userRole, role);
     pref.set(Pref.typeReg, typeReg);
-    print("User Auth! Save email=$email pass=$password");
+    pref.set(Pref.userName, userName);
+    pref.set(Pref.token, token);
+    pref.set(Pref.phone, phone);
+
+    print("User TESTTTTTT email=$email ,pass=$password ,avatar=$avatar ,userName=$userName ,token=$token");
     _callAll(true);
     if (_fcbToken != null) addNotificationToken(account.token, _fcbToken);
     chatGetUnread();
@@ -60,6 +66,7 @@ class Account {
   _callAll(bool value) {
     for (var callback in callbacks.values) {
       try {
+        print("Check callback HERE ---> " + value.toString());
         callback(value);
       } catch (ex) {}
     }
@@ -90,16 +97,30 @@ class Account {
   }
 
   isAuth(Function(bool) callback) {
-    var email = pref.get(Pref.userEmail);
+
+    var emails = pref.get(Pref.userEmail);
     var pass = pref.get(Pref.userPassword);
-    print("Login: email=$email pass=$pass");
-    if (email.isNotEmpty && pass.isNotEmpty) {
+
+
+
+    print("Check Step 3 > " + emails.toString() + " " + pass.toString());
+    if (emails.isNotEmpty && pass.isNotEmpty) {
       /*login(email, pass, (String name, String password, String avatar, String email, String token, String phone, int unreadNotify, String userId){
         callback(true);
         okUserEnter(name, password, avatar, email, token, phone, unreadNotify, userId);
       }, (String err) {
         callback(false);
       });*/
+
+      email = pref.get(Pref.userEmail);
+      userName = pref.get(Pref.userName);
+      userId = pref.get(Pref.userId);
+      phone = pref.get(Pref.phone);
+      userAvatar = pref.get(Pref.userAvatar);
+      token = pref.get(Pref.token);
+      role = pref.get(Pref.userRole);
+      typeReg = pref.get(Pref.typeReg);
+
       callback(true);
     } else
       callback(false);
@@ -117,6 +138,16 @@ class Account {
   //
   // notifications
   //
+
+  getFavoritesState(String id){
+    return false;
+  }
+
+  revertFavoriteState(String id){
+    return false;
+  }
+
+
 
   setFcbToken(String token) {
     _fcbToken = token;

@@ -39,8 +39,7 @@ class _LoginScreenState extends State<Login> {
   //
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
-    print(
-        "Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
+    print("Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
     if (editControllerName.text.isEmpty)
       return openDialog(strings.get(10)); // "Enter Login",
     if (!validateEmail(editControllerName.text))
@@ -59,7 +58,8 @@ class _LoginScreenState extends State<Login> {
     }else{
       role="fan";
     }
-    print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
+    // print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
+    print(":::Teken::: "+token);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
     account.okUserEnter(name, password, avatar, email, token, "", 0, uid,typeReg,role);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);

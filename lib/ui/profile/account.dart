@@ -24,8 +24,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  ///////////////////////////////////////////////////////////////////////////////
-  //
   _makePhoto() {
     print("Make photo");
     _openDialogs("makePhoto");
@@ -55,9 +53,6 @@ class _AccountScreenState extends State<AccountScreen> {
     route.push(context, "/createaccount");
   }
 
-  //
-  //
-  ///////////////////////////////////////////////
   var windowWidth;
   var windowHeight;
   bool wait = false;
@@ -157,6 +152,7 @@ class _AccountScreenState extends State<AccountScreen> {
         _logoutWidget(),
       ],
     ));
+
     list.add(SizedBox(
       height: 10,
     ));
@@ -305,11 +301,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     fit: BoxFit.contain,
                     color: Colors.black.withAlpha(80),
                   ))),
-
           SizedBox(
             height: 30,
           ),
-
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.15, right: windowWidth * 0.15),
@@ -318,11 +312,9 @@ class _AccountScreenState extends State<AccountScreen> {
               textAlign: TextAlign.center,
             ), // "You must sign-in to access to this section",
           ),
-
           SizedBox(
             height: 40,
           ),
-
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.1, right: windowWidth * 0.1),
@@ -334,7 +326,6 @@ class _AccountScreenState extends State<AccountScreen> {
               textStyle: theme.text16boldWhite,
             ),
           ),
-
           Container(
             padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
             child: InkWell(
@@ -470,7 +461,6 @@ class _AccountScreenState extends State<AccountScreen> {
               if (appSettings.otp != "true")
                 _edit(editControllerPhone, strings.get(161), false),
               //  "Enter your User Phone",
-
               SizedBox(
                 height: 30,
               ),
@@ -547,8 +537,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _callbackSave() {
     print("User pressed Save profile");
-    print(
-        "User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
+    print("User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
     changeProfile(
         account.token,
         editControllerName.text,

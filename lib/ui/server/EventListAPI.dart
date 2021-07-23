@@ -30,10 +30,9 @@ event_list_api(
         .timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
+      print("::: Reena Data :::");
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
-
-      print(":::TTTT::: "+ret.data.toString());
 
       if (ret.data != null) {
         callback(ret.data);
@@ -45,6 +44,7 @@ event_list_api(
   } catch (ex) {
     callbackError(ex.toString());
   }
+
 }
 
 class Response {
@@ -56,7 +56,6 @@ class Response {
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
-    print("::::TYTYTY:::: "+list.length.toString());
 
     List<EventData> imagesList =
         list.map((i) => EventData.fromJson(i)).toList();
@@ -94,15 +93,14 @@ class EventData {
 
   factory EventData.fromJson(Map<String, dynamic> json) {
     return EventData(
-      id: json['id'],
-      title: json['title'],
-      imageid: json['imageid'],
-      desc: json['desc'],
-      artist: json['artist'],
-      event_date: json['event_date'],
-      event_time: json['event_time'],
-      price: json['price'],
-      image: json['image']
-    );
+        id: json['id'],
+        title: json['title'],
+        imageid: json['imageid'],
+        desc: json['desc'],
+        artist: json['artist'],
+        event_date: json['event_date'],
+        event_time: json['event_time'],
+        price: json['price'],
+        image: json['image']);
   }
 }

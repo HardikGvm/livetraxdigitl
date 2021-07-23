@@ -7,5 +7,6 @@ final String _path = "https://www.livetraxs.gvmsoftware.in/adminPanel/";
 
 String serverPath = "${_path}public/api/";
 String serverImages = "${_path}public/images/";
+String uploadImages="${_path}public/image/upload/store";
 String serverImgNoUserPath = "${_path}public/img/user.png";
 String serverImgNoImage = "${_path}public/img/noimage.png";

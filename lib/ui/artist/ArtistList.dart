@@ -153,27 +153,26 @@ class _ArtistListState extends State<ArtistList> {
   }
 
   _okUserEnter(List<UserData> list) {
-
     _waits(false);
-
     print(":::isLoadMore::" + isLoadMore.toString());
-    print(":::list.length::" + list.length.toString());
-    print(":::pagination_index::" + pagination_index.toString());
-
     if (isLoadMore) {
       isLoadMore = false;
       if (list != null) {
+        print(":::list.length::" + list.length.toString());
         for (var i = 0; i < list.length; i++) {
           UserData userData = list[i];
+          print(":::INDEX::: " + i.toString());
+          // print(":::Artist Name::: " + userData.artist_name);
+          print("::: image ::: " + userData.image);
           this.list.add(userData);
         }
         setState(() {});
+        print(":::pagination_index::" + pagination_index.toString());
       }
     } else {
       this.list = list;
       setState(() {});
     }
-
   }
 
   _artist(String type, int page, int limit) {

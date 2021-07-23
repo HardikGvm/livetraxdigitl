@@ -24,9 +24,7 @@ artist_list_api(
     });
 
     var url = "${serverPath}getUserByType";
-
     var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
-
     if (response.statusCode == 200) {
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
@@ -55,8 +53,8 @@ class Response {
     List<UserData> imagesList = list.map((i) => UserData.fromJson(i)).toList();
 
     return Response(
-      status: toInt(json['status'].toString()),
       pages: toInt(json['pages'].toString()),
+      status: toInt(json['status'].toString()),
       message: json['message'],
       data: imagesList,
     );

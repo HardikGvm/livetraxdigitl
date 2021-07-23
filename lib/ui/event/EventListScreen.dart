@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:need_resume/need_resume.dart';
 import 'package:tomo_app/ui/event/AddEventScreen.dart';
+import 'package:tomo_app/ui/model/pref.dart';
+import 'package:tomo_app/ui/server/DeleteEvent.dart';
 import 'package:tomo_app/ui/server/EventListAPI.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
@@ -12,18 +15,39 @@ class EventListScreen extends StatefulWidget {
   _EventListScreenState createState() => _EventListScreenState();
 }
 
-class _EventListScreenState extends State<EventListScreen> {
+class _EventListScreenState extends ResumableState<EventListScreen> {
   bool _wait = false;
   var windowWidth;
   var windowHeight;
+  bool isChanges = false;
   List<EventData> list = new List();
 
   @override
-  void initState() {
-    super.initState();
-    _waits(true);
-    _event('2', 1, 1);
+  void onReady() {
+    callAPI();
+    super.onReady();
   }
+
+  @override
+  void onResume() {
+    print("::: On Resume ::: ");
+    isChanges = pref.getBool(Pref.isChanges);
+    if (isChanges) {
+      pref.setBool(Pref.isChanges, false);
+      callAPI();
+    }
+    super.onResume();
+  }
+
+  @override
+  void onPause() {
+    super.onPause();
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,16 +88,36 @@ class _EventListScreenState extends State<EventListScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            new Flexible(
-                              child: Text(
-                                list == null && list.isEmpty ||
-                                        list[index].event_date == null
-                                    ? '31.01.2015'
-                                    : list[index].event_date,
-                                style: TextStyle(fontSize: 14.0),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    list == null && list.isEmpty ||
+                                            list[index].event_date == null
+                                        ? '31.01.2015'
+                                        : list[index].event_date,
+                                    style: TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                Visibility(
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    tooltip: 'Delete Event',
+                                    onPressed: () {
+                                      deleteEventAPI(list[index].id.toString(), index,
+                                          _onSuccessDelete, _error);
+                                    },
+                                  ),
+                                  visible: isVisibility(index),
+                                )
+                              ],
                             ),
+                            SizedBox(height: 30),
                             Text(
                               list == null && list.isEmpty ||
                                       list[index].title == null
@@ -88,6 +132,7 @@ class _EventListScreenState extends State<EventListScreen> {
                                   : list[index].desc,
                               style: TextStyle(fontSize: 12.0),
                             ),
+                            SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -136,7 +181,7 @@ class _EventListScreenState extends State<EventListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
+          push(
             context,
             MaterialPageRoute(builder: (context) => AddEventScreen()),
           );
@@ -149,12 +194,11 @@ class _EventListScreenState extends State<EventListScreen> {
 
   _event(String artist, int page, int limit) {
     print("::::Data::::");
-    event_list_api(artist, page, limit, _okUserEnter, _error);
+    event_list_api(artist, page, limit, _onSuccessEventList, _error);
   }
 
   _waits(bool value) {
     _wait = value;
-    print("::::TRUE::::");
     if (mounted) setState(() {});
   }
 
@@ -193,9 +237,45 @@ class _EventListScreenState extends State<EventListScreen> {
     });
   }
 
-  _okUserEnter(List<EventData> list) {
+  _onSuccessEventList(List<EventData> list) {
     _waits(false);
     this.list = list;
+    var i;
+    for (i = 0; i < list.length; i++) {
+      print(":::ID::: " + list[i].id.toString());
+    }
     setState(() {});
+  }
+
+  _onSuccessDelete(String message, int index) {
+    _waits(false);
+    if (message == 'User deleted successfully!') {
+      print("::: Data deleted :::" + index.toString());
+      list.removeAt(index);
+      setState(() {});
+    }
+  }
+
+  void callAPI() {
+    _waits(true);
+    if (list != null && list.length > 0) {
+      print(":::Call API:::");
+      list.clear();
+    }
+    _event(account.userId, 1, 0);
+  }
+
+  bool isVisibility(int index) {
+    bool isVisible = false;
+    if (list != null && list.isNotEmpty) {
+      if (list[index].artist == int.parse(account.userId)) {
+        isVisible = true;
+      } else {
+        isVisible = false;
+      }
+    } else {
+      isVisible = false;
+    }
+    return isVisible;
   }
 }

@@ -372,7 +372,13 @@ class Lang {
     2243 : "Referral Code",
     2244 : "Username",
     2245 : "Phone",
-
+    2246: "Title",
+    2247: "Description",
+    2248: "Event Date",
+    2249: "Event Time",
+    2250: "Event Type",
+    2251: "Price",
+    2252: "Proceed"
   };
 
   //
