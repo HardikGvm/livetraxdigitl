@@ -7,8 +7,9 @@ import 'getagoratoken_model.dart';
 
 GetAgoraToken(
     String channelname,
+    int Eventid,
     String username,
-    Function(String, String, String) callback,
+    Function(String,int, String, String) callback,
     Function(String) callbackError) async {
   try {
     //var url = "${serverPath}forgot?email=$email";
@@ -47,7 +48,7 @@ GetAgoraToken(
       if (ret.status == 200) {
         print("CALL _success Test ---> " + (ret.token != null).toString());
         if (ret.token != null) {
-          callback(channelname, username, ret.token);
+          callback(channelname,Eventid, username, ret.token);
         } else {
           callbackError(ret.message);
         }

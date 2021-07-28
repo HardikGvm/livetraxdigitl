@@ -15,6 +15,7 @@ import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/model/message.dart';
 import 'package:tomo_app/widgets/HearAnim.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
+import 'package:tomo_app/ui/server/LiveStatusEvent.dart';
 
 import '../../main.dart';
 import 'Productlist.dart';
@@ -25,13 +26,20 @@ class CallScreen extends StatefulWidget {
   final String token;
   final String userName;
   final String userImage;
+  final int Eventid;
 
   /// non-modifiable client role of the page
   final ClientRole role;
 
   /// Creates a call page with given channel name.
   const CallScreen(
-      {Key key, this.channelName, this.userName, this.role, this.userImage,this.token})
+      {Key key,
+      this.channelName,
+      this.Eventid,
+      this.userName,
+      this.role,
+      this.userImage,
+      this.token})
       : super(key: key);
 
   @override
@@ -69,6 +77,9 @@ class _CallPageState extends State<CallScreen> {
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
+
+    SetStatusEvent(0);
+
     super.dispose();
   }
 
@@ -79,6 +90,20 @@ class _CallPageState extends State<CallScreen> {
     initialize();
     userMap = {widget.userName: widget.userImage};
     _createClient();
+    SetStatusEvent(1);
+  }
+
+  SetStatusEvent(int status) {
+    LiveStatusEvent(widget.Eventid, status, _onSuccessDelete, _error);
+  }
+
+  _onSuccessDelete(String message, int index) {
+    print("::: Data deleted :::" + index.toString());
+    setState(() {});
+  }
+
+  _error(String error) {
+    print("Get message here HERE " + error);
   }
 
   void _createClient() async {
@@ -356,7 +381,7 @@ class _CallPageState extends State<CallScreen> {
                     onPressed: _onVirtualGift,
                     child: Icon(
                       Icons.card_giftcard,
-                      color:  Colors.white,
+                      color: Colors.white,
                       size: 20.0,
                     ),
                     shape: CircleBorder(),
@@ -483,16 +508,12 @@ class _CallPageState extends State<CallScreen> {
   }
 
   void _onVirtualGift() {
-    setState(() {
-
-    });
+    setState(() {});
     return openVirtualDialog("Virtual Gift");
   }
 
   void _onMerchandise() {
-    setState(() {
-
-    });
+    setState(() {});
     return openDialog("Merchandise");
   }
 
@@ -870,7 +891,8 @@ class _CallPageState extends State<CallScreen> {
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                              color: Colors.white, fontSize: 14),
+                                              color: Colors.white,
+                                              fontSize: 14),
                                         ),
                                       ),
                                     ),
@@ -1098,20 +1120,20 @@ class _CallPageState extends State<CallScreen> {
   double _show = 0;
 
   openDialog(String _text) {
-    _dialogBody=SingleChildScrollView();
+    _dialogBody = SingleChildScrollView();
     setState(() {
       _show = 1;
     });
   }
 
   openVirtualDialog(String _text) {
-    _dialogBody=SampleList();
+    _dialogBody = SampleList();
     setState(() {
       _show = 1;
     });
   }
 
-  Widget SingleChildScrollView(){
+  Widget SingleChildScrollView() {
     return Container(
       color: Colors.white,
       height: MediaQuery.of(context).size.height * 0.5,
@@ -1130,7 +1152,5 @@ class _CallPageState extends State<CallScreen> {
         ],
       ),
     );
-
   }
-
 }

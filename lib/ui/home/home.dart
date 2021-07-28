@@ -313,11 +313,11 @@ class _HomeScreenState extends State<Home> {
                       builder: (context) => ExclusiveAccessScreen()),
                 );
               } else if (title == 'Live Event') {
-                 AgoraToken();
-                /*Navigator.push(
+                 //AgoraToken();
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EventListScreen()),
-                );*/
+                );
               }
             },
             child: Column(
@@ -350,12 +350,12 @@ class _HomeScreenState extends State<Home> {
 
     _waits(true);
     print("User Name > " + account.userName.trim().replaceAll(" ", ""));
-    GetAgoraToken("asd", account.userName.trim().replaceAll(" ", ""),
+    GetAgoraToken("asd",0, account.userName.trim().replaceAll(" ", ""),
         token_success, token_error);
     //}
   }
 
-  token_success(String channelname, String username, String _response) {
+  token_success(String channelname,int Eventid, String username, String _response) {
     _waits(false);
     _Token = _response;
     print("CALL _success Done ---> " + _response.toString());
@@ -367,6 +367,7 @@ class _HomeScreenState extends State<Home> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => CallScreen(
               channelName: channelname,
+              Eventid: 0,
               userName: username,
               role: _role,
               userImage:

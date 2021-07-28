@@ -378,7 +378,13 @@ class Lang {
     2249: "Event Time",
     2250: "Event Type",
     2251: "Price",
-    2252: "Proceed"
+    2252: "Proceed",
+
+    2253 : "MERCHANDISE",
+    2254 : "BUY IT NOW!",
+    2255 : "1.Include both lower and upper case characters.\n2.Include at least one number or symbol.\n3.Passoword have at-least 8 characters.",
+    2256 : "Please enter Referral Code",
+    2258 : "FREE",
   };
 
   //

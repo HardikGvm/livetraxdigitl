@@ -46,6 +46,7 @@ class AppThemeData{
   TextStyle text14boldWhite;
   TextStyle text14boldBlack;
   TextStyle text14boldWhiteShadow;
+  TextStyle text16boldPimary;
   TextStyle text14link = TextStyle(
     color: Colors.blue,
     fontWeight: FontWeight.w400,
@@ -54,6 +55,7 @@ class AppThemeData{
   );
   TextStyle text16;
   TextStyle text16Red;
+  TextStyle text16RedBold;
   TextStyle text16UI;
   TextStyle text16Ubold;
   TextStyle text16UIWhite;
@@ -167,6 +169,12 @@ class AppThemeData{
       fontSize: 14,
     );
 
+    text16boldPimary = TextStyle(
+      color: colorPrimary,
+      fontWeight: FontWeight.w800,
+      fontSize: 16,
+    );
+
     text14grey = TextStyle(
       color: Colors.grey,
       fontWeight: FontWeight.w400,
@@ -227,6 +235,13 @@ class AppThemeData{
       color: Colors.red,
       fontWeight: FontWeight.w800,
       fontSize: 16,
+    );
+
+    text16RedBold = TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.w800,
+      fontSize: 16,
+      backgroundColor: Colors.grey
     );
 
     text16UI = TextStyle(

@@ -11,10 +11,10 @@ addEventAPI(
     String event_date,
     String event_time,
     String price,
+    int imageid,
     Function(String message) callback,
     Function(String) callbackError) async {
   try {
-
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': "application/json",
@@ -27,6 +27,7 @@ addEventAPI(
       'event_date': '$event_date',
       'event_time': '$event_time',
       'price': '$price',
+      'imageid': imageid,
     });
 
     var url = "${serverPath}addEvent";
@@ -51,7 +52,6 @@ addEventAPI(
   } catch (ex) {
     callbackError(ex.toString());
   }
-
 }
 
 class Response {

@@ -68,7 +68,8 @@ class _AddCreditCardState extends State<AddCreditCard> {
                   Text(
                     'Add new Card',
                     style: TextStyle(
-                        fontSize: 35.0,
+                        fontFamily: 'NovaSquare',
+                        fontSize: 20.0,
                         letterSpacing: 1.0,
                         fontWeight: FontWeight.bold),
                   ),

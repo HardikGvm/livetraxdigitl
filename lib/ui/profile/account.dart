@@ -62,7 +62,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   var windowWidth;
   var windowHeight;
-  bool wait = false;
+  bool _wait = false;
 
   double mainDialogShow = 0;
   Widget mainDialogBody = Container();
@@ -108,7 +108,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ],
             )),
         IAppBar(context: context, text: "", color: Colors.black),
-        if (wait)
+        if (_wait)
           Container(
               color: Color(0x80000000),
               width: windowWidth,
@@ -555,6 +555,14 @@ class _AccountScreenState extends State<AccountScreen> {
   _callbackSave() {
     print("User pressed Save profile");
     print("User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
+    if (editControllerName.text.isEmpty)
+      return openDialog(strings.get(158));
+    if (editControllerEmail.text.isEmpty)
+      return openDialog(strings.get(160));// "Enter your Login"
+    if (editControllerPhone.text.isEmpty)
+      return openDialog(strings.get(161));
+
+
     changeProfile(
         account.token,
         editControllerName.text,
@@ -562,6 +570,37 @@ class _AccountScreenState extends State<AccountScreen> {
         editControllerPhone.text,
         _successChangeProfile,
         _errorChangeProfile);
+  }
+
+
+
+
+  openDialog(String _text) {
+    waits(false);
+    _dialogBody = Column(
+      children: [
+        Text(
+          _text,
+          style: theme.text14,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+        IButton3(
+            color: theme.colorPrimary,
+            text: strings.get(155), // Cancel
+            textStyle: theme.text14boldWhite,
+            pressButton: () {
+              setState(() {
+                _show = 0;
+              });
+            }),
+      ],
+    );
+
+    setState(() {
+      _show = 1;
+    });
   }
 
   _errorChangeProfile(String error) {
@@ -658,7 +697,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   waits(bool value) {
-    wait = value;
+    _wait = value;
     if (mounted) setState(() {});
   }
 
@@ -783,12 +822,24 @@ class _AccountScreenState extends State<AccountScreen> {
     if (editControllerNewPassword1.text.isEmpty ||
         editControllerNewPassword2.text.isEmpty)
       return _openDialogError(strings.get(170)); // "Enter New Password",
+
+    if (!validateStructure(editControllerNewPassword2.text)) {
+      return openDialog(strings.get(2255));// "Enter Valid password"
+    }
     changePassword(
         account.token,
         editControllerOldPassword.text,
         editControllerNewPassword1.text,
         _successChangePassword,
         _errorChangePassword);
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    print("Match Password herr > " + regExp.hasMatch(value).toString());
+    return regExp.hasMatch(value);
   }
 
   _successChangePassword() {

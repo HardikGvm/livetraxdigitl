@@ -398,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: IList1(
                     imageAsset: "assets/shops.png",
-                    text: strings.get(2246),
+                    text: strings.get(2253),
                     // "Most Popular",
                     textStyle: theme.text16bold,
                     imageColor: appSettings.getIconColorByMode(theme.darkMode)),

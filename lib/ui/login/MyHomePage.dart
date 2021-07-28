@@ -144,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => CallScreen(
                               channelName: _channelName.text,
+                              Eventid: 0,
                               userName: _userName.text,
                               role: _role,
                               userImage:

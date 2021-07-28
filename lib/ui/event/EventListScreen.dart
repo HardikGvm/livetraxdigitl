@@ -1,11 +1,17 @@
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:need_resume/need_resume.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tomo_app/ui/call/call.dart';
 import 'package:tomo_app/ui/event/AddEventScreen.dart';
 import 'package:tomo_app/ui/model/pref.dart';
 import 'package:tomo_app/ui/server/DeleteEvent.dart';
 import 'package:tomo_app/ui/server/EventListAPI.dart';
+import 'package:tomo_app/ui/server/getagoratoken.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
+
 import '../../main.dart';
 
 class EventListScreen extends StatefulWidget {
@@ -21,6 +27,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
   var windowHeight;
   bool isChanges = false;
   List<EventData> list = new List();
+  bool isArtist = false;
 
   @override
   void onReady() {
@@ -53,6 +60,9 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
   Widget build(BuildContext context) {
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
+    isArtist = (account.role == "artist");
+    print("Check List > " + isArtist.toString());
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -73,15 +83,18 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
             },
             itemBuilder: (BuildContext ctxt, int index) {
               return Container(
+                height: 180,
                 color: Color.fromARGB(247, 247, 247, 255),
                 child: Row(
                   children: [
                     new Flexible(
-                      child: Image.network((list == null ||
-                              list.isEmpty ||
-                              list[index].image == null)
-                          ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
-                          : list[index].image),
+                      child: Image.network(
+                          (list == null ||
+                                  list.isEmpty ||
+                                  list[index].image == null)
+                              ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
+                              : list[index].image,
+                          width: 120),
                       flex: 1,
                     ),
                     new Flexible(
@@ -99,64 +112,86 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                                   child: Text(
                                     list == null && list.isEmpty ||
                                             list[index].event_date == null
-                                        ? '31.01.2015'
-                                        : list[index].event_date,
-                                    style: TextStyle(fontSize: 14.0),
+                                        ? ''
+                                        : list[index].event_date +
+                                            " " +
+                                            list[index].event_time,
+                                    style: theme.text14boldBlack,
                                   ),
                                 ),
                                 Visibility(
                                   child: IconButton(
-                                    icon: const Icon(Icons.delete),
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
                                     tooltip: 'Delete Event',
                                     onPressed: () {
-                                      deleteEventAPI(list[index].id.toString(), index,
-                                          _onSuccessDelete, _error);
+                                      _waits(true);
+                                      deleteEventAPI(list[index].id.toString(),
+                                          index, _onSuccessDelete, _error);
                                     },
                                   ),
-                                  visible: isVisibility(index),
+                                  visible: isArtist,
                                 )
                               ],
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: 10),
                             Text(
                               list == null && list.isEmpty ||
                                       list[index].title == null
-                                  ? 'Thy Art is Murder'
+                                  ? ''
                                   : list[index].title,
-                              style: TextStyle(fontSize: 12.0),
+                              style: theme.text14boldBlack,
                             ),
                             Text(
                               list == null && list.isEmpty ||
                                       list[index].desc == null
-                                  ? 'Attila & Aversion Crown'
+                                  ? ''
                                   : list[index].desc,
-                              style: TextStyle(fontSize: 12.0),
+                              style: theme.text14,
                             ),
-                            SizedBox(height: 30),
+                            SizedBox(height: 5),
+                            Visibility(
+                              child: SizedBox(
+                                child: Text("LIVE", style: theme.text16RedBold),
+                              ),
+                              visible: (list[index].is_live == 1) ? true : false,
+                            ),
+                            SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
                                     list == null && list.isEmpty ||
-                                            list[index].event_time == null
-                                        ? '12.00'
-                                        : list[index].event_time,
-                                    style: TextStyle(fontSize: 12.0),
+                                            list[index].price == null
+                                        ? strings.get(2258)
+                                        : (list[index].price != "0")
+                                            ? ("\$" +
+                                                list[index].price.toString())
+                                            : strings.get(2258),
+                                    style: theme.text16boldPimary,
                                   ),
                                 ),
-                                IconButton(
-                                  icon:
-                                      const Icon(Icons.navigate_next_outlined),
-                                  tooltip: 'Increase volume by 10',
-                                  onPressed: () {},
+                                Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.navigate_next_outlined,
+                                      color: Colors.red,
+                                    ),
+                                    tooltip: 'Increase volume by 10',
+                                    onPressed: () {
+                                      AgoraToken(
+                                          list[index].title, list[index].id);
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                      flex: 1,
+                      flex: 2,
                     )
                   ],
                 ),
@@ -179,21 +214,26 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
             (Container()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          push(
-            context,
-            MaterialPageRoute(builder: (context) => AddEventScreen()),
-          );
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
-      ),
+      floatingActionButton: new Visibility(
+          visible: isArtist,
+          child: FloatingActionButton(
+            onPressed: () {
+              push(
+                context,
+                MaterialPageRoute(builder: (context) => AddEventScreen()),
+              );
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: Color.fromARGB(217, 217, 217, 255),
+          )),
     );
   }
 
   _event(String artist, int page, int limit) {
     print("::::Data::::");
+    if (!isArtist) {
+      artist = "";
+    }
     event_list_api(artist, page, limit, _onSuccessEventList, _error);
   }
 
@@ -204,6 +244,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
 
   _error(String error) {
     _waits(false);
+    print("Get message here " + error);
     openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
   }
 
@@ -249,11 +290,10 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
 
   _onSuccessDelete(String message, int index) {
     _waits(false);
-    if (message == 'User deleted successfully!') {
-      print("::: Data deleted :::" + index.toString());
-      list.removeAt(index);
-      setState(() {});
-    }
+
+    print("::: Data deleted :::" + index.toString());
+    list.removeAt(index);
+    setState(() {});
   }
 
   void callAPI() {
@@ -277,5 +317,55 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
       isVisible = false;
     }
     return isVisible;
+  }
+
+  AgoraToken(String title, int Eventid) async {
+    //if (_formKey.currentState.validate()) {
+    await _handleMicPermission();
+    title = title.toString().toLowerCase().replaceAll(" ", "");
+    _waits(true);
+    print("User Name > " +
+        account.userName.trim().replaceAll(" ", "") +
+        " Title > " +
+        title);
+    GetAgoraToken(title, Eventid, account.userName.trim().replaceAll(" ", ""),
+        token_success, token_error);
+    //}
+  }
+
+  Future<void> _handleMicPermission() {
+    final status = Permission.microphone.request();
+    print(status);
+  }
+
+  String _Token;
+  ClientRole _role = ClientRole.Audience;
+
+  token_success(
+      String channelname, int eventId, String username, String _response) {
+    _waits(false);
+    _Token = _response;
+    print("CALL _success Done ---> " + _response.toString());
+
+    if (account.role == "artist") {
+      _role = ClientRole.Broadcaster;
+    }
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CallScreen(
+              channelName: channelname,
+              Eventid: eventId,
+              userName: username,
+              role: _role,
+              userImage: account.userAvatar,
+              token: _response,
+            )));
+  }
+
+  token_error(String error) {
+    _waits(false);
+    print("CALL ERROR _success >>> " + error.toString());
+    if (error == "5000") {}
+    if (error == "5001") {}
   }
 }

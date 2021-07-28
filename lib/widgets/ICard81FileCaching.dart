@@ -210,7 +210,7 @@ class _ICard81FileCachingState extends State<ICard81FileCaching> {
                       alignment: Alignment.bottomCenter,
                       child: IButton11(
                           color: Colors.orangeAccent,
-                          text: strings.get(2247) + "    " + homeScreen.mainWindowData.currency + widget.price, // Change
+                          text: strings.get(2254) + "    " + homeScreen.mainWindowData.currency + widget.price, // Change
                           textStyle: theme.text14boldBlack,
                           pressButton: () {
                             Navigator.pushNamed(context, "/address");

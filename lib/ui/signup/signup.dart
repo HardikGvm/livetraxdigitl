@@ -56,12 +56,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
         editControllerPassword2.text.isEmpty)
       return openDialog(strings.get(177)); // "Enter your password"
     if (!validateStructure(editControllerPassword1.text)) {
-      return openDialog(strings.get(2250));// "Enter Valid password"
+      return openDialog(strings.get(2255));// "Enter Valid password"
     }
     if (editControllerPassword1.text != editControllerPassword2.text)
       return openDialog(strings.get(134)); // "Passwords are different.",
     if(value && editReferralCode.text.isEmpty){
-      return openDialog(strings.get(2251));// "Enter Referral Code"
+      return openDialog(strings.get(2256));// "Enter Referral Code"
     }
     if (appSettings.otp == "true")
       return Navigator.push(

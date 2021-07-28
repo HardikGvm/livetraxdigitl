@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:tomo_app/payment/PaypalPayment.dart';
 import 'package:tomo_app/ui/config/UserService.dart';
 import 'package:tomo_app/widgets/internetConnection.dart';
 
@@ -21,9 +22,27 @@ class _PaymentMethodState extends State<PaymentMethod> {
 
   checkoutPaymentMethod() {
     if (selectedPaymentCard != null) {
-      Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
-      args['selectedCard'] = selectedPaymentCard;
-      Navigator.pushNamed(context, '/checkout/placeOrder', arguments: args);
+      //Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
+      // args['selectedCard'] = selectedPaymentCard;
+      //Navigator.pushNamed(context, '/checkout/placeOrder', arguments: args);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaypalPayment(
+              /*currency: code,
+              userFirstName: "",
+              userLastName: "",
+              userEmail: "",
+              payAmount: _total,
+              secret: homeScreen.mainWindowData.payments.payPalSecret,
+              clientId: homeScreen.mainWindowData.payments.payPalClientId,
+              sandBoxMode: homeScreen.mainWindowData.payments.payPalSandBoxMode,*/
+              onFinish: (w) {
+                //_onSuccess("PayPal: $w");
+              }),
+        ),
+      );
     } else {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -45,14 +64,13 @@ class _PaymentMethodState extends State<PaymentMethod> {
     bool connectionStatus = await _userService.checkInternetConnectivity();
     List<PaymentOption> cardNumber_List = new List<PaymentOption>();
     if (connectionStatus) {
-
-
       setState(() {
         PaymentOption _option = new PaymentOption("Visa", "assets/visa.png");
         cardNumber_List.add(_option);
         PaymentOption _option1 = new PaymentOption("Amex", "assets/amex.png");
         cardNumber_List.add(_option1);
-        PaymentOption _option2 =new PaymentOption("Mastercard", "assets/mastercard.png");
+        PaymentOption _option2 =
+            new PaymentOption("Mastercard", "assets/mastercard.png");
         cardNumber_List.add(_option2);
 
         cardNumberList = cardNumber_List;
@@ -72,7 +90,10 @@ class _PaymentMethodState extends State<PaymentMethod> {
             itemCount: cardNumberList.length,
             itemBuilder: (BuildContext context, int index) {
               PaymentOption item = cardNumberList[index];
-              print("Image DATA > " + item.paymentName.toString() + " Size " + cardNumberList.length.toString());
+              print("Image DATA > " +
+                  item.paymentName.toString() +
+                  " Size " +
+                  cardNumberList.length.toString());
               return CheckboxListTile(
                 secondary: Container(
                   child: Image(

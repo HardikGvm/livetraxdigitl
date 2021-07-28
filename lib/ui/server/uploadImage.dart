@@ -1,27 +1,26 @@
-import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
 import 'package:image/image.dart';
 import 'package:tomo_app/ui/config/api.dart';
 
-uploadImage(String _avatarFile, String uid, Function(String) callback,
+//uploadImage(String _image, String uid, Function(String, String) callback, Function(String) callbackError) async {
+uploadImage(String _avatarFile, String uid, Function(String,int id) callback,
     Function(String) callbackError) async {
   //
   // resize image
   //
   try {
-    var image = decodeImage(File(_avatarFile).readAsBytesSync());
-    print("uploadAvatar decodeImage");
-    var thumbnail = copyResize(image, width: 300);
-    File(_avatarFile).writeAsBytesSync(encodeJpg(thumbnail));
+    Image image = decodeImage(File(_avatarFile).readAsBytesSync());
+    Image thumbnail = copyResize(image, width: 1000);
+    File(_avatarFile)..writeAsBytesSync(encodeJpg(thumbnail));
 
     Map<String, String> requestHeaders = {
-      'Accept': "application/json",
       'Content-type': 'application/json',
       'Authorization': "Bearer $uid"
     };
-
-    var url = "${uploadImages}";
+    var url = "${serverPath}uploadImage";
     var request = http.MultipartRequest("POST", Uri.parse(url));
     request.headers.addAll(requestHeaders);
     var pic = await http.MultipartFile.fromPath("file", _avatarFile);
@@ -30,33 +29,36 @@ uploadImage(String _avatarFile, String uid, Function(String) callback,
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
 
-    print("uploadAvatar $request");
-    print(":::Response String::: " + responseString);
-
+    print("uploadImage $request");
+    print(responseString);
     var jsonResult = json.decode(responseString);
     Response ret = Response.fromJson(jsonResult);
-
-    if (ret.filename != null && ret.id != null) {
-      callback(ret.id);
+    if (ret.error == "0") {
+      var path = "";
+      if (ret.filename != null)
+        path = "$serverImages${ret.filename}";
+      else
+        path = "${serverImages}noimage.png";
+      callback(path,ret.id);
     } else
-      callbackError(ret.filename);
+      callbackError(ret.error.toString());
   } catch (ex) {
     callbackError(ex.toString());
   }
 }
 
 class Response {
+  String error;
   String filename;
-  String id;
-  String date;
+  int id;
 
-  Response({this.filename, this.id, this.date});
+  Response({this.error, this.filename, this.id});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     return Response(
-      id: json['id'].toString(),
-      filename: json['filename'],
-      date: json['date'],
+      error: json['error'].toString(),
+      filename: json['filename'].toString(),
+      id: int.parse(json['id'].toString()),
     );
   }
 }

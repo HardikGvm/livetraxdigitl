@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/model/pref.dart';
 import 'package:tomo_app/ui/server/AddEvent.dart';
 import 'package:tomo_app/ui/server/uploadImage.dart';
-import 'package:tomo_app/ui/server/uploadavatar.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
 import 'package:tomo_app/widgets/iAvatarWithPhotoFileCaching.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
+
 import '../../main.dart';
 
 class AddEventScreen extends StatefulWidget {
@@ -49,7 +50,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   String _Description;
   String _eventDate;
   String _eventTime;
-  String _price;
+  int _imageid=0;
+  String _price="0";
 
   DateTime currentDate = DateTime.now();
 
@@ -66,9 +68,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
+  String defaultPath;
 
   @override
   void initState() {
+    defaultPath =serverImgNoImage;
     super.initState();
   }
 
@@ -114,7 +118,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           IAvatarWithPhotoFileCaching(
-                            avatar: account.userAvatar,
+                            avatar: defaultPath,
                             color: theme.colorPrimary,
                             colorBorder: theme.colorGrey,
                             callback: getImage,
@@ -166,12 +170,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                       hintMaxLines: 1,
                                       contentPadding: EdgeInsets.all(4),
                                       counterText: "",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      labelStyle: theme.text14boldBlack,
+                                      hintStyle: theme.text14boldBlack,
                                       errorMaxLines: 1,
                                       errorBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -224,12 +224,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                       hintMaxLines: 1,
                                       contentPadding: EdgeInsets.all(4),
                                       counterText: "",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      labelStyle: theme.text14boldBlack,
+                                      hintStyle: theme.text14boldBlack,
                                       errorMaxLines: 1,
                                       errorBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -277,12 +273,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                       hintMaxLines: 1,
                                       contentPadding: EdgeInsets.all(4),
                                       counterText: "",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      labelStyle: theme.text14boldBlack,
+                                      hintStyle: theme.text14boldBlack,
                                       errorMaxLines: 1,
                                       errorBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -333,12 +325,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                       hintMaxLines: 1,
                                       contentPadding: EdgeInsets.all(4),
                                       counterText: "",
-                                      labelStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                      hintStyle: TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      labelStyle: theme.text14boldBlack,
+                                      hintStyle: theme.text14boldBlack,
                                       errorMaxLines: 1,
                                       errorBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
@@ -356,10 +344,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                   child: DropdownButtonFormField(
                                     isExpanded: true,
                                     value: dropdownvalue,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                    ),
+                                    style: theme.text14boldBlack,
 
                                     hint: Text(strings.get(2250)),
                                     //Event Type
@@ -423,12 +408,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                         contentPadding: EdgeInsets.all(4),
                                         counterText: "",
 
-                                        labelStyle: TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                        hintStyle: TextStyle(
-                                          fontSize: 12,
-                                        ),
+                                        labelStyle: theme.text14boldBlack,
+                                        hintStyle: theme.text14boldBlack,
                                         errorMaxLines: 1,
                                         errorBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
@@ -467,7 +448,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                     _Description,
                                     _eventDate,
                                     _eventTime,
-                                    _price,
+                                    (_price.toString() != "null") ? _price : "0" ,
+                                    _imageid,
                                     _okUserEnter,
                                     _error);
                               } else {
@@ -575,13 +557,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
     _waits(true);
     final pickedFile = await picker.getImage(source: source);
     if (pickedFile != null && pickedFile.path != null) {
-      print(":::File Path::: " + pickedFile.path);
+      print(":::File Path::: " + pickedFile.path + " >> TOKEN <<  " + account.token);
       _waits(true);
-      uploadImage(pickedFile.path, account.token, (String avatar) {
+      uploadImage(pickedFile.path, account.token, (String avatar,int id) async {
         // account.setUserAvatar(avatar);
-        print(":::Date::: " + avatar);
+        print(":::Date::: --> " + avatar);
         _waits(false);
-        setState(() {});
+        _imageid=id;
+        defaultPath=avatar;
+        setState(() {
+        });
       }, (String error) {
         _waits(false);
         _openDialogError(
@@ -664,11 +649,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
         selectedTime = picked;
         _hour = selectedTime.hour.toString();
         _minute = selectedTime.minute.toString();
-        _time = _hour + ' : ' + _minute;
+        if(_hour.toString().length == 1){
+          _hour="0"+_hour;
+        }
+        if(_minute.toString().length == 1){
+          _minute="0"+_minute;
+        }
+
+        _time = _hour + ':' + _minute + ':' + "00";
         _timeController.text = _time;
-        // _timeController.text = formatDate(
-        //     DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
-        //     [hh, ':', nn, " ", am]).toString();
+         /*formatDate(
+            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+            [hh, ':', nn, " ", am]).toString();*/
       });
   }
 
@@ -676,7 +668,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     bool isVisible = true;
     if (dropdownvalue == 'Paid') {
       isVisible = true;
-    } else if(dropdownvalue == 'Free'){
+    } else if (dropdownvalue == 'Free') {
       isVisible = false;
     }
     return isVisible;

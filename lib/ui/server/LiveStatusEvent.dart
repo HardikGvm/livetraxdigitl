@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/model/utils.dart';
 
-deleteEventAPI(String id, int index, Function(String message, int index) callback,
+LiveStatusEvent(int id, int isLive, Function(String message, int index) callback,
     Function(String) callbackError) async {
 
   try {
@@ -14,11 +14,11 @@ deleteEventAPI(String id, int index, Function(String message, int index) callbac
       'Accept': "application/json",
     };
 
-    var body = json.encoder.convert({'id': '$id'});
+    var body = json.encoder.convert({'id': '$id', 'is_live':'$isLive'});
 
-    var url = "${serverPath}deleteEvent";
+    var url = "${serverPath}updateStatusEvent";
 
-    print(":::Reena_Index::: " + index.toString());
+    print(":::Reena_Index::: " + isLive.toString() + " url " + url);
 
     var response = await http
         .post(Uri.parse(url), headers: requestHeaders, body: body)
@@ -34,7 +34,7 @@ deleteEventAPI(String id, int index, Function(String message, int index) callbac
       //if (ret.error == "0") {
       print('Response Message: ${ret.message}');
       if (ret.message != null) {
-        callback(ret.message, index);
+        callback(ret.message, isLive);
       }
     } else {
       callbackError("statusCode=${response.statusCode}");
