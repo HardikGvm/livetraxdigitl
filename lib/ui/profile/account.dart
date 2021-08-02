@@ -42,11 +42,9 @@ class _AccountScreenState extends State<AccountScreen> {
   _pressLogOutButton() {
     print("User pressed Log Out");
     account.logOut(PushRedirection);
-
-
   }
 
-  PushRedirection(){
+  PushRedirection() {
     Navigator.pushNamedAndRemoveUntil(context, "/splash", (r) => false);
   }
 
@@ -284,19 +282,22 @@ class _AccountScreenState extends State<AccountScreen> {
             IList4(
               text: "${strings.get(2245)}:", // "Phone",
               textStyle: theme.text14bold,
-              text2: account.phone,
+              text2: (account.phone.toString().trim() != "null")
+                  ? account.phone
+                  : "",
               textStyle2: theme.text14bold,
             ),
             SizedBox(
               height: 10,
             ),
-            (account.role == "fan") ?
-            IList4(
-              text: "${strings.get(2243)}:", // "Referral Code",
-              textStyle: theme.text14bold,
-              text2: account.referral_code,
-              textStyle2: theme.text14bold,
-            ) : Container(),
+            (account.role == "fan")
+                ? IList4(
+                    text: "${strings.get(2243)}:", // "Referral Code",
+                    textStyle: theme.text14bold,
+                    text2: account.referral_code,
+                    textStyle2: theme.text14bold,
+                  )
+                : Container(),
           ],
         ));
   }
@@ -423,8 +424,6 @@ class _AccountScreenState extends State<AccountScreen> {
     editControllerEmail.text = account.email;
     editControllerPhone.text = account.phone;
 
-
-
     _dialogBody = Directionality(
         textDirection: strings.direction,
         child: Container(
@@ -450,7 +449,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "User Name",
-              _edit(editControllerName, strings.get(67), false,false),
+              _edit(editControllerName, strings.get(67), false, false),
               //  "Enter your User Name",
               SizedBox(
                 height: 20,
@@ -462,7 +461,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // "E-mail",
               if (account.typeReg == "email")
-                _edit(editControllerEmail, strings.get(160), false,false),
+                _edit(editControllerEmail, strings.get(160), false, false),
               //  "Enter your User E-mail",
               if (account.typeReg == "email")
                 SizedBox(
@@ -475,7 +474,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // Phone
               if (appSettings.otp != "true")
-                _edit(editControllerPhone, strings.get(161), false,true),
+                _edit(editControllerPhone, strings.get(161), false, true),
               //  "Enter your User Phone",
               SizedBox(
                 height: 30,
@@ -522,7 +521,8 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  _edit(TextEditingController _controller, String _hint, bool _obscure,bool isint) {
+  _edit(TextEditingController _controller, String _hint, bool _obscure,
+      bool isint) {
     return Container(
         height: 30,
         child: Directionality(
@@ -554,14 +554,12 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _callbackSave() {
     print("User pressed Save profile");
-    print("User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
-    if (editControllerName.text.isEmpty)
-      return openDialog(strings.get(158));
+    print(
+        "User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
+    if (editControllerName.text.isEmpty) return openDialog(strings.get(158));
     if (editControllerEmail.text.isEmpty)
-      return openDialog(strings.get(160));// "Enter your Login"
-    if (editControllerPhone.text.isEmpty)
-      return openDialog(strings.get(161));
-
+      return openDialog(strings.get(160)); // "Enter your Login"
+    if (editControllerPhone.text.isEmpty) return openDialog(strings.get(161));
 
     changeProfile(
         account.token,
@@ -571,9 +569,6 @@ class _AccountScreenState extends State<AccountScreen> {
         _successChangeProfile,
         _errorChangeProfile);
   }
-
-
-
 
   openDialog(String _text) {
     waits(false);
@@ -746,7 +741,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Old password",
-              _edit(editControllerOldPassword, strings.get(149), true,false),
+              _edit(editControllerOldPassword, strings.get(149), true, false),
               //  "Enter your old password",
               SizedBox(
                 height: 20,
@@ -756,7 +751,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "New password",
-              _edit(editControllerNewPassword1, strings.get(152), true,false),
+              _edit(editControllerNewPassword1, strings.get(152), true, false),
               //  "Enter your new password",
               SizedBox(
                 height: 20,
@@ -766,7 +761,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Confirm New password",
-              _edit(editControllerNewPassword2, strings.get(154), true,false),
+              _edit(editControllerNewPassword2, strings.get(154), true, false),
               //  "Enter your new password",
               SizedBox(
                 height: 30,
@@ -824,7 +819,7 @@ class _AccountScreenState extends State<AccountScreen> {
       return _openDialogError(strings.get(170)); // "Enter New Password",
 
     if (!validateStructure(editControllerNewPassword2.text)) {
-      return openDialog(strings.get(2255));// "Enter Valid password"
+      return openDialog(strings.get(2255)); // "Enter Valid password"
     }
     changePassword(
         account.token,

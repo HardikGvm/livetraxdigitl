@@ -9,16 +9,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tomo_app/ui/Artist/data.dart';
-import 'package:tomo_app/ui/call/SampletList.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/model/message.dart';
-import 'package:tomo_app/widgets/HearAnim.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
 import 'package:tomo_app/ui/server/LiveStatusEvent.dart';
+import 'package:tomo_app/ui/server/listvirtualgift.dart';
+import 'package:tomo_app/ui/server/listvirtualgift_model.dart';
+import 'package:tomo_app/widgets/HearAnim.dart';
+import 'package:tomo_app/widgets/background_image.dart';
+import 'package:tomo_app/widgets/background_image_another.dart';
+import 'package:tomo_app/widgets/easyDialog2.dart';
+import 'package:tomo_app/widgets/ibutton10.dart';
 
 import '../../main.dart';
 import 'Productlist.dart';
+import 'SampletList.dart';
 
 class CallScreen extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -27,6 +32,8 @@ class CallScreen extends StatefulWidget {
   final String userName;
   final String userImage;
   final int Eventid;
+
+  static data sample;
 
   /// non-modifiable client role of the page
   final ClientRole role;
@@ -55,7 +62,7 @@ class _CallPageState extends State<CallScreen> {
 
   bool _isLogin = false;
   bool _isInChannel = false;
-
+  List<data> _responseList = [];
   final _channelMessageController = TextEditingController();
 
   /*Agora Messaging*/
@@ -69,6 +76,7 @@ class _CallPageState extends State<CallScreen> {
 
   var userMap;
   int userNo = 0;
+  int SelectedID=-1;
 
   @override
   void dispose() {
@@ -91,10 +99,41 @@ class _CallPageState extends State<CallScreen> {
     userMap = {widget.userName: widget.userImage};
     _createClient();
     SetStatusEvent(1);
+
+    LoadVirtualgift();
+  }
+
+  LoadVirtualgift() {
+    _waits(true);
+    listVirtualGift(_success, _error);
+  }
+
+  bool _wait = false;
+
+  _success(List<data> _response) {
+    _waits(false);
+    _responseList = _response;
+    print("CALL _success Done ---> " + _response.length.toString());
+    /*openDialog(strings.get(
+        135)); // "A letter with a new password has been sent to the specified E-mail",*/
+  }
+
+  _error(String error) {
+    _waits(false);
+    print("CALL ERROR _success >>> " + error.toString());
+    if (error == "5000") {}
+    if (error == "5001") {}
+  }
+
+  _waits(bool value) {
+    _wait = value;
+    if (mounted) setState(() {});
   }
 
   SetStatusEvent(int status) {
-    LiveStatusEvent(widget.Eventid, status, _onSuccessDelete, _error);
+    if (account.role == "artist") {
+      LiveStatusEvent(widget.Eventid, status, _onSuccessDelete, error);
+    }
   }
 
   _onSuccessDelete(String message, int index) {
@@ -102,7 +141,7 @@ class _CallPageState extends State<CallScreen> {
     setState(() {});
   }
 
-  _error(String error) {
+  error(String error) {
     print("Get message here HERE " + error);
   }
 
@@ -545,15 +584,13 @@ class _CallPageState extends State<CallScreen> {
     return WillPopScope(
         child: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.black,
             body: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/sample.png"),
-                      fit: BoxFit.cover)),
               child: Center(
                 child: Stack(
                   children: <Widget>[
                     _viewRows(),
+                    background_image_another(),
                     _liveText(),
                     //_panel(),
                     _toolbar(),
@@ -703,7 +740,7 @@ class _CallPageState extends State<CallScreen> {
               child: Text(
                 'END',
                 style: TextStyle(
-                    color: Colors.indigo,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
@@ -1114,7 +1151,6 @@ class _CallPageState extends State<CallScreen> {
   }
 
   int _languageIndex = -1;
-  Map sample;
 
   Widget _dialogBody = Container();
   double _show = 0;
@@ -1127,7 +1163,7 @@ class _CallPageState extends State<CallScreen> {
   }
 
   openVirtualDialog(String _text) {
-    _dialogBody = SampleList();
+    _dialogBody = SingleGiftView();
     setState(() {
       _show = 1;
     });
@@ -1148,6 +1184,162 @@ class _CallPageState extends State<CallScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return ProductList(context, index);
                 }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget SingleGiftView() {
+    print("check auto refresh here -->");
+    return Container(
+      color: Colors.white,
+      height: 300,
+      width: MediaQuery.of(context).size.width,
+      child: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Text(
+              strings.get(2241),
+              style: TextStyle(
+                color: Color(0xff00315C),
+                fontSize: 16.0,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Container(
+            height: 200,
+            width: double.infinity,
+            child: SizedBox(
+              height: 200,
+              child:  GridView.builder(
+                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height / 2),),
+                  scrollDirection: Axis.vertical,
+                  itemCount: _responseList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    /*return SampleList(context, index,_responseList);*/
+                    return Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () {
+                              // What do i do here?
+                              SelectedID=index;
+                              CallScreen.sample = _responseList[index];
+                              print("Check Selection here >> VALSS " + CallScreen.sample.price + " INDEX " + SelectedID.toString());
+                              setState(() {
+                                SelectedID=index;
+                                CallScreen.sample = _responseList[index];
+                              });
+                            },
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              alignment: Alignment.center,
+                              transformAlignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: (SelectedID == index)
+                                    ? Color.fromRGBO(143, 17, 250, 0.5)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(5.0),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(1.0, 10.0),
+                                    blurRadius: 10.0,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Center(
+                                    child: Container(
+                                        width: 60,
+                                        height: 50,
+                                        child: Image.network(
+                                          _responseList[index].image,
+                                          fit: BoxFit.contain,
+                                        )),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 0),
+                                    child: Text(
+                                      "\$ "+_responseList[index].price,
+                                      style: TextStyle(
+                                        color: Color(0xff00315C),
+                                        fontSize: 12.0,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              if (_languageIndex != -1)
+                new Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                          width: 60,
+                          height: 50,
+                          child: Image.network(
+                            CallScreen.sample.image,
+                            fit: BoxFit.contain,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Text(
+                          CallScreen.sample.price,
+                          style: TextStyle(
+                            color: Color(0xff00315C),
+                            fontSize: 16.0,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  flex: 2,
+                ),
+              SizedBox(
+                width: 5,
+              ),
+              Center(
+                child: IButton10(
+                    color: Colors.blue,
+                    text: strings.get(19), // Change
+                    textStyle: theme.text14boldWhite,
+                    pressButton: () {
+                      setState(() {});
+                    }),
+              ),
+            ],
           ),
         ],
       ),

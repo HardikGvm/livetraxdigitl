@@ -67,7 +67,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('EVENTS'),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Stack(
         children: [
@@ -85,13 +85,15 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
               return Container(
                 height: 180,
                 color: Color.fromARGB(247, 247, 247, 255),
+                child: Padding(
+                padding: const EdgeInsets.all(5),
                 child: Row(
                   children: [
                     new Flexible(
                       child: Image.network(
                           (list == null ||
-                                  list.isEmpty ||
-                                  list[index].image == null)
+                              list.isEmpty ||
+                              list[index].image == null)
                               ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
                               : list[index].image,
                           width: 120),
@@ -102,7 +104,6 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -111,11 +112,11 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                                 Expanded(
                                   child: Text(
                                     list == null && list.isEmpty ||
-                                            list[index].event_date == null
+                                        list[index].event_date == null
                                         ? ''
                                         : list[index].event_date +
-                                            " " +
-                                            list[index].event_time,
+                                        " " +
+                                        list[index].event_time,
                                     style: theme.text14boldBlack,
                                   ),
                                 ),
@@ -125,55 +126,57 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                                         color: Colors.red),
                                     tooltip: 'Delete Event',
                                     onPressed: () {
-                                      _waits(true);
-                                      deleteEventAPI(list[index].id.toString(),
-                                          index, _onSuccessDelete, _error);
+
+                                      _showMyDialog(index);
+
                                     },
                                   ),
                                   visible: isArtist,
                                 )
                               ],
                             ),
-                            SizedBox(height: 10),
                             Text(
                               list == null && list.isEmpty ||
-                                      list[index].title == null
+                                  list[index].title == null
                                   ? ''
                                   : list[index].title,
                               style: theme.text14boldBlack,
                             ),
-                            Text(
-                              list == null && list.isEmpty ||
-                                      list[index].desc == null
-                                  ? ''
-                                  : list[index].desc,
-                              style: theme.text14,
-                            ),
-                            SizedBox(height: 5),
-                            Visibility(
-                              child: SizedBox(
-                                child: Text("LIVE", style: theme.text16RedBold),
+                            if(list[index].is_live == 1)
+                              Visibility(
+                                child: SizedBox(
+                                  child: IconButton(
+                                    iconSize: 40,
+                                    icon: Image.asset('assets/storie.png'),
+                                  ),
+                                ),
+                                visible: true,
                               ),
-                              visible: (list[index].is_live == 1) ? true : false,
-                            ),
-                            SizedBox(height: 10),
+                            if(list[index].is_live != 1)
+                              Text(
+                                list == null && list.isEmpty ||
+                                    list[index].desc == null
+                                    ? ''
+                                    : list[index].desc,
+                                style: theme.text14,
+                              ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
                                     list == null && list.isEmpty ||
-                                            list[index].price == null
+                                        list[index].price == null
                                         ? strings.get(2258)
                                         : (list[index].price != "0")
-                                            ? ("\$" +
-                                                list[index].price.toString())
-                                            : strings.get(2258),
+                                        ? ("\$" +
+                                        list[index].price.toString())
+                                        : strings.get(2258),
                                     style: theme.text16boldPimary,
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(0),
                                   child: IconButton(
                                     icon: const Icon(
                                       Icons.navigate_next_outlined,
@@ -194,7 +197,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                       flex: 2,
                     )
                   ],
-                ),
+                ),),
               );
             },
           ),
@@ -224,7 +227,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
               );
             },
             child: const Icon(Icons.add),
-            backgroundColor: Color.fromARGB(217, 217, 217, 255),
+            backgroundColor: Colors.blueGrey,
           )),
     );
   }
@@ -367,5 +370,39 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
     print("CALL ERROR _success >>> " + error.toString());
     if (error == "5000") {}
     if (error == "5001") {}
+  }
+
+  Future<void> _showMyDialog(int index) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure want to delete the event?'),
+          content: SingleChildScrollView(
+            child: Container(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                _waits(true);
+                deleteEventAPI(list[index].id.toString(),
+                    index, _onSuccessDelete, _error);
+              },
+            ),
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

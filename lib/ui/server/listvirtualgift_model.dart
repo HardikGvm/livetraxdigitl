@@ -30,6 +30,7 @@ class data {
   String price;
   String created_at;
   String updated_at;
+  bool isSelected=false;
 
   data(
       {this.id,

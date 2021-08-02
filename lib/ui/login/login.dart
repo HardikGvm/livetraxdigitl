@@ -167,7 +167,7 @@ class _LoginScreenState extends State<Login> {
           height: 10,
         ),
         new Center(
-          child: new Text("LOVEMUSIC",
+          child: new Text("LIVETRAXDIGITL", 
               style: new TextStyle(fontSize: 25.0, color: Colors.white)),
         ),
         SizedBox(

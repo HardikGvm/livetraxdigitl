@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tomo_app/main.dart';
 import 'package:tomo_app/ui/Artist/data.dart';
 
 Widget ProductList(BuildContext context, int index) {
@@ -8,8 +9,8 @@ Widget ProductList(BuildContext context, int index) {
       color: Colors.white,
     ),
     width: double.infinity,
-    height: 100,
-    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+    height: 90,
+    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -35,7 +36,7 @@ Widget ProductList(BuildContext context, int index) {
                     details[index]['name'],
                     maxLines: 2,
                     style: TextStyle(
-                        color: Colors.blue,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.bold,
                         fontSize: 14),
                   ),flex: 2,)
@@ -59,10 +60,7 @@ Widget ProductList(BuildContext context, int index) {
                 child: Row(
                   children: <Widget>[
                     Text(details[index]['mobile'],
-                        style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 13,
-                            letterSpacing: .3)),
+                        style: theme.text14boldBlack),
                   ],
                 ),
               ),

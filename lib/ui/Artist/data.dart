@@ -1,6 +1,6 @@
 final List<Map> details = [
   {
-    "name": "Abhi",
+    "name": "Abhi-2",
     "country": "India",
     "mobile": "\$12",
     "email": "abhi@email.com",

@@ -12,10 +12,11 @@ register(
     String type,
     String photoUrl,
     Function(String name, String password, String avatar, String email,
-            String token, String, String uid,String referral_code)
+            String token, String, String uid, String referral_code)
         callback,
     Function(String) callbackError,
-    String userType,String referral_code) async {
+    String userType,
+    String referral_code) async {
   try {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
@@ -41,7 +42,7 @@ register(
         'typeReg': '$type',
         'photoUrl': "$photoUrl",
         'role': "$role",
-        'referral_code':"$referral_code",
+        'referral_code': "$referral_code",
       });
     } else {
       body = json.encoder.convert({
@@ -67,12 +68,15 @@ register(
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
       //if (ret.error == "0") {
-      print("CHeck Response DATT ==> " + (ret.data != null).toString() + " TOK " + ret.data.access_token);
+      print("CHeck Response DATT ==>>> " + (ret.data != null).toString() + " >> " + ret.error);
       if (ret.data != null) {
         var path = "";
         if (ret.data.avatar != null) path = "$serverImages${ret.data.avatar}";
         callback(ret.data.name, password, path, email, ret.data.access_token,
-            ret.data.typeReg,ret.data.uid,ret.data.referral_code);
+            ret.data.typeReg, ret.data.uid, ret.data.referral_code);
+      } else if (ret.error == "3") {
+        print("CHeck Response DATT ==> 3");
+        callbackError("User already exist.");
       } else {
         print("CHeck Response DATT ==> 1");
         callbackError("error:ret.data=null");
@@ -86,7 +90,7 @@ register(
       callbackError("statusCode=${response.body}");
     }
   } catch (ex) {
-    print("CHeck Response DATT ==> 4");
+    print("CHeck Response DATT ==> 4 " + ex.toString());
     callbackError(ex.toString());
   }
 }
@@ -96,16 +100,15 @@ class Response {
   String message;
   UserData data;
 
-
   //String errorMsg;
 
-  Response({ this.message,this.data});
+  Response({this.message, this.data,this.error});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var a;
     if (json['data'] != null) a = UserData.fromJson(json['data']);
     return Response(
-      //error: json['error'].toString(),
+      error: json['error'].toString(),
       message: json['message'].toString(),
       data: a,
     );

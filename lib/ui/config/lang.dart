@@ -168,7 +168,7 @@ class Lang {
     125 : "Click here for select Image",
     126 : "Select image from:",
     127 : "Camera",
-    128 : "Gallery",
+    128 : "Something went wrong.",
     129 : "Select Place and press OK",
     133 : "Dishes List",
     134 : "My Dishes",

@@ -86,7 +86,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('ADD EVENT'),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -626,11 +626,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
+    DateTime now = new DateTime.now();
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         initialDatePickerMode: DatePickerMode.day,
-        firstDate: DateTime(2015),
+        firstDate: DateTime(now.year,now.month,now.day),
         lastDate: DateTime(2101));
     if (picked != null)
       setState(() {

@@ -370,7 +370,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
           ? (shippingAddress.length == 0)
               ? saveNewAddress()
               : showSavedAddress()
-          : ShippingAddressInput(addressValues, this.validateInput),
+          : ShippingAddressInput(addressValues, this.validateInput,_scaffoldKey),
     );
   }
 
@@ -431,6 +431,22 @@ class _ShippingAddressState extends State<ShippingAddress> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  openDialog_(String _text) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: new Text(_text),
+        action: SnackBarAction(
+          label: 'Close',
+          textColor: Colors.white,
+          onPressed: () {
+            _scaffoldKey.currentState.removeCurrentSnackBar();
+          },
         ),
       ),
     );

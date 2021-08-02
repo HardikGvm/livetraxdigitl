@@ -26,7 +26,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Artist'),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

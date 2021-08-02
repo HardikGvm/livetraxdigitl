@@ -161,7 +161,7 @@ class _ForgotScreenState extends State<ForgotScreen>
         Container(
             margin: EdgeInsets.only(left: 20, right: 20),
             child: IButton3(
-                color: theme.colorCompanion,
+                color: Colors.blue,
                 text: strings.get(19),
                 textStyle: theme.text14boldWhite,
                 // SEND

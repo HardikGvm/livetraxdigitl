@@ -65,7 +65,7 @@ class _ArtistListState extends State<ArtistList> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(title),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
         decoration: BoxDecoration(
