@@ -18,7 +18,7 @@ changePassword(String uid, String oldPassword, String newPassword,
     var url = "${serverPath}changePassword";
     var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
 
-    print(url);
+    print(url  + " UID " + uid);
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:tomo_app/payment/PaypalServices.dart';
 import 'package:tomo_app/ui/server/ArtistListAPI.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
@@ -26,7 +28,26 @@ class _ArtistListState extends State<ArtistList> {
     super.initState();
     _waits(true);
     int pagination_index = 1;
-    _artist('artist', pagination_index, 2);
+    _artist('artist', pagination_index, 4,true);
+
+  //  CheckPaypal();
+  }
+
+  PaypalServices services = PaypalServices();
+  String accessToken;
+
+  CheckPaypal() async {
+    final request = BraintreeCreditCardRequest(
+      cardNumber: '4115511771161116',
+      expirationMonth: '02',
+      expirationYear: '2025',
+    );
+
+    accessToken = await services.getAccessToken();
+    print("Check Payment Nonce Here accessTokens> " + accessToken);
+    BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(accessToken, request,);
+
+    print("Check Payment Nonce Here > " + result.nonce + " DES " + result.description);
   }
 
   @override
@@ -44,7 +65,7 @@ class _ArtistListState extends State<ArtistList> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(title),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -105,6 +126,7 @@ class _ArtistListState extends State<ArtistList> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ArtistDetailScreen(
+                                  artist_id: list[index].id.toString(),
                                   artist_name: list[index].artist_name,
                                   artist_description: list[index].description,
                                   artist_image: list[index].image)),
@@ -137,8 +159,9 @@ class _ArtistListState extends State<ArtistList> {
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: MaterialButton(
                   child: Text('More Artist', style: TextStyle(fontSize: 16)),
+
                   onPressed: () => {
-                    _artist('artist', pagination_index++, 2),
+                    _artist('artist', pagination_index, 4,false),
                     isLoadMore = true
                   },
                   color: Colors.white,
@@ -152,32 +175,39 @@ class _ArtistListState extends State<ArtistList> {
     );
   }
 
+
+
   _okUserEnter(List<UserData> list) {
-
     _waits(false);
-
     print(":::isLoadMore::" + isLoadMore.toString());
-    print(":::list.length::" + list.length.toString());
-    print(":::pagination_index::" + pagination_index.toString());
-
     if (isLoadMore) {
       isLoadMore = false;
       if (list != null) {
+        print(":::list.length::" + list.length.toString());
         for (var i = 0; i < list.length; i++) {
           UserData userData = list[i];
+          print(":::INDEX::: " + i.toString());
+          // print(":::Artist Name::: " + userData.artist_name);
+          print("::: image ::: " + userData.image);
           this.list.add(userData);
         }
         setState(() {});
+        print(":::pagination_index::" + pagination_index.toString());
       }
     } else {
       this.list = list;
       setState(() {});
     }
-
   }
 
-  _artist(String type, int page, int limit) {
-    artist_list_api(type, page, limit, _okUserEnter, _error);
+  _artist(String type, int page, int limit,bool isFirst) {
+    print("Pages >> " + pagination_index.toString());
+    if(!isFirst){
+      pagination_index = pagination_index + 1;
+      print("Pages PLUS>> " + pagination_index.toString());
+    }
+
+    artist_list_api(type, pagination_index, limit, _okUserEnter, _error);
   }
 
   _waits(bool value) {

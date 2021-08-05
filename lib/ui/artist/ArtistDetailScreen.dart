@@ -1,11 +1,13 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:tomo_app/ui/config/constant.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
-  final String artist_name, artist_description, artist_image;
+  final String artist_name, artist_description, artist_image, artist_id;
 
   const ArtistDetailScreen(
       {Key key,
+      @required this.artist_id,
       @required this.artist_name,
       @required this.artist_description,
       @required this.artist_image})
@@ -24,7 +26,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Artist'),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -113,14 +115,42 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                 //   context,
                 //   MaterialPageRoute(builder: (context) => MusicPlayListScreen()),
                 // );
-
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart, color: Colors.red),
               iconSize: 28,
               onPressed: () {
                 fabKey.currentState.close();
-                print('Buy Merchandise');
+
+                String Value = widget.artist_id.toString();
+                print('Buy Merchandise ID HERE >> ' +
+                    widget.artist_id.toString() +
+                    " VAL " +
+                    Value);
+                setState(() {
+                  Artistid = Value;
+                });
+
+                Navigator.pushNamed(context, "/homescreen",
+                    arguments: {"artist_id": Value});
+
+                /* Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaypalPayment(
+                        */ /*currency: code,
+              userFirstName: "",
+              userLastName: "",
+              userEmail: "",
+              payAmount: _total,
+              secret: homeScreen.mainWindowData.payments.payPalSecret,
+              clientId: homeScreen.mainWindowData.payments.payPalClientId,
+              sandBoxMode: homeScreen.mainWindowData.payments.payPalSandBoxMode,*/ /*
+                        onFinish: (w) {
+                      //_onSuccess("PayPal: $w");
+                    }),
+                  ),
+                );*/
               })
         ],
       ),

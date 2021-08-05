@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/config/server/fcbToken.dart';
 import 'package:tomo_app/ui/model/pref.dart';
@@ -14,6 +15,8 @@ class Account {
   String token = "";
   String role = "";
   String typeReg = "";
+  String referral_code = "";
+
 
   int notifyCount = 0;
   String currentOrder = "";
@@ -33,7 +36,8 @@ class Account {
       int unreadNotify,
       String _userId,
       String _typeReg,
-      String _role) {
+      String _role,
+      String _referral_code) {
     _initUser = true;
     userName = name;
     userAvatar = avatar;
@@ -43,15 +47,25 @@ class Account {
     if (_phone != null) phone = _phone;
     if (_role != null) role = _role;
     if (_typeReg != null) typeReg = _typeReg;
+    if (_referral_code != null) referral_code = _referral_code;
+
     token = _token;
     userId = _userId;
     notifyCount = unreadNotify;
+
+    pref.set(Pref.userId, userId);
     pref.set(Pref.userEmail, _email);
     pref.set(Pref.userPassword, password);
     pref.set(Pref.userAvatar, avatar);
     pref.set(Pref.userRole, role);
     pref.set(Pref.typeReg, typeReg);
-    print("User Auth! Save email=$email pass=$password");
+    pref.set(Pref.userName, userName);
+    pref.set(Pref.token, token);
+    pref.set(Pref.phone, phone);
+    pref.set(Pref.referral_code, referral_code);
+
+
+    print("User TESTTTTTT email=$email ,pass=$password ,avatar=$avatar ,userName=$userName ,Code=$referral_code,token=$token ");
     _callAll(true);
     if (_fcbToken != null) addNotificationToken(account.token, _fcbToken);
     chatGetUnread();
@@ -64,6 +78,17 @@ class Account {
         callback(value);
       } catch (ex) {}
     }
+
+  }
+
+  _callAllWithRedirect(bool value,Function() pushRedirection) {
+    for (var callback in callbacks.values) {
+      try {
+        print("Check callback HERE ---> " + value.toString());
+        callback(value);
+      } catch (ex) {}
+    }
+    pushRedirection();
   }
 
   var callbacks = Map<String, Function(bool)>();
@@ -80,27 +105,41 @@ class Account {
     _callAll(_initUser);
   }
 
-  logOut() {
+  logOut(Function() pushRedirection) {
     _initUser = false;
     pref.clearUser();
     userName = "";
     userAvatar = "";
     email = "";
     token = "";
-    _callAll(false);
+    _callAllWithRedirect(false,pushRedirection);
   }
 
   isAuth(Function(bool) callback) {
-    var email = pref.get(Pref.userEmail);
+
+    var emails = pref.get(Pref.userEmail);
     var pass = pref.get(Pref.userPassword);
-    print("Login: email=$email pass=$pass");
-    if (email.isNotEmpty && pass.isNotEmpty) {
+
+
+
+    print("Check Step 3 > " + emails.toString() + " " + pass.toString());
+    if (emails.isNotEmpty && pass.isNotEmpty) {
       /*login(email, pass, (String name, String password, String avatar, String email, String token, String phone, int unreadNotify, String userId){
         callback(true);
         okUserEnter(name, password, avatar, email, token, phone, unreadNotify, userId);
       }, (String err) {
         callback(false);
       });*/
+
+      email = pref.get(Pref.userEmail);
+      userName = pref.get(Pref.userName);
+      userId = pref.get(Pref.userId);
+      phone = pref.get(Pref.phone);
+      userAvatar = pref.get(Pref.userAvatar);
+      token = pref.get(Pref.token);
+      role = pref.get(Pref.userRole);
+      typeReg = pref.get(Pref.typeReg);
+
       callback(true);
     } else
       callback(false);

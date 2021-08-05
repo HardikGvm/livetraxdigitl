@@ -55,8 +55,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
     if (editControllerPassword1.text.isEmpty ||
         editControllerPassword2.text.isEmpty)
       return openDialog(strings.get(177)); // "Enter your password"
+    if (!validateStructure(editControllerPassword1.text)) {
+      return openDialog(strings.get(2255));// "Enter Valid password"
+    }
     if (editControllerPassword1.text != editControllerPassword2.text)
       return openDialog(strings.get(134)); // "Passwords are different.",
+    if(value && editReferralCode.text.isEmpty){
+      return openDialog(strings.get(2256));// "Enter Referral Code"
+    }
     if (appSettings.otp == "true")
       return Navigator.push(
         context,
@@ -73,7 +79,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
     _waits(true);
     register(editControllerEmail.text, editControllerPassword1.text,
-        editControllerName.text, "email", "", _okUserEnter, _error, userRole);
+        editControllerName.text, "email", "", _okUserEnter, _error, userRole, value ? editReferralCode.text : "");
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    print("Match Password herr > " + regExp.hasMatch(value).toString());
+    return regExp.hasMatch(value);
   }
 
   //
@@ -84,6 +98,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   final editControllerEmail = TextEditingController();
   final editControllerPassword1 = TextEditingController();
   final editControllerPassword2 = TextEditingController();
+  final editReferralCode = TextEditingController();
   ScrollController _scrollController = ScrollController();
   String userRole = "";
 
@@ -123,11 +138,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
   }*/
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String typeReg, String uid) {
+      String token, String typeReg, String uid, String referral_code) {
     _waits(false);
     print("CHeck Response Done ==> " + name + " uid " + uid + " TOK " + token);
     account.okUserEnter(
-        name, password, avatar, email, token, "", 0, uid, typeReg, userRole);
+        name, password, avatar, email, token, "", 0, uid, typeReg, userRole,referral_code);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
@@ -340,38 +355,100 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
           height: 0.5,
           color: Colors.white.withAlpha(200), // line
         ),
+
+        SizedBox(
+          height: 5,
+        ),
+        Card(
+          color: Colors.white30,
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Column(
+            children: [
+              Row(
+                children: <Widget>[
+                  Checkbox(
+                    value: this.value,
+                    hoverColor: Colors.white,
+                    activeColor: Colors.redAccent,
+                    checkColor: Colors.white,
+                    tristate: false,
+                    onChanged: (bool value) {
+                      setState(() {
+                        this.value = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ), //SizedBox
+                  Text(
+                    'Do you have referral code?',
+                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  ),
+                ], //<Widget>[]
+              ), //Row
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          height: 0.5,
+          color: Colors.white.withAlpha(200), // line
+        ),
+        (value)
+            ? Container(
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: IInputField2a(
+              hint: strings.get(2243), // "Login"
+              icon: Icons.code,
+              colorDefaultText: Colors.white,
+              controller: editReferralCode,
+            ))
+            : Container(),
+        SizedBox(
+          height: 5,
+        ),
+
+
+
         SizedBox(
           height: 20,
         ),
         Container(
+          alignment: Alignment.center,
           margin: EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: pressGoogleAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/twitter.png'),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              IButton4(
-                  color: Colors.blue,
-                  text: strings.get(304), // Change
-                  textStyle: theme.text14boldWhite,
-                  pressButton: () {
-                    _pressCreateAccountButton();
-                  }),
-              SizedBox(
-                height: 30,
-              ),
-              IconButton(
-                onPressed: pressFacebookAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/facebook.png'),
-              ),
-            ],
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: pressGoogleAuthentication,
+                  iconSize: 30,
+                  icon: Image.asset('assets/twitter.png'),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                IButton4(
+                    color: Colors.blue,
+                    text: strings.get(304), // Change
+                    textStyle: theme.text14boldWhite,
+                    pressButton: () {
+                      _pressCreateAccountButton();
+                    }),
+                SizedBox(
+                  height: 30,
+                ),
+                IconButton(
+                  onPressed: pressFacebookAuthentication,
+                  iconSize: 30,
+                  icon: Image.asset('assets/facebook.png'),
+                ),
+              ],
+            ),
           ),
         ),
 
@@ -489,83 +566,35 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
         SizedBox(
           height: 5,
         ),
-        Card(
-          color: Colors.white30,
-          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Column(
-            children: [
-              Row(
-                children: <Widget>[
-                  Checkbox(
-                    value: this.value,
-                    hoverColor: Colors.white,
-                    activeColor: Colors.redAccent,
-                    checkColor: Colors.white,
-                    tristate: false,
-                    onChanged: (bool value) {
-                      setState(() {
-                        this.value = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ), //SizedBox
-                  Text(
-                    'Do you have referral code?',
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
-                  ),
-                ], //<Widget>[]
-              ), //Row
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Container(
-          margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-          height: 0.5,
-          color: Colors.white.withAlpha(200), // line
-        ),
-        (value)
-            ? Container(
-                margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: IInputField2a(
-                  hint: strings.get(2243), // "Login"
-                  icon: Icons.code,
-                  colorDefaultText: Colors.white,
-                  controller: editControllerName,
-                ))
-            : Container(),
-        SizedBox(
-          height: 5,
-        ),
         SizedBox(
           height: 20,
         ),
         Container(
+          alignment: Alignment.center,
           margin: EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: pressGoogleAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/twitter.png'),
-              ),
-              IButton4(
-                  color: Colors.blue,
-                  text: strings.get(304), // Change
-                  textStyle: theme.text14boldWhite,
-                  pressButton: () {
-                    _pressCreateAccountButton();
-                  }),
-              IconButton(
-                onPressed: pressFacebookAuthentication,
-                iconSize: 30,
-                icon: Image.asset('assets/facebook.png'),
-              ),
-            ],
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: pressGoogleAuthentication,
+                  iconSize: 30,
+                  icon: Image.asset('assets/twitter.png'),
+                ),
+                IButton4(
+                    color: Colors.blue,
+                    text: strings.get(304), // Change
+                    textStyle: theme.text14boldWhite,
+                    pressButton: () {
+                      _pressCreateAccountButton();
+                    }),
+                IconButton(
+                  onPressed: pressFacebookAuthentication,
+                  iconSize: 30,
+                  icon: Image.asset('assets/facebook.png'),
+                ),
+              ],
+            ),
           ),
         ),
 
@@ -596,7 +625,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       );
 
     register(
-        "$id@$type.com", id, name, type, photo, _okUserEnter, _error, userRole);
+        "$id@$type.com", id, name, type, photo, _okUserEnter, _error, userRole,"");
   }
 
   double _show = 0;

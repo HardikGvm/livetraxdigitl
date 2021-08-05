@@ -168,10 +168,10 @@ class Lang {
     125 : "Click here for select Image",
     126 : "Select image from:",
     127 : "Camera",
-    128 : "Gallery",
+    128 : "Something went wrong.",
     129 : "Select Place and press OK",
     133 : "Dishes List",
-    134 : "My Dishes",
+    134 : "Passwords are different.",
     //135 : "Category",
     135 : "A letter with a new password has been sent to the specified E-mail",
     136 : "User with this Email was not found!",
@@ -372,7 +372,19 @@ class Lang {
     2243 : "Referral Code",
     2244 : "Username",
     2245 : "Phone",
-    2246 : "MERCHANDISE",
+    2246: "Title",
+    2247: "Description",
+    2248: "Event Date",
+    2249: "Event Time",
+    2250: "Event Type",
+    2251: "Price",
+    2252: "Proceed",
+
+    2253 : "MERCHANDISE",
+    2254 : "BUY IT NOW!",
+    2255 : "1.Include both lower and upper case characters.\n2.Include at least one number or symbol.\n3.Passoword have at-least 8 characters.",
+    2256 : "Please enter Referral Code",
+    2258 : "FREE",
   };
 
   //

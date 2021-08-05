@@ -9,15 +9,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tomo_app/ui/Artist/data.dart';
-import 'package:tomo_app/ui/call/SampletList.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/model/message.dart';
+import 'package:tomo_app/ui/server/LiveStatusEvent.dart';
+import 'package:tomo_app/ui/server/listvirtualgift.dart';
+import 'package:tomo_app/ui/server/listvirtualgift_model.dart';
 import 'package:tomo_app/widgets/HearAnim.dart';
+import 'package:tomo_app/widgets/background_image_another.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
+import 'package:tomo_app/ui/call/giftView.dart';
 
 import '../../main.dart';
 import 'Productlist.dart';
+import 'SampletList.dart';
 
 class CallScreen extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -25,13 +30,22 @@ class CallScreen extends StatefulWidget {
   final String token;
   final String userName;
   final String userImage;
+  final int Eventid;
+
+  static data sample;
 
   /// non-modifiable client role of the page
   final ClientRole role;
 
   /// Creates a call page with given channel name.
   const CallScreen(
-      {Key key, this.channelName, this.userName, this.role, this.userImage,this.token})
+      {Key key,
+      this.channelName,
+      this.Eventid,
+      this.userName,
+      this.role,
+      this.userImage,
+      this.token})
       : super(key: key);
 
   @override
@@ -47,7 +61,7 @@ class _CallPageState extends State<CallScreen> {
 
   bool _isLogin = false;
   bool _isInChannel = false;
-
+  List<data> _responseList = [];
   final _channelMessageController = TextEditingController();
 
   /*Agora Messaging*/
@@ -61,6 +75,7 @@ class _CallPageState extends State<CallScreen> {
 
   var userMap;
   int userNo = 0;
+  int SelectedID=-1;
 
   @override
   void dispose() {
@@ -69,6 +84,9 @@ class _CallPageState extends State<CallScreen> {
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
+
+    SetStatusEvent(0);
+
     super.dispose();
   }
 
@@ -79,6 +97,51 @@ class _CallPageState extends State<CallScreen> {
     initialize();
     userMap = {widget.userName: widget.userImage};
     _createClient();
+    SetStatusEvent(1);
+
+    LoadVirtualgift();
+  }
+
+  LoadVirtualgift() {
+    _waits(true);
+    listVirtualGift(_success, _error);
+  }
+
+  bool _wait = false;
+
+  _success(List<data> _response) {
+    _waits(false);
+    _responseList = _response;
+    print("CALL _success Done ---> " + _response.length.toString());
+    /*openDialog(strings.get(
+        135)); // "A letter with a new password has been sent to the specified E-mail",*/
+  }
+
+  _error(String error) {
+    _waits(false);
+    print("CALL ERROR _success >>> " + error.toString());
+    if (error == "5000") {}
+    if (error == "5001") {}
+  }
+
+  _waits(bool value) {
+    _wait = value;
+    if (mounted) setState(() {});
+  }
+
+  SetStatusEvent(int status) {
+    if (account.role == "artist") {
+      LiveStatusEvent(widget.Eventid, status, _onSuccessDelete, error);
+    }
+  }
+
+  _onSuccessDelete(String message, int index) {
+    print("::: Data deleted :::" + index.toString());
+    setState(() {});
+  }
+
+  error(String error) {
+    print("Get message here HERE " + error);
   }
 
   void _createClient() async {
@@ -356,7 +419,7 @@ class _CallPageState extends State<CallScreen> {
                     onPressed: _onVirtualGift,
                     child: Icon(
                       Icons.card_giftcard,
-                      color:  Colors.white,
+                      color: Colors.white,
                       size: 20.0,
                     ),
                     shape: CircleBorder(),
@@ -483,16 +546,16 @@ class _CallPageState extends State<CallScreen> {
   }
 
   void _onVirtualGift() {
-    setState(() {
-
+    setState(() {});
+    return openVirtualDialog("Virtual Gift",(s) {
+      setState(() {
+        print("Updated VALUE IS HERE --->> " + s.toString());
+      });
     });
-    return openVirtualDialog("Virtual Gift");
   }
 
   void _onMerchandise() {
-    setState(() {
-
-    });
+    setState(() {});
     return openDialog("Merchandise");
   }
 
@@ -524,15 +587,13 @@ class _CallPageState extends State<CallScreen> {
     return WillPopScope(
         child: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.black,
             body: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/sample.png"),
-                      fit: BoxFit.cover)),
               child: Center(
                 child: Stack(
                   children: <Widget>[
                     _viewRows(),
+                    background_image_another(),
                     _liveText(),
                     //_panel(),
                     _toolbar(),
@@ -682,7 +743,7 @@ class _CallPageState extends State<CallScreen> {
               child: Text(
                 'END',
                 style: TextStyle(
-                    color: Colors.indigo,
+                    color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
@@ -863,10 +924,16 @@ class _CallPageState extends State<CallScreen> {
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 8,
                                       ),
-                                      child: Text(
-                                        _infoStrings[index].message,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                      child: Container(
+                                        width: 180,
+                                        child: Text(
+                                          _infoStrings[index].message,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -909,7 +976,7 @@ class _CallPageState extends State<CallScreen> {
   }
 
   void _toggleSendChannelMessage() async {
-    String text = _channelMessageController.text;
+    String text = _channelMessageController.text.trim();
     print('TAGGGG ------------->>><>>> Send channel SENDING : ' +
         text.isEmpty.toString());
     if (text.isEmpty) {
@@ -1087,26 +1154,25 @@ class _CallPageState extends State<CallScreen> {
   }
 
   int _languageIndex = -1;
-  Map sample;
 
   Widget _dialogBody = Container();
   double _show = 0;
 
   openDialog(String _text) {
-    _dialogBody=SingleChildScrollView();
+    _dialogBody = SingleChildScrollView();
     setState(() {
       _show = 1;
     });
   }
 
-  openVirtualDialog(String _text) {
-    _dialogBody=SampleList();
+  openVirtualDialog(String _text,Function callBack) {
+    _dialogBody = SingleGiftView(callBack);
     setState(() {
       _show = 1;
     });
   }
 
-  Widget SingleChildScrollView(){
+  Widget SingleChildScrollView() {
     return Container(
       color: Colors.white,
       height: MediaQuery.of(context).size.height * 0.5,
@@ -1125,7 +1191,38 @@ class _CallPageState extends State<CallScreen> {
         ],
       ),
     );
-
   }
 
+  Widget SingleGiftView(Function callBack) {
+    print("check auto refresh here -->");
+    return Container(
+      color: Colors.white,
+      height: 300,
+      width: MediaQuery.of(context).size.width,
+      child: ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Text(
+              strings.get(2241),
+              style: TextStyle(
+                color: Color(0xff00315C),
+                fontSize: 16.0,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Container(
+            height: 250,
+            width: double.infinity,
+            child: SizedBox(
+              height: 250,
+              child:  SampleList(context, 0,_responseList,callBack),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
+import 'package:tomo_app/ui/checkout/addCreditCard.dart';
+import 'package:tomo_app/ui/checkout/paymentMethod.dart';
+import 'package:tomo_app/ui/checkout/shippingAddress.dart';
 import 'package:tomo_app/ui/config/lang.dart';
 import 'package:tomo_app/ui/config/theme.dart';
 import 'package:tomo_app/ui/home/home.dart';
 import 'package:tomo_app/ui/login/UserSelection.dart';
 import 'package:tomo_app/ui/login/forgot.dart';
 import 'package:tomo_app/ui/login/login.dart';
+import 'package:tomo_app/ui/merchandise/home.dart';
 import 'package:tomo_app/ui/model/account.dart';
 import 'package:tomo_app/ui/model/pref.dart';
 import 'package:tomo_app/ui/profile/account.dart';
-import 'package:tomo_app/ui/server/mainwindowdata.dart';
 import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
 import 'package:tomo_app/widgets/route.dart';
@@ -36,8 +39,8 @@ Lang strings = Lang();
 Account account = Account();
 Pref pref = Pref();
 AppThemeData theme = AppThemeData();
-AppSettings appSettings = AppSettings();
 AppFoodRoute route = AppFoodRoute();
+
 
 
 class LiveStreamApp extends StatelessWidget {
@@ -72,6 +75,12 @@ class LiveStreamApp extends StatelessWidget {
         '/home': (BuildContext context) => Home(),
         '/userselection': (BuildContext context) => UserSelection(),
         '/account': (BuildContext context) => AccountScreen(),
+        '/homescreen': (BuildContext context) => HomeScreen(),
+        '/address': (BuildContext context) => ShippingAddress(),
+        '/checkout/payment': (BuildContext context) => PaymentMethod(),
+        '/checkout/addCreditCard': (context) => AddCreditCard(),
+
+
       },
     );
   }

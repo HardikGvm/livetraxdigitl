@@ -109,7 +109,7 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
       );
 
     Widget _sale = Container();
-    if (widget.discountprice != null && widget.discountprice.isNotEmpty) {
+    if (widget.discountprice != null && widget.discountprice?.isNotEmpty) {
       var t = widget.width;
       if (t == MediaQuery.of(context).size.width) t /= 2;
       _sale =
@@ -164,7 +164,7 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
                                       image: imageProvider,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitHeight,
                                     ),
                                   ),
                                 ),

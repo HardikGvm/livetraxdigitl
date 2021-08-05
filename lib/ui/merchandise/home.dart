@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tomo_app/main.dart';
+import 'package:tomo_app/ui/merchandise/ProductDetail.dart';
 import 'package:tomo_app/ui/model/foods.dart';
 import 'package:tomo_app/ui/model/topRestourants.dart';
 import 'package:tomo_app/ui/server/mainwindowdata.dart';
 import 'package:tomo_app/widgets/ICard20FileCaching.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
+import 'package:tomo_app/widgets/easyDialog2.dart';
 import 'package:tomo_app/widgets/iappBar.dart';
 import 'package:tomo_app/widgets/ibanner.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
@@ -14,7 +16,7 @@ import 'package:tomo_app/widgets/widgets.dart';
 import 'package:tomo_app/widgets/wproducts.dart';
 import 'package:tomo_app/widgets/wsearch.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:tomo_app/ui/config/constant.dart';
 import 'homescreenModel.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,6 +49,8 @@ String firstCategoryImage;
 HomeScreenModel homeScreen = HomeScreenModel();
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   //
@@ -172,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool _homeScreenLoad = true;
 
+
   callback(bool reg) {
     setState(() {});
   }
@@ -187,6 +192,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
+
+    final arguments = ModalRoute.of(context).settings.arguments as Map;
+
+    if (arguments != null) {
+      Artistid = arguments['artist_id'];
+      print("USER TYPE HERE :-  >> " + arguments.toString());
+    }
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -221,6 +234,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
+                IEasyDialog2(
+                  setPosition: (double value) {
+                    _show = value;
+                  },
+                  getPosition: () {
+                    return _show;
+                  },
+                  color: theme.colorGrey,
+                  body: _dialogBody,
+                  backgroundColor: theme.colorBackground,
+                ),
               ],
             )),
         IAppBar(context: context, text: "", color: Colors.black),
@@ -236,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (var row in appSettings.rows) {
       lastRow = row;
 
-      if (_search.isNotEmpty) continue;
+      if (_search?.isNotEmpty) continue;
 
       if (row == "banner2") {
         if (homeScreen.secondStepData != null &&
@@ -374,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: IList1(
                     imageAsset: "assets/shops.png",
-                    text: strings.get(2246),
+                    text: strings.get(2253),
                     // "Most Popular",
                     textStyle: theme.text16bold,
                     imageColor: appSettings.getIconColorByMode(theme.darkMode)),
@@ -495,6 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _addToBasketItem = loadFood(id);
     _addToBasketItem.count = 1;
     setState(() {});
+    return openProductDetailDialog(_addToBasketItem);
   }
 
   /*_reviews(List<Widget> list){
@@ -601,6 +626,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
 
+    setState(() {
+      _show = 1;
+    });
+  }
+
+  openProductDetailDialog(DishesData _addToBasketItem) {
+    _dialogBody = ProductDetails(_addToBasketItem);
     setState(() {
       _show = 1;
     });

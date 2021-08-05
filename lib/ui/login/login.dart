@@ -39,8 +39,7 @@ class _LoginScreenState extends State<Login> {
   //
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
-    print(
-        "Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
+    print("Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
     if (editControllerName.text.isEmpty)
       return openDialog(strings.get(10)); // "Enter Login",
     if (!validateEmail(editControllerName.text))
@@ -52,16 +51,17 @@ class _LoginScreenState extends State<Login> {
   }
 
   _okUserEnter(String name, String password, String avatar, String email,
-      String token, String _phone, int i, String typeReg, String role, String uid) {
+      String token, String _phone, int i, String typeReg, String role, String uid,String referral_code) {
     _waits(false);
     if(role == "2"){
       role="artist";
     }else{
       role="fan";
     }
-    print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
+    // print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
+    print(":::Teken::: "+token);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
-    account.okUserEnter(name, password, avatar, email, token, "", 0, uid,typeReg,role);
+    account.okUserEnter(name, password, avatar, email, token, _phone, 0, uid,typeReg,role,referral_code);
     Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
   }
 
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<Login> {
           height: 10,
         ),
         new Center(
-          child: new Text("LOVEMUSIC",
+          child: new Text("LIVETRAXDIGITL", 
               style: new TextStyle(fontSize: 25.0, color: Colors.white)),
         ),
         SizedBox(

@@ -25,8 +25,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  ///////////////////////////////////////////////////////////////////////////////
-  //
   _makePhoto() {
     print("Make photo");
     _openDialogs("makePhoto");
@@ -43,7 +41,11 @@ class _AccountScreenState extends State<AccountScreen> {
 
   _pressLogOutButton() {
     print("User pressed Log Out");
-    account.logOut();
+    account.logOut(PushRedirection);
+  }
+
+  PushRedirection() {
+    Navigator.pushNamedAndRemoveUntil(context, "/splash", (r) => false);
   }
 
   _pressLoginButton() {
@@ -56,12 +58,9 @@ class _AccountScreenState extends State<AccountScreen> {
     route.push(context, "/createaccount");
   }
 
-  //
-  //
-  ///////////////////////////////////////////////
   var windowWidth;
   var windowHeight;
-  bool wait = false;
+  bool _wait = false;
 
   double mainDialogShow = 0;
   Widget mainDialogBody = Container();
@@ -107,7 +106,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ],
             )),
         IAppBar(context: context, text: "", color: Colors.black),
-        if (wait)
+        if (_wait)
           Container(
               color: Color(0x80000000),
               width: windowWidth,
@@ -158,6 +157,7 @@ class _AccountScreenState extends State<AccountScreen> {
         _logoutWidget(),
       ],
     ));
+
     list.add(SizedBox(
       height: 10,
     ));
@@ -247,10 +247,10 @@ class _AccountScreenState extends State<AccountScreen> {
                     margin: EdgeInsets.only(top: 10),
                     width: 100,
                     child: IButton5(
-                      color: Color(0xffd9534f),
+                      color: Colors.grey,
                       text: "",
                       textStyle: theme.text14boldWhite,
-                      icon: "assets/google.png",
+                      icon: "assets/twitter.png",
                     ),
                   )
                 ],
@@ -282,12 +282,22 @@ class _AccountScreenState extends State<AccountScreen> {
             IList4(
               text: "${strings.get(2245)}:", // "Phone",
               textStyle: theme.text14bold,
-              text2: account.phone,
+              text2: (account.phone.toString().trim() != "null")
+                  ? account.phone
+                  : "",
               textStyle2: theme.text14bold,
             ),
             SizedBox(
               height: 10,
             ),
+            (account.role == "fan")
+                ? IList4(
+                    text: "${strings.get(2243)}:", // "Referral Code",
+                    textStyle: theme.text14bold,
+                    text2: account.referral_code,
+                    textStyle2: theme.text14bold,
+                  )
+                : Container(),
           ],
         ));
   }
@@ -306,11 +316,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     fit: BoxFit.contain,
                     color: Colors.black.withAlpha(80),
                   ))),
-
           SizedBox(
             height: 30,
           ),
-
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.15, right: windowWidth * 0.15),
@@ -319,11 +327,9 @@ class _AccountScreenState extends State<AccountScreen> {
               textAlign: TextAlign.center,
             ), // "You must sign-in to access to this section",
           ),
-
           SizedBox(
             height: 40,
           ),
-
           Container(
             margin: EdgeInsets.only(
                 left: windowWidth * 0.1, right: windowWidth * 0.1),
@@ -335,7 +341,6 @@ class _AccountScreenState extends State<AccountScreen> {
               textStyle: theme.text16boldWhite,
             ),
           ),
-
           Container(
             padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
             child: InkWell(
@@ -444,7 +449,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "User Name",
-              _edit(editControllerName, strings.get(158), false),
+              _edit(editControllerName, strings.get(67), false, false),
               //  "Enter your User Name",
               SizedBox(
                 height: 20,
@@ -456,7 +461,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // "E-mail",
               if (account.typeReg == "email")
-                _edit(editControllerEmail, strings.get(160), false),
+                _edit(editControllerEmail, strings.get(160), false, false),
               //  "Enter your User E-mail",
               if (account.typeReg == "email")
                 SizedBox(
@@ -469,9 +474,8 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               // Phone
               if (appSettings.otp != "true")
-                _edit(editControllerPhone, strings.get(161), false),
+                _edit(editControllerPhone, strings.get(161), false, true),
               //  "Enter your User Phone",
-
               SizedBox(
                 height: 30,
               ),
@@ -517,7 +521,8 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
-  _edit(TextEditingController _controller, String _hint, bool _obscure) {
+  _edit(TextEditingController _controller, String _hint, bool _obscure,
+      bool isint) {
     return Container(
         height: 30,
         child: Directionality(
@@ -530,6 +535,7 @@ class _AccountScreenState extends State<AccountScreen> {
             cursorWidth: 1,
             obscureText: _obscure,
             maxLines: 1,
+            keyboardType: isint ? TextInputType.number : TextInputType.name,
             decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
@@ -550,6 +556,11 @@ class _AccountScreenState extends State<AccountScreen> {
     print("User pressed Save profile");
     print(
         "User Name: ${editControllerName.text}, E-mail: ${editControllerEmail.text}, Phone: ${editControllerPhone.text}, Token: ${account.token}, UID: ${account.userId}");
+    if (editControllerName.text.isEmpty) return openDialog(strings.get(158));
+    if (editControllerEmail.text.isEmpty)
+      return openDialog(strings.get(160)); // "Enter your Login"
+    if (editControllerPhone.text.isEmpty) return openDialog(strings.get(161));
+
     changeProfile(
         account.token,
         editControllerName.text,
@@ -557,6 +568,34 @@ class _AccountScreenState extends State<AccountScreen> {
         editControllerPhone.text,
         _successChangeProfile,
         _errorChangeProfile);
+  }
+
+  openDialog(String _text) {
+    waits(false);
+    _dialogBody = Column(
+      children: [
+        Text(
+          _text,
+          style: theme.text14,
+        ),
+        SizedBox(
+          height: 40,
+        ),
+        IButton3(
+            color: theme.colorPrimary,
+            text: strings.get(155), // Cancel
+            textStyle: theme.text14boldWhite,
+            pressButton: () {
+              setState(() {
+                _show = 0;
+              });
+            }),
+      ],
+    );
+
+    setState(() {
+      _show = 1;
+    });
   }
 
   _errorChangeProfile(String error) {
@@ -653,7 +692,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   waits(bool value) {
-    wait = value;
+    _wait = value;
     if (mounted) setState(() {});
   }
 
@@ -702,7 +741,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Old password",
-              _edit(editControllerOldPassword, strings.get(149), true),
+              _edit(editControllerOldPassword, strings.get(149), true, false),
               //  "Enter your old password",
               SizedBox(
                 height: 20,
@@ -712,7 +751,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "New password",
-              _edit(editControllerNewPassword1, strings.get(152), true),
+              _edit(editControllerNewPassword1, strings.get(152), true, false),
               //  "Enter your new password",
               SizedBox(
                 height: 20,
@@ -722,7 +761,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 style: theme.text12bold,
               ),
               // "Confirm New password",
-              _edit(editControllerNewPassword2, strings.get(154), true),
+              _edit(editControllerNewPassword2, strings.get(154), true, false),
               //  "Enter your new password",
               SizedBox(
                 height: 30,
@@ -778,12 +817,24 @@ class _AccountScreenState extends State<AccountScreen> {
     if (editControllerNewPassword1.text.isEmpty ||
         editControllerNewPassword2.text.isEmpty)
       return _openDialogError(strings.get(170)); // "Enter New Password",
+
+    if (!validateStructure(editControllerNewPassword2.text)) {
+      return openDialog(strings.get(2255)); // "Enter Valid password"
+    }
     changePassword(
         account.token,
         editControllerOldPassword.text,
         editControllerNewPassword1.text,
         _successChangePassword,
         _errorChangePassword);
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    print("Match Password herr > " + regExp.hasMatch(value).toString());
+    return regExp.hasMatch(value);
   }
 
   _successChangePassword() {

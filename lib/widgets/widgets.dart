@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
 import 'package:tomo_app/ui/model/categories.dart';
 import 'package:tomo_app/ui/model/foods.dart';
+import 'package:tomo_app/widgets/iinputField2.dart';
 
 import '../main.dart';
 import 'ICard21FileCaching.dart';
@@ -610,7 +612,7 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
       revertFavoriteState: account.revertFavoriteState,
       text: item.name,
       enableFavorites: false,
-      width: windowWidth * 0.6,
+      width: windowWidth * 0.4,
       height: height,
       image: "$serverImages${item.image}",
       id: item.id,
@@ -619,7 +621,7 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
           : getCategoryName(item.category),
       discount: item.discount,
       discountprice: "10",
-      price: "100",
+      price: item.price.toString(),
       textStyle2: theme.text18boldPrimaryUI,
       textStyle: theme.text18boldPrimaryUI,
       textStyle3: theme.text16UI,
@@ -638,5 +640,91 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
       scrollDirection: Axis.horizontal,
       children: list,
     ),
+  );
+
+
+}
+
+// text
+formEdit(String hint, TextEditingController controller, String text, int maxLenght){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+          height: 40,
+          child: IInputField2(
+            maxLenght: maxLenght,
+            hint: hint,
+            type: TextInputType.text,
+            colorDefaultText: theme.colorDefaultText,
+            colorBackground: theme.colorBackground,
+            controller: controller,
+          )),
+      Container(height: 0.5, color: Colors.black.withAlpha(100),),
+      SizedBox(height: 3,),
+      if (text.isNotEmpty)
+        Text(text, style: theme.text12bold,),
+    ],
+  );
+}
+
+checkBox(String text, bool init, Function(bool) callback){
+  return Row(
+    children: <Widget>[
+      Checkbox(
+          value: init,
+          activeColor: theme.colorPrimary,
+          onChanged: callback
+      ),
+      Text(text, style: theme.text14)
+    ],
+  );
+}
+
+
+// price
+formEditPrice(String hint, TextEditingController controller, String text, int numberOfDigits){
+  var regx = r'(^\d*[,.]?\d{0,2})';
+  if (numberOfDigits == 0)
+    regx = r'(^\d*)';
+  if (numberOfDigits == 1)
+    regx = r'(^\d*[,.]?\d{0,1})';
+  if (numberOfDigits == 3)
+    regx = r'(^\d*[,.]?\d{0,3})';
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        height: 40,
+        child: TextFormField(
+            keyboardType: TextInputType.number,
+            cursorColor: theme.colorDefaultText,
+            controller: controller,
+            onChanged: (String value) async {
+            },
+            textAlignVertical: TextAlignVertical.center,
+            maxLines: 1,
+//            maxLength: widget.maxLenght,
+            style: TextStyle(
+              color: theme.colorDefaultText,
+            ),
+            decoration: new InputDecoration(
+              counterText: "",
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: TextStyle(
+                  color: theme.colorDefaultText,
+                  fontSize: 16.0),
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(regx)),
+            ]
+        ),
+      ),
+      Container(height: 0.5, color: Colors.black.withAlpha(100),),
+      SizedBox(height: 3,),
+      if (text.isNotEmpty)
+        Text(text, style: theme.text12bold,),                // Enter Dishes Name
+    ],
   );
 }
