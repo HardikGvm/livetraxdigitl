@@ -56,6 +56,10 @@ dependencies:
   http_auth: ^1.0.0
   flutter_braintree: ^0.5.3+1
   need_resume: ^1.0.6
+  audioplayer: ^0.8.1
+  just_audio:
+  audio_session: any
+  rxdart: any
 
 
 dev_dependencies:

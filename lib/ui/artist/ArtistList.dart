@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
-import 'package:tomo_app/payment/PaypalServices.dart';
 import 'package:tomo_app/ui/server/ArtistListAPI.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/ibutton3.dart';
 import '../../main.dart';
 import 'ArtistDetailScreen.dart';
@@ -20,36 +17,13 @@ class _ArtistListState extends State<ArtistList> {
   List<UserData> list = new List();
   bool isLoadMore = false;
   static int pagination_index = 1;
-  var windowWidth;
-  var windowHeight;
 
   @override
   void initState() {
     super.initState();
-    _waits(true);
     int pagination_index = 1;
-    _artist('artist', pagination_index, 4,true);
-
-  //  CheckPaypal();
+    _artist('artist', pagination_index, 2);
   }
-
-  PaypalServices services = PaypalServices();
-  String accessToken;
-
-  CheckPaypal() async {
-    final request = BraintreeCreditCardRequest(
-      cardNumber: '4115511771161116',
-      expirationMonth: '02',
-      expirationYear: '2025',
-    );
-
-    accessToken = await services.getAccessToken();
-    print("Check Payment Nonce Here accessTokens> " + accessToken);
-    BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(accessToken, request,);
-
-    print("Check Payment Nonce Here > " + result.nonce + " DES " + result.description);
-  }
-
   @override
   void dispose() {
     print(":::Dispose:::");
@@ -59,13 +33,11 @@ class _ArtistListState extends State<ArtistList> {
   @override
   Widget build(BuildContext context) {
     final title = 'Artists';
-    windowWidth = MediaQuery.of(context).size.width;
-    windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(title),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Color.fromARGB(217, 217, 217, 255),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -74,8 +46,7 @@ class _ArtistListState extends State<ArtistList> {
                 fit: BoxFit.cover)),
         child: Stack(
           children: [
-            Container(
-              margin: EdgeInsets.only(top: 16),
+            Center(
               child: GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
@@ -125,11 +96,7 @@ class _ArtistListState extends State<ArtistList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ArtistDetailScreen(
-                                  artist_id: list[index].id.toString(),
-                                  artist_name: list[index].artist_name,
-                                  artist_description: list[index].description,
-                                  artist_image: list[index].image)),
+                              builder: (context) => ArtistDetailScreen()),
                         );
                         pagination_index = 1;
                       },
@@ -138,30 +105,14 @@ class _ArtistListState extends State<ArtistList> {
                 ),
               ),
             ),
-            if (_wait)
-              (Container(
-                color: Color(0x80000000),
-                width: windowWidth,
-                height: windowHeight,
-                child: Center(
-                  child: ColorLoader2(
-                    color1: theme.colorPrimary,
-                    color2: theme.colorCompanion,
-                    color3: theme.colorPrimary,
-                  ),
-                ),
-              ))
-            else
-              (Container()),
             Align(
               alignment: Alignment.bottomRight,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: MaterialButton(
+                child: FlatButton(
                   child: Text('More Artist', style: TextStyle(fontSize: 16)),
-
                   onPressed: () => {
-                    _artist('artist', pagination_index, 4,false),
+                    _artist('artist', pagination_index++, 2),
                     isLoadMore = true
                   },
                   color: Colors.white,
@@ -175,24 +126,20 @@ class _ArtistListState extends State<ArtistList> {
     );
   }
 
-
-
   _okUserEnter(List<UserData> list) {
     _waits(false);
     print(":::isLoadMore::" + isLoadMore.toString());
+    print(":::list.length::" + list.length.toString());
+    print(":::pagination_index::" + pagination_index.toString());
+
     if (isLoadMore) {
       isLoadMore = false;
       if (list != null) {
-        print(":::list.length::" + list.length.toString());
         for (var i = 0; i < list.length; i++) {
           UserData userData = list[i];
-          print(":::INDEX::: " + i.toString());
-          // print(":::Artist Name::: " + userData.artist_name);
-          print("::: image ::: " + userData.image);
           this.list.add(userData);
         }
         setState(() {});
-        print(":::pagination_index::" + pagination_index.toString());
       }
     } else {
       this.list = list;
@@ -200,14 +147,8 @@ class _ArtistListState extends State<ArtistList> {
     }
   }
 
-  _artist(String type, int page, int limit,bool isFirst) {
-    print("Pages >> " + pagination_index.toString());
-    if(!isFirst){
-      pagination_index = pagination_index + 1;
-      print("Pages PLUS>> " + pagination_index.toString());
-    }
-
-    artist_list_api(type, pagination_index, limit, _okUserEnter, _error);
+  _artist(String type, int page, int limit) {
+    artist_list_api(type, page, limit, _okUserEnter, _error);
   }
 
   _waits(bool value) {
