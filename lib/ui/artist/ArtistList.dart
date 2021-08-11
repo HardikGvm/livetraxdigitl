@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:tomo_app/payment/PaypalServices.dart';
 import 'package:tomo_app/ui/server/ArtistListAPI.dart';
@@ -28,9 +29,9 @@ class _ArtistListState extends State<ArtistList> {
     super.initState();
     _waits(true);
     int pagination_index = 1;
-    _artist('artist', pagination_index, 4,true);
+    _artist('artist', pagination_index, 4, true);
 
-  //  CheckPaypal();
+    //  CheckPaypal();
   }
 
   PaypalServices services = PaypalServices();
@@ -45,9 +46,15 @@ class _ArtistListState extends State<ArtistList> {
 
     accessToken = await services.getAccessToken();
     print("Check Payment Nonce Here accessTokens> " + accessToken);
-    BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(accessToken, request,);
+    BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(
+      accessToken,
+      request,
+    );
 
-    print("Check Payment Nonce Here > " + result.nonce + " DES " + result.description);
+    print("Check Payment Nonce Here > " +
+        result.nonce +
+        " DES " +
+        result.description);
   }
 
   @override
@@ -55,6 +62,8 @@ class _ArtistListState extends State<ArtistList> {
     print(":::Dispose:::");
     super.dispose();
   }
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +89,7 @@ class _ArtistListState extends State<ArtistList> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
+                controller: _scrollController,
                 shrinkWrap: true,
                 children: List.generate(
                   list == null || list.isEmpty ? 0 : list.length,
@@ -159,9 +169,8 @@ class _ArtistListState extends State<ArtistList> {
                 margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: MaterialButton(
                   child: Text('More Artist', style: TextStyle(fontSize: 16)),
-
                   onPressed: () => {
-                    _artist('artist', pagination_index, 4,false),
+                    _artist('artist', pagination_index, 4, false),
                     isLoadMore = true
                   },
                   color: Colors.white,
@@ -174,8 +183,6 @@ class _ArtistListState extends State<ArtistList> {
       ),
     );
   }
-
-
 
   _okUserEnter(List<UserData> list) {
     _waits(false);
@@ -193,6 +200,18 @@ class _ArtistListState extends State<ArtistList> {
         }
         setState(() {});
         print(":::pagination_index::" + pagination_index.toString());
+
+
+
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 10),
+            curve: Curves.easeOut,);
+        });
+
+
+
       }
     } else {
       this.list = list;
@@ -200,13 +219,13 @@ class _ArtistListState extends State<ArtistList> {
     }
   }
 
-  _artist(String type, int page, int limit,bool isFirst) {
+  _artist(String type, int page, int limit, bool isFirst) {
     print("Pages >> " + pagination_index.toString());
-    if(!isFirst){
+    if (!isFirst) {
       pagination_index = pagination_index + 1;
       print("Pages PLUS>> " + pagination_index.toString());
     }
-
+    _waits(true);
     artist_list_api(type, pagination_index, limit, _okUserEnter, _error);
   }
 
