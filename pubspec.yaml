@@ -60,6 +60,7 @@ dependencies:
   just_audio:
   audio_session: any
   rxdart: any
+  photofilters: ^2.0.2
 
 
 dev_dependencies:
