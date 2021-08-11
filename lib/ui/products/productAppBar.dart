@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class CheckoutAppBar extends StatefulWidget with PreferredSizeWidget {
+class productAppBar extends StatefulWidget with PreferredSizeWidget {
   final String leftButtonText;
   final String rightButtonText;
   final String centerButtonText;
   final void Function () rightButtonFunction;
+  final void Function () leftButtonFunction;
 
-  CheckoutAppBar(this.leftButtonText, this.rightButtonText, this.rightButtonFunction,this.centerButtonText);
+  productAppBar(this.leftButtonText, this.rightButtonText, this.rightButtonFunction,this.centerButtonText,this.leftButtonFunction);
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
-  _CheckoutAppBarState createState() => _CheckoutAppBarState();
+  _productAppBarState createState() => _productAppBarState();
 }
 
-class _CheckoutAppBarState extends State<CheckoutAppBar> {
+class _productAppBarState extends State<productAppBar> {
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,8 @@ class _CheckoutAppBarState extends State<CheckoutAppBar> {
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.pop(context);
+                //Navigator.pop(context);
+                widget.leftButtonFunction();
               },
               child: Text(
                 widget.leftButtonText,

@@ -54,7 +54,7 @@ class _AddCreditCardState extends State<AddCreditCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CheckoutAppBar('Cancel', 'Next', this.addNewCard),
+      appBar: CheckoutAppBar('Cancel', 'Next', this.addNewCard,""),
       body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),

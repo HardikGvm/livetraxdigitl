@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,9 +10,9 @@ class SeekBar extends StatefulWidget {
   final ValueChanged<Duration> onChangeEnd;
 
   SeekBar({
-     this.duration,
-     this.position,
-     this.bufferedPosition,
+    this.duration,
+    this.position,
+    this.bufferedPosition,
     this.onChanged,
     this.onChangeEnd,
   });
@@ -63,7 +62,7 @@ class _SeekBarState extends State<SeekBar> {
 
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-              trackHeight: 2.0,
+            trackHeight: 2.0,
             inactiveTrackColor: Colors.transparent,
             thumbColor: Colors.red,
             activeTrackColor: Colors.red,
@@ -96,8 +95,8 @@ class _SeekBarState extends State<SeekBar> {
           bottom: 0.0,
           child: Text(
               RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                      .firstMatch("$_remaining")
-                      ?.group(1) ??
+                  .firstMatch("$_remaining")
+                  ?.group(1) ??
                   '$_remaining',
               style: Theme.of(context).textTheme.caption.copyWith(color: Colors.white)),
         ),
@@ -114,19 +113,19 @@ class HiddenThumbComponentShape extends SliderComponentShape {
 
   @override
   void paint(
-    PaintingContext context,
-    Offset center, {
-     Animation<double> activationAnimation,
-     Animation<double> enableAnimation,
-     bool isDiscrete,
-     TextPainter labelPainter,
-     RenderBox parentBox,
-     SliderThemeData sliderTheme,
-     TextDirection textDirection,
-     double value,
-     double textScaleFactor,
-     Size sizeWithOverflow,
-  }) {}
+      PaintingContext context,
+      Offset center, {
+        Animation<double> activationAnimation,
+        Animation<double> enableAnimation,
+        bool isDiscrete,
+        TextPainter labelPainter,
+        RenderBox parentBox,
+        SliderThemeData sliderTheme,
+        TextDirection textDirection,
+        double value,
+        double textScaleFactor,
+        Size sizeWithOverflow,
+      }) {}
 }
 
 class PositionData {
@@ -138,16 +137,16 @@ class PositionData {
 }
 
 void showSliderDialog({
-   BuildContext context,
-   String title,
-   int divisions,
-   double min,
-   double max,
+  BuildContext context,
+  String title,
+  int divisions,
+  double min,
+  double max,
   String valueSuffix = '',
   // TODO: Replace these two by ValueStream.
-   double value,
-   Stream<double> stream,
-   ValueChanged<double> onChanged,
+  double value,
+  Stream<double> stream,
+  ValueChanged<double> onChanged,
 }) {
   showDialog<void>(
     context: context,

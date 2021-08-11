@@ -21,7 +21,7 @@ class AppThemeData{
   Color colorGrey = Color.fromARGB(255, 209, 210, 205);
   Color colorPrimary = Color(0xff668798); // foods 0xff66b88c // restaurants 0xff668798
   Color colorCompanion = Color(0xff009688); // foods 0xff029600 // restaurants 0xff009688
-
+  Color colorRed = Color(0xffFF0000);
   Color colorGrey2 = Color.fromARGB(255, 209, 210, 205).withOpacity(0.1);
   Color colorBackground;
   Color colorBackgroundGray;
@@ -32,7 +32,11 @@ class AppThemeData{
   Color colorDarkModeLight = Color.fromARGB(255, 40, 40, 40); // for dialog background in dark mode
   //
 
+  double radius = 4;
+  int shadow = 5;
+
   TextStyle text12grey;
+  TextStyle text12greybold;
   TextStyle text12bold;
   TextStyle text12Ubold;
   TextStyle text10white;
@@ -117,6 +121,13 @@ class AppThemeData{
     text12grey = TextStyle(
       color: Colors.grey,
       fontWeight: FontWeight.w400,
+      fontSize: 12,
+    );
+
+
+    text12greybold = TextStyle(
+      color: Colors.grey,
+      fontWeight: FontWeight.w800,
       fontSize: 12,
     );
 

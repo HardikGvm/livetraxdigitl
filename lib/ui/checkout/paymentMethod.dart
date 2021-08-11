@@ -144,7 +144,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CheckoutAppBar('Cancel', 'Next', this.checkoutPaymentMethod),
+      appBar: CheckoutAppBar('Cancel', 'Next', this.checkoutPaymentMethod,""),
       body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),

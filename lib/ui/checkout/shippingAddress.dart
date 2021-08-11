@@ -391,7 +391,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CheckoutAppBar('Back', 'Next', this.checkoutAddress),
+      appBar: CheckoutAppBar('Back', 'Next', this.checkoutAddress,""),
       body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),

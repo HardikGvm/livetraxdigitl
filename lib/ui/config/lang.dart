@@ -385,6 +385,32 @@ class Lang {
     2255 : "1.Include both lower and upper case characters.\n2.Include at least one number or symbol.\n3.Passoword have at-least 8 characters.",
     2256 : "Please enter Referral Code",
     2258 : "FREE",
+
+    2259 : "What are you selling? (required)",
+    2260 : "Describe it! (required)",
+    2261 : "Category",
+    2262 : "Required",
+    2263 : "Quantity",
+    2264 : "Size",
+    2265 : "Brand",
+    2266 : "Color",
+    2267 : "Optional",
+    2268 : "New with tags",
+    2269 : "Price",
+    2270 : "Please select Image",
+    2271 : "Gallery",
+    2272 : "Listing Details",
+    2273 : "The selling product field is request",
+    2274 : "The description field is request",
+    2275 : "The Size field is request",
+    2276 : "Product list",
+    2277 : "PUBLISHED",
+    2278 : "HIDDEN",
+    2279 : "EDIT",
+    2280 : "DELETE",
+    2281 : "ID:",
+    2282 : "Last update:",
+
   };
 
   //

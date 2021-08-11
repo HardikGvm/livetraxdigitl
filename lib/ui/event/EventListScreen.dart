@@ -225,8 +225,8 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
             onPressed: () {
               push(
                 context,
-                //MaterialPageRoute(builder: (context) => AddEventScreen()),
-                MaterialPageRoute(builder: (context) => AddProductScreen()),
+                MaterialPageRoute(builder: (context) => AddEventScreen()),
+                //MaterialPageRoute(builder: (context) => AddProductScreen()),
               );
             },
             child: const Icon(Icons.add),

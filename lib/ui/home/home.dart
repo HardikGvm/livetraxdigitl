@@ -8,6 +8,7 @@ import 'package:tomo_app/ui/Artist/ArtistList.dart';
 import 'package:tomo_app/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
 import 'package:tomo_app/ui/call/call.dart';
 import 'package:tomo_app/ui/event/EventListScreen.dart';
+
 import 'package:tomo_app/ui/server/getagoratoken.dart';
 import 'package:tomo_app/widgets/background_image.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
@@ -23,7 +24,8 @@ class _HomeScreenState extends State<Home> {
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
     print(
-        "Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
+        "Login: ${editControllerName.text}, password: ${editControllerPassword
+            .text}");
     if (editControllerName.text.isEmpty)
       return openDialog(strings.get(10)); // "Enter Login",
     if (!validateEmail(editControllerName.text))
@@ -85,8 +87,14 @@ class _HomeScreenState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    windowWidth = MediaQuery.of(context).size.width;
-    windowHeight = MediaQuery.of(context).size.height;
+    windowWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    windowHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     return Scaffold(
       backgroundColor: theme.colorBackground,
       body: Stack(
@@ -144,33 +152,34 @@ class _HomeScreenState extends State<Home> {
         crossAxisCount: 3,
         padding: EdgeInsets.all(3.0),
         children: <Widget>[
-          makeDashboardItem("Artist", Icons.supervised_user_circle_sharp),
-          makeDashboardItem("Live Event", Icons.music_note),
-          makeDashboardItem("Exclusive\nAccess", Icons.verified_user),
+
+          makeDashboardItem("Artist", Icons.supervised_user_circle_sharp,"assets/artists.png"),
+          makeDashboardItem("Live Event", Icons.music_note,"assets/play.png"),
+          makeDashboardItem("Exclusive\nAccess", Icons.verified_user,"assets/vip.png"),
         ],
       ),
     );
   }
 
   Widget _toolbar() {
-    return GestureDetector(
-        child: Container(
-          height: 200,
-          alignment: Alignment.centerRight,
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Container(
-              alignment: Alignment.topRight,
-              padding: const EdgeInsets.symmetric(vertical: 30),
-              constraints: BoxConstraints(maxHeight: 400),
-              child: Container(
-                height: 200,
-                color: Colors.transparent,
-                alignment: Alignment.topRight,
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  children: <Widget>[
-                    Container(
+    return Container(
+      height: 500,
+      alignment: Alignment.centerRight,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          alignment: Alignment.topRight,
+          padding: const EdgeInsets.symmetric(vertical: 30),
+          constraints: BoxConstraints(maxHeight: 400),
+          child: Container(
+            height: 200,
+            color: Colors.transparent,
+            alignment: Alignment.topRight,
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                GestureDetector(
+                    child: Container(
                         alignment: Alignment.centerRight,
                         padding: EdgeInsets.only(
                             top: 10, bottom: 0, left: 20, right: 20),
@@ -179,32 +188,72 @@ class _HomeScreenState extends State<Home> {
                           size: 40.0,
                           color: Colors.white,
                         )),
-                    SizedBox(height: 5.0),
-                    GestureDetector(
-                        child: Container(
+                    onTap: () {
+                      print("Press Profile");
+                      Navigator.pushNamed(context, "/account");
+                      //Navigator.pushNamed(context, "/homescreen");
+
+                    }),
+                SizedBox(height: 5.0),
+                GestureDetector(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: new Text("My Account",
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                              fontSize: 16.0, color: Colors.white)),
+                    ),
+                    onTap: () {
+                      print("Press Profile");
+                      Navigator.pushNamed(context, "/account");
+                      //Navigator.pushNamed(context, "/homescreen");
+                    }),
+
+                SizedBox(height: 15.0),
+                if (account.role == "artist")
+                  GestureDetector(
+                      child: Container(
                           alignment: Alignment.centerRight,
-                          child: new Text("My Account",
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(
-                                  fontSize: 16.0, color: Colors.white)),
-                        ),
-                        onTap: () {
-                          print("Press Profile");
-                          Navigator.pushNamed(context, "/account");
-                          //Navigator.pushNamed(context, "/homescreen");
-                        })
-                  ],
-                ),
-              ),
+                          padding: EdgeInsets.only(
+                              top: 10, bottom: 0, left: 20, right: 20),
+                          child: Icon(
+                            Icons.add_business_rounded,
+                            size: 40.0,
+                            color: Colors.white,
+                          )),
+                      onTap: () {
+                        print("Press Profile");
+                        Navigator.pushNamed(context, "/addproducts");
+                      })
+                else
+                  Container(),
+
+                if (account.role == "artist")
+                  SizedBox(height: 5.0)
+                else
+                  Container(),
+                if (account.role == "artist")
+                  GestureDetector(
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        child: new Text("Add Products",
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(
+                                fontSize: 16.0, color: Colors.white)),
+                      ),
+                      onTap: () {
+                        print("Press Profile..");
+                        Navigator.pushNamed(context, "/addproducts");
+                      })
+                else
+                  Container()
+
+              ],
             ),
           ),
         ),
-        onTap: () {
-          print("Press Profile");
-          Navigator.pushNamed(context, "/account");
-          //Navigator.pushNamed(context, "/homescreen");
-
-        });
+      ),
+    );
   }
 
   _body() {
@@ -231,9 +280,9 @@ class _HomeScreenState extends State<Home> {
       crossAxisCount: 3,
       padding: EdgeInsets.all(3.0),
       children: <Widget>[
-        makeDashboardItem("Ordbog", Icons.book),
-        makeDashboardItem("Alphabet", Icons.alarm),
-        makeDashboardItem("Sample", Icons.ac_unit_rounded),
+        makeDashboardItem("Ordbog", Icons.book,""),
+        makeDashboardItem("Alphabet", Icons.alarm,""),
+        makeDashboardItem("Sample", Icons.ac_unit_rounded,""),
       ],
     );
   }
@@ -290,7 +339,7 @@ class _HomeScreenState extends State<Home> {
     log("TAGGGG " + "Print Exclusive");
   }
 
-  Card makeDashboardItem(String title, IconData icon) {
+  Card makeDashboardItem(String title, IconData icon,String icons) {
     return Card(
         elevation: 1.0,
         color: Colors.transparent,
@@ -313,7 +362,7 @@ class _HomeScreenState extends State<Home> {
                       builder: (context) => ExclusiveAccessScreen()),
                 );
               } else if (title == 'Live Event') {
-                 //AgoraToken();
+                //AgoraToken();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EventListScreen()),
@@ -327,16 +376,25 @@ class _HomeScreenState extends State<Home> {
               children: <Widget>[
                 SizedBox(height: 5.0),
                 Center(
-                    child: Icon(
-                  icon,
-                  size: 40.0,
-                  color: Colors.white,
-                )),
+                    /*child: Icon(
+                      icon,
+                      size: 40.0,
+                      color: Colors.white,
+                    )*/
+                  child: Container(
+                    child: Image(
+                        image: AssetImage(icons),
+                        fit: BoxFit.fill,
+                        height: 40,
+                        alignment: Alignment.topCenter),
+                  ),
+
+                ),
                 SizedBox(height: 15.0),
                 new Center(
                   child: new Text(title,
                       style:
-                          new TextStyle(fontSize: 16.0, color: Colors.white)),
+                      new TextStyle(fontSize: 16.0, color: Colors.white)),
                 )
               ],
             ),
@@ -350,12 +408,13 @@ class _HomeScreenState extends State<Home> {
 
     _waits(true);
     print("User Name > " + account.userName.trim().replaceAll(" ", ""));
-    GetAgoraToken("asd",0, account.userName.trim().replaceAll(" ", ""),
+    GetAgoraToken("asd", 0, account.userName.trim().replaceAll(" ", ""),
         token_success, token_error);
     //}
   }
 
-  token_success(String channelname,int Eventid, String username, String _response) {
+  token_success(String channelname, int Eventid, String username,
+      String _response) {
     _waits(false);
     _Token = _response;
     print("CALL _success Done ---> " + _response.toString());
@@ -365,13 +424,14 @@ class _HomeScreenState extends State<Home> {
     }
 
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => CallScreen(
+        builder: (context) =>
+            CallScreen(
               channelName: channelname,
               Eventid: 0,
               userName: username,
               role: _role,
               userImage:
-                  "https://image.flaticon.com/icons/png/128/3135/3135715.png",
+              "https://image.flaticon.com/icons/png/128/3135/3135715.png",
               token: _response,
             )));
   }

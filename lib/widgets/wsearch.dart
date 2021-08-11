@@ -9,10 +9,10 @@ String categoriesSearchValue = "0";
 
 restaurantsComboBox(double windowWidth, Function redraw){
   var menuItems = List<DropdownMenuItem>();
-  menuItems.add(DropdownMenuItem(
+  /*menuItems.add(DropdownMenuItem(
     child: Text(strings.get(133), style: theme.text14,), // All
     value: "0",
-  ),);
+  ),);*/
   for (var item in nearYourRestaurants) {
     menuItems.add(DropdownMenuItem(
       child: Text(item.name, style: theme.text14,),
@@ -24,7 +24,7 @@ restaurantsComboBox(double windowWidth, Function redraw){
       width: windowWidth,
       child: Row(
         children: [
-          Text(strings.get(267), style: theme.text14bold,), // Market
+          /*Text(strings.get(267), style: theme.text14bold,), // Market
           SizedBox(width: 10,),
           Expanded(child: ButtonTheme(
               alignedDropdown: true,
@@ -36,17 +36,17 @@ restaurantsComboBox(double windowWidth, Function redraw){
                     restaurantSearchValue = value;
                     redraw();
                   })
-          ))
+          ))*/
         ],
       ));
 }
 
 cateroriesComboBox(double windowWidth, Function redraw){
   var menuItems = List<DropdownMenuItem>();
-  menuItems.add(DropdownMenuItem(
+  /*menuItems.add(DropdownMenuItem(
     child: Text(strings.get(133), style: theme.text14,), // All
     value: "0",
-  ),);
+  ),);*/
   for (var item in categories) {
     menuItems.add(DropdownMenuItem(
       child: Text(item.name, style: theme.text14,),

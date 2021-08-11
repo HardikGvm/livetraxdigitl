@@ -12,6 +12,8 @@ import 'package:tomo_app/ui/login/login.dart';
 import 'package:tomo_app/ui/merchandise/home.dart';
 import 'package:tomo_app/ui/model/account.dart';
 import 'package:tomo_app/ui/model/pref.dart';
+import 'package:tomo_app/ui/products/AddProductScreen.dart';
+import 'package:tomo_app/ui/products/ListProductScreen.dart';
 import 'package:tomo_app/ui/profile/account.dart';
 import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
@@ -79,6 +81,8 @@ class LiveStreamApp extends StatelessWidget {
         '/address': (BuildContext context) => ShippingAddress(),
         '/checkout/payment': (BuildContext context) => PaymentMethod(),
         '/checkout/addCreditCard': (context) => AddCreditCard(),
+        '/addproducts': (context) => AddProductScreen(),
+        //0'/addproducts': (context) => ListProductScreen(),
 
 
       },

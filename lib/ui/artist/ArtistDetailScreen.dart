@@ -1,15 +1,25 @@
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:tomo_app/ui/Music/MusicPlayList.dart';
+import 'package:tomo_app/ui/config/constant.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
-  const ArtistDetailScreen({Key key}) : super(key: key);
+  final String artist_name, artist_description, artist_image, artist_id;
+
+  const ArtistDetailScreen(
+      {Key key,
+      @required this.artist_id,
+      @required this.artist_name,
+      @required this.artist_description,
+      @required this.artist_image})
+      : super(key: key);
 
   @override
   _ArtistDetailScreenState createState() => _ArtistDetailScreenState();
 }
 
 class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -17,47 +27,83 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Artist'),
-        backgroundColor: Color.fromARGB(217, 217, 217, 255),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
+        width: MediaQuery.of(context).size.width,
         // For background Image
-        // decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //         image: AssetImage("lib/assets/images/background_image.png"),
-        //         fit: BoxFit.cover)),
-
-        child: Column(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: new NetworkImage(
+                    (widget.artist_image != null) ? widget.artist_image : ""),
+                fit: BoxFit.cover)),
+        child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: new Text(
-                'Kiwi Time',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.left,
+            Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: new Text(
+                      (widget.artist_name != null &&
+                              widget.artist_name.isNotEmpty)
+                          ? widget.artist_name
+                          : "Kiwi time",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: new Text(
+                        (widget.artist_description != null &&
+                                widget.artist_description.isNotEmpty)
+                            ? widget.artist_description
+                            : 'Kiwi time is San Francisco band of four childhood friends.',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        textAlign: TextAlign.left),
+                  ),
+                )
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: MaterialButton(
+                  child: Text('Active', style: TextStyle(fontSize: 18)),
+                  onPressed: () => {},
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  padding:
+                      EdgeInsets.only(left: 32, right: 32, top: 12, bottom: 12),
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: new Text(
-                  'Kiwi time is San Francisco band of four childhood friends.',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                  textAlign: TextAlign.center),
-            )
           ],
         ),
       ),
       floatingActionButton: FabCircularMenu(
+        key: fabKey,
         fabOpenIcon: Icon(Icons.menu, color: Colors.red),
         fabCloseIcon: Icon(Icons.close, color: Colors.red),
         fabColor: Colors.white,
-        ringColor: Colors.white30,
+        ringDiameter: 340.0,
+        ringWidth: 90.0,
+        ringColor: Colors.white70,
         children: [
           IconButton(
               icon: Icon(Icons.event, color: Colors.red),
+              iconSize: 28,
               onPressed: () {
+                fabKey.currentState.close();
                 print('Live Event');
               }),
           IconButton(
@@ -70,8 +116,23 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               }),
           IconButton(
               icon: Icon(Icons.shopping_cart, color: Colors.red),
+              iconSize: 28,
               onPressed: () {
-                print('Buy Merchandise');
+                fabKey.currentState.close();
+
+                String Value = widget.artist_id.toString();
+                print('Buy Merchandise ID HERE >> ' +
+                    widget.artist_id.toString() +
+                    " VAL " +
+                    Value);
+                setState(() {
+                  Artistid = Value;
+                });
+
+                Navigator.pushNamed(context, "/homescreen",
+                    arguments: {"artist_id": Value});
+
+
               })
         ],
       ),

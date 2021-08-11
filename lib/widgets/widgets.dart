@@ -5,7 +5,9 @@ import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
 import 'package:tomo_app/ui/model/categories.dart';
 import 'package:tomo_app/ui/model/foods.dart';
+import 'package:tomo_app/widgets/ibutton3.dart';
 import 'package:tomo_app/widgets/iinputField2.dart';
+import 'package:tomo_app/widgets/iinputField21.dart';
 
 import '../main.dart';
 import 'ICard21FileCaching.dart';
@@ -668,6 +670,43 @@ formEdit(String hint, TextEditingController controller, String text, int maxLeng
   );
 }
 
+formEditSample(String hint, TextEditingController controller, String text, int maxLenght){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        height: 25,
+        child: TextFormField(
+            keyboardType: TextInputType.text,
+            cursorColor: theme.colorDefaultText,
+            controller: controller,
+            onChanged: (String value) async {
+            },
+            textAlignVertical: TextAlignVertical.center,
+            maxLines: 1,
+//            maxLength: widget.maxLenght,
+            style: TextStyle(
+              color: theme.colorDefaultText,
+            ),
+            decoration: new InputDecoration(
+              counterText: "",
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: TextStyle(
+                  color: theme.colorDefaultText,
+                  fontSize: 14.0),
+            ),
+
+        ),
+      ),
+      Container(height: 0.0, color: Colors.black.withAlpha(100),),
+      SizedBox(height: 1,),
+
+
+    ],
+  );
+}
+
 checkBox(String text, bool init, Function(bool) callback){
   return Row(
     children: <Widget>[
@@ -695,7 +734,7 @@ formEditPrice(String hint, TextEditingController controller, String text, int nu
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        height: 40,
+        height: 25,
         child: TextFormField(
             keyboardType: TextInputType.number,
             cursorColor: theme.colorDefaultText,
@@ -714,17 +753,128 @@ formEditPrice(String hint, TextEditingController controller, String text, int nu
               hintText: hint,
               hintStyle: TextStyle(
                   color: theme.colorDefaultText,
-                  fontSize: 16.0),
+                  fontSize: 13.0),
             ),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(regx)),
             ]
         ),
       ),
-      Container(height: 0.5, color: Colors.black.withAlpha(100),),
-      SizedBox(height: 3,),
+      Container(height: 0.0, color: Colors.black.withAlpha(100),),
+      SizedBox(height: 1,),
       if (text.isNotEmpty)
         Text(text, style: theme.text12bold,),                // Enter Dishes Name
     ],
+  );
+}
+
+oneItem(String id, String name, String lastUpdate, String image, double windowWidth, String published){
+  return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: theme.colorBackground,
+          border: Border.all(color: Colors.black.withAlpha(100)),
+          borderRadius: new BorderRadius.circular(theme.radius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withAlpha(theme.shadow),
+              spreadRadius: 2,
+              blurRadius: 2,
+              offset: Offset(2, 2), // changes position of shadow
+            ),
+          ]
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(id, style: theme.text16bold,),  // "ID: ",
+              Expanded(child: Text(lastUpdate, textAlign: TextAlign.end, style: theme.text14), ),
+            ],
+          ),
+          SizedBox(height: 5,),
+          if (published != '')
+            Row(children: [
+              Expanded(child: Text(name, style: theme.text16bold, textAlign: TextAlign.start, maxLines: 1,)),  // name
+              if (published == '1')
+                Container(
+                  padding: EdgeInsets.all(5),
+                  color: theme.colorPrimary,
+                  child: Text(strings.get(2277), style: theme.text14boldWhite,), // "PUBLISHED",
+                ),
+              if (published == '0')
+                Container(
+                  padding: EdgeInsets.all(5),
+                  color: theme.colorRed,
+                  child: Text(strings.get(2278), style: theme.text14boldWhite,), // "HIDE",
+                ),
+            ],),
+          SizedBox(height: 5,),
+          Container(
+            width: windowWidth,
+            height: 120,
+            child: imageWidget(image),
+          )
+
+        ],
+      )
+  );
+}
+
+imageWidget(String image){
+  return CachedNetworkImage(
+    placeholder: (context, url) =>
+        UnconstrainedBox(child:
+        Container(
+          alignment: Alignment.center,
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator(backgroundColor: theme.colorPrimary, ),
+        )),
+    imageUrl: image,
+    imageBuilder: (context, imageProvider) => Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: imageProvider,
+          fit: BoxFit.cover,
+        ),
+      ),
+    ),
+    errorWidget: (context,url,error) => new Icon(Icons.error),
+  );
+}
+
+
+buttonsEditOrDelete(String id, Function callback1, Function callback2, double windowWidth){
+  return Container(
+    alignment: Alignment.center,
+    child: Row(
+      children: [
+        Container(
+            width: windowWidth/2-20,
+            child: IButton3(
+              color: theme.colorPrimary,
+              text: strings.get(2279),                       // EDIT
+              textStyle: theme.text14boldWhite,
+              pressButton: (){
+                callback1(id);
+              },
+            )
+        ),
+        SizedBox(width: 10,),
+        Container(
+            width: windowWidth/2-20,
+            child: IButton3(
+              color: theme.colorRed,
+              text: strings.get(2280),                       // DELETE
+              textStyle: theme.text14boldWhite,
+              pressButton: (){
+                callback2(id);
+              },
+            )
+        ),
+      ],
+    ),
   );
 }

@@ -75,7 +75,7 @@ class _CallPageState extends State<CallScreen> {
 
   var userMap;
   int userNo = 0;
-  int SelectedID=-1;
+  int SelectedID = -1;
 
   @override
   void dispose() {
@@ -547,7 +547,7 @@ class _CallPageState extends State<CallScreen> {
 
   void _onVirtualGift() {
     setState(() {});
-    return openVirtualDialog("Virtual Gift",(s) {
+    return openVirtualDialog("Virtual Gift", (s) {
       setState(() {
         print("Updated VALUE IS HERE --->> " + s.toString());
       });
@@ -650,7 +650,12 @@ class _CallPageState extends State<CallScreen> {
       });
     } else {
       setState(() {
-        tryingToEnd = !tryingToEnd;
+        print("Check Value here >>" + (_show != 1).toString() + " >> " + _show.toString());
+        if (_show != 0) {
+          _show = 0;
+        } else {
+          tryingToEnd = !tryingToEnd;
+        }
       });
     }
     return false; // return true if the route to be popped
@@ -1165,7 +1170,7 @@ class _CallPageState extends State<CallScreen> {
     });
   }
 
-  openVirtualDialog(String _text,Function callBack) {
+  openVirtualDialog(String _text, Function callBack) {
     _dialogBody = SingleGiftView(callBack);
     setState(() {
       _show = 1;
@@ -1218,7 +1223,7 @@ class _CallPageState extends State<CallScreen> {
             width: double.infinity,
             child: SizedBox(
               height: 250,
-              child:  SampleList(context, 0,_responseList,callBack),
+              child: SampleList(context, 0, _responseList, callBack),
             ),
           )
         ],

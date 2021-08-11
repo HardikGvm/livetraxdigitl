@@ -27,9 +27,9 @@ class AudioMetadata {
   final String artwork;
 
   AudioMetadata({
-     this.album,
-     this.title,
-     this.artwork,
+    this.album,
+    this.title,
+    this.artwork,
   });
 }
 
@@ -183,123 +183,123 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: !_wait && _mList.length>0 && dataReady
-          ?  Container(color: Colors.black87, child:Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: StreamBuilder<SequenceState>(
-              stream: _player.sequenceStateStream,
-              builder: (context, snapshot) {
-                final state = snapshot.data;
-                if (state.sequence.isEmpty ?? true) return SizedBox();
-                final metadata = state.currentSource.tag as AudioMetadata;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                        Center(child: Image.network(metadata.artwork)),
+        body: !_wait && _mList.length>0 && dataReady
+            ?  Container(color: Colors.black87, child:Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: StreamBuilder<SequenceState>(
+                stream: _player.sequenceStateStream,
+                builder: (context, snapshot) {
+                  final state = snapshot.data;
+                  if (state.sequence.isEmpty ?? true) return SizedBox();
+                  final metadata = state.currentSource.tag as AudioMetadata;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                          Center(child: Image.network(metadata.artwork)),
+                        ),
                       ),
-                    ),
-                    Text(metadata.album,
-                        style: TextStyle(color: Colors.white)),
-                    Text(metadata.title,style: TextStyle(color: Colors.white)),
-                  ],
+                      Text(metadata.album,
+                          style: TextStyle(color: Colors.white)),
+                      Text(metadata.title,style: TextStyle(color: Colors.white)),
+                    ],
+                  );
+                },
+              ),
+            ),
+            ControlButtons(_player),
+            StreamBuilder<PositionData>(
+              stream: _positionDataStream,
+              builder: (context, snapshot) {
+                final positionData = snapshot.data;
+                return SeekBar(
+                  duration: positionData?.duration ?? Duration.zero,
+                  position: positionData?.position ?? Duration.zero,
+                  bufferedPosition:
+                  positionData?.bufferedPosition ?? Duration.zero,
+                  onChangeEnd: (newPosition) {
+                    _player.seek(newPosition);
+                  },
                 );
               },
             ),
-          ),
-          ControlButtons(_player),
-          StreamBuilder<PositionData>(
-            stream: _positionDataStream,
-            builder: (context, snapshot) {
-              final positionData = snapshot.data;
-              return SeekBar(
-                duration: positionData?.duration ?? Duration.zero,
-                position: positionData?.position ?? Duration.zero,
-                bufferedPosition:
-                positionData?.bufferedPosition ?? Duration.zero,
-                onChangeEnd: (newPosition) {
-                  _player.seek(newPosition);
-                },
-              );
-            },
-          ),
-          SizedBox(height: 8.0),
-          Row(
-            children: [
-              StreamBuilder<LoopMode>(
-                stream: _player.loopModeStream,
-                builder: (context, snapshot) {
-                  final loopMode = snapshot.data ?? LoopMode.off;
-                  const icons = [
-                    Icon(Icons.repeat, color: Colors.grey),
-                    Icon(Icons.repeat, color: Colors.orange),
-                    Icon(Icons.repeat_one, color: Colors.orange),
-                  ];
-                  const cycleModes = [
-                    LoopMode.off,
-                    LoopMode.all,
-                    LoopMode.one,
-                  ];
-                  final index = cycleModes.indexOf(loopMode);
-                  return IconButton(
-                    icon: icons[index],
-                    onPressed: () {
-                      _player.setLoopMode(cycleModes[
-                      (cycleModes.indexOf(loopMode) + 1) %
-                          cycleModes.length]);
-                    },
-                  );
-                },
-              ),
-              Expanded(
-                child: Text(
-                  "Playlist",
-                  textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white,fontSize: 25)
+            SizedBox(height: 8.0),
+            Row(
+              children: [
+                StreamBuilder<LoopMode>(
+                  stream: _player.loopModeStream,
+                  builder: (context, snapshot) {
+                    final loopMode = snapshot.data ?? LoopMode.off;
+                    const icons = [
+                      Icon(Icons.repeat, color: Colors.grey),
+                      Icon(Icons.repeat, color: Colors.orange),
+                      Icon(Icons.repeat_one, color: Colors.orange),
+                    ];
+                    const cycleModes = [
+                      LoopMode.off,
+                      LoopMode.all,
+                      LoopMode.one,
+                    ];
+                    final index = cycleModes.indexOf(loopMode);
+                    return IconButton(
+                      icon: icons[index],
+                      onPressed: () {
+                        _player.setLoopMode(cycleModes[
+                        (cycleModes.indexOf(loopMode) + 1) %
+                            cycleModes.length]);
+                      },
+                    );
+                  },
                 ),
-              ),
-              StreamBuilder<bool>(
-                stream: _player.shuffleModeEnabledStream,
+                Expanded(
+                  child: Text(
+                      "Playlist",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white,fontSize: 25)
+                  ),
+                ),
+                StreamBuilder<bool>(
+                  stream: _player.shuffleModeEnabledStream,
+                  builder: (context, snapshot) {
+                    final shuffleModeEnabled = snapshot.data ?? false;
+                    return IconButton(
+                      icon: shuffleModeEnabled
+                          ? Icon(Icons.shuffle, color: Colors.orange)
+                          : Icon(Icons.shuffle, color: Colors.grey),
+                      onPressed: () async {
+                        final enable = !shuffleModeEnabled;
+                        if (enable) {
+                          await _player.shuffle();
+                        }
+                        await _player.setShuffleModeEnabled(enable);
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+            Container(
+              height: 240.0,
+              child: StreamBuilder<SequenceState>(
+                stream: _player.sequenceStateStream,
                 builder: (context, snapshot) {
-                  final shuffleModeEnabled = snapshot.data ?? false;
-                  return IconButton(
-                    icon: shuffleModeEnabled
-                        ? Icon(Icons.shuffle, color: Colors.orange)
-                        : Icon(Icons.shuffle, color: Colors.grey),
-                    onPressed: () async {
-                      final enable = !shuffleModeEnabled;
-                      if (enable) {
-                        await _player.shuffle();
-                      }
-                      await _player.setShuffleModeEnabled(enable);
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
-          Container(
-            height: 240.0,
-            child: StreamBuilder<SequenceState>(
-              stream: _player.sequenceStateStream,
-              builder: (context, snapshot) {
-                final state = snapshot.data;
-                final sequence = state?.sequence ?? [];
-                return ListView(
-                /*  onReorder: (int oldIndex, int newIndex) {
+                  final state = snapshot.data;
+                  final sequence = state?.sequence ?? [];
+                  return ListView(
+                    /*  onReorder: (int oldIndex, int newIndex) {
                     if (oldIndex < newIndex) newIndex--;
                     _playlist.move(oldIndex, newIndex);
                   },*/
 
-                  children: [
-                    for (var i = 0; i < sequence.length; i++)
-                    /*  Dismissible(
+                    children: [
+                      for (var i = 0; i < sequence.length; i++)
+                      /*  Dismissible(
                         key: ValueKey(sequence[i]),
                         background: Container(
                           color: Colors.redAccent,
@@ -317,47 +317,47 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
                               ? Colors.black87
                               : null,
                           child:
-                            ListTile(
-                              leading: Image.network(
-                                sequence[i].tag.artwork,
-                                height: 60,
-                                width: 60,
-                                fit: BoxFit.cover,
-                              ),
-                              title: Text(
-                                sequence[i].tag.title,
-                                style: TextStyle(color: i == state.currentIndex?Colors.green:Colors.white),
-                              ),
-                              subtitle: Text(
-                                sequence[i].tag.album,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  _player.seek(Duration.zero, index: i);
-                                });
+                          ListTile(
+                            leading: Image.network(
+                              sequence[i].tag.artwork,
+                              height: 60,
+                              width: 60,
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(
+                              sequence[i].tag.title,
+                              style: TextStyle(color: i == state.currentIndex?Colors.green:Colors.white),
+                            ),
+                            subtitle: Text(
+                              sequence[i].tag.album,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _player.seek(Duration.zero, index: i);
+                              });
 
-                              },
-                            )
-                        ),
-                    //  ),
-                  ],
-                );
-              },
+                            },
+                          )
+                      ),
+                      //  ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        )):Container(
+          width: windowWidth,
+          height: windowHeight,
+          child: Center(
+            child: ColorLoader2(
+              color1: theme.colorPrimary,
+              color2: theme.colorCompanion,
+              color3: theme.colorPrimary,
             ),
           ),
-        ],
-      )):Container(
-        width: windowWidth,
-        height: windowHeight,
-        child: Center(
-          child: ColorLoader2(
-            color1: theme.colorPrimary,
-            color2: theme.colorCompanion,
-            color3: theme.colorPrimary,
-          ),
-        ),
-      )
+        )
 
     );
   }
