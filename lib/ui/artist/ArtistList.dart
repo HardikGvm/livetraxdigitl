@@ -24,10 +24,17 @@ class _ArtistListState extends State<ArtistList> {
   var windowWidth;
   var windowHeight;
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     _waits(true);
+
+
+
+
+
     int pagination_index = 1;
     _artist('artist', pagination_index, 4, true);
 
@@ -36,6 +43,7 @@ class _ArtistListState extends State<ArtistList> {
 
   PaypalServices services = PaypalServices();
   String accessToken;
+  bool _needsScroll = false;
 
   CheckPaypal() async {
     final request = BraintreeCreditCardRequest(
@@ -63,13 +71,18 @@ class _ArtistListState extends State<ArtistList> {
     super.dispose();
   }
 
-  final ScrollController _scrollController = ScrollController();
+
 
   @override
   Widget build(BuildContext context) {
     final title = 'Artists';
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
+
+    if (_needsScroll) {
+      _scrollToEnd();
+      _needsScroll = false;
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -203,12 +216,7 @@ class _ArtistListState extends State<ArtistList> {
 
 
 
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 10),
-            curve: Curves.easeOut,);
-        });
+        _needsScroll = true;
 
 
 
@@ -266,6 +274,15 @@ class _ArtistListState extends State<ArtistList> {
 
     setState(() {
       _show = 1;
+    });
+  }
+
+  _scrollToEnd() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 10),
+        curve: Curves.easeOut,);
     });
   }
 }

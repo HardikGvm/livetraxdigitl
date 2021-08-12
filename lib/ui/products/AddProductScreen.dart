@@ -205,6 +205,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     editControllerquantity.dispose();
     editControllerSize.dispose();
     editControllerIngredients.dispose();
+    _imagePath="";
     super.dispose();
   }
 
@@ -871,6 +872,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _nutritionGroup = nutritionGroup;
       _state = "viewFoodsList";
       isListMode=true;
+      _imagePath="";
       _ensureVisibleId = id;
       _waits(false);
       setState(() {});

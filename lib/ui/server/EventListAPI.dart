@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:tomo_app/ui/config/api.dart';
 import 'package:tomo_app/ui/model/utils.dart';
 
-event_list_api(String artist,
+event_list_api(
+    String artist,
     int page,
     int limit,
     Function(List<EventData> list) callback,
@@ -18,6 +19,8 @@ event_list_api(String artist,
       'artist': '$artist',
       'page': '$page',
       'limit': '$limit',
+      "sortBy": "event_date",
+      "sortAscDesc": "asc"
     });
 
     var url = "${serverPath}listEvent";
@@ -28,12 +31,15 @@ event_list_api(String artist,
 
     if (response.statusCode == 200) {
       print("::: Reena Data ::: " + response.body);
+      print("::: Reena Data url ::: " + url);
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
 
       if (ret.data != null) {
         for (int i = 0; i < ret.data.length; i++) {
-          print("IS STATUS LIVE > " + ret.data[i].title + " L." +
+          print("IS STATUS LIVE > " +
+              ret.data[i].title +
+              " L." +
               ret.data[i].is_live.toString());
         }
         callback(ret.data);
@@ -57,7 +63,7 @@ class Response {
     var list = json['data'] as List;
 
     List<EventData> imagesList =
-    list.map((i) => EventData.fromJson(i)).toList();
+        list.map((i) => EventData.fromJson(i)).toList();
 
     return Response(
       status: toInt(json['status'].toString()),
@@ -80,16 +86,17 @@ class EventData {
   String event_time;
   String image;
 
-  EventData({this.id,
-    this.title,
-    this.imageid,
-    this.desc,
-    this.artist,
-    this.event_date,
-    this.event_time,
-    this.price,
-    this.image,
-    this.is_live});
+  EventData(
+      {this.id,
+      this.title,
+      this.imageid,
+      this.desc,
+      this.artist,
+      this.event_date,
+      this.event_time,
+      this.price,
+      this.image,
+      this.is_live});
 
   factory EventData.fromJson(Map<String, dynamic> json) {
     return EventData(

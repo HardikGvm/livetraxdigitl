@@ -52,6 +52,9 @@ class AppThemeData{
   TextStyle text14boldBlack;
   TextStyle text14boldWhiteShadow;
   TextStyle text16boldPimary;
+  TextStyle text16boldGreen;
+  TextStyle text16boldRed;
+
   TextStyle text14link = TextStyle(
     color: Colors.blue,
     fontWeight: FontWeight.w400,
@@ -75,6 +78,7 @@ class AppThemeData{
   TextStyle text20bold;
   TextStyle text20boldPrimary;
   TextStyle text20boldWhite;
+  TextStyle text32boldWhite;
   TextStyle text20negative;
   TextStyle text22primaryShadow;
   TextStyle text28Red = TextStyle(      // text negative color
@@ -188,6 +192,18 @@ class AppThemeData{
 
     text16boldPimary = TextStyle(
       color: colorPrimary,
+      fontWeight: FontWeight.w800,
+      fontSize: 16,
+    );
+
+    text16boldGreen = TextStyle(
+      color: Colors.green,
+      fontWeight: FontWeight.w800,
+      fontSize: 16,
+    );
+
+    text16boldRed = TextStyle(
+      color: Colors.redAccent,
       fontWeight: FontWeight.w800,
       fontSize: 16,
     );
@@ -323,6 +339,12 @@ class AppThemeData{
       color: Colors.white,
       fontWeight: FontWeight.w800,
       fontSize: 20,
+    );
+
+    text32boldWhite = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w800,
+      fontSize: 32,
     );
 
     text20negative = TextStyle(      // text negative color

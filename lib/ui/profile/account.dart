@@ -5,6 +5,7 @@ import 'package:tomo_app/ui/model/pref.dart';
 import 'package:tomo_app/ui/server/changePassword.dart';
 import 'package:tomo_app/ui/server/changeProfile.dart';
 import 'package:tomo_app/ui/server/uploadavatar.dart';
+import 'package:tomo_app/ui/wallet/WalletScreen.dart';
 import 'package:tomo_app/widgets/colorloader2.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
 import 'package:tomo_app/widgets/iAvatarWithPhotoFileCaching.dart';
@@ -33,6 +34,15 @@ class _AccountScreenState extends State<AccountScreen> {
   _onChangePassword() {
     _openDialogs("changePassword");
   }
+
+  _onRedirectScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WalletListScreen()),
+    );
+  }
+
+
 
   _pressEditProfileButton() {
     print("User pressed Edit profile");
@@ -183,6 +193,17 @@ class _AccountScreenState extends State<AccountScreen> {
           margin: EdgeInsets.only(left: 30, right: 30),
           child: _changePassword()));
 
+
+    if (account.role == "artist") {
+      list.add(SizedBox(
+        height: 15,
+      ));
+
+      list.add(Container(
+          margin: EdgeInsets.only(left: 30, right: 30),
+          child: _ClickWallet()));
+    }
+
     list.add(SizedBox(
       height: 100,
     ));
@@ -209,6 +230,17 @@ class _AccountScreenState extends State<AccountScreen> {
           text: strings.get(70), // Change password
           textStyle: theme.text14boldWhite,
           pressButton: _onChangePassword),
+    );
+  }
+
+  _ClickWallet() {
+    return Container(
+      alignment: Alignment.center,
+      child: IButton3(
+          color: theme.colorPrimary,
+          text: strings.get(2283), // Change password
+          textStyle: theme.text14boldWhite,
+          pressButton: _onRedirectScreen),
     );
   }
 

@@ -410,6 +410,7 @@ class Lang {
     2280 : "DELETE",
     2281 : "ID:",
     2282 : "Last update:",
+    2283 : "Wallet",
 
   };
 

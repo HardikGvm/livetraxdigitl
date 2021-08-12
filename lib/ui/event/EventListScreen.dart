@@ -91,13 +91,16 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                   child: Row(
                     children: [
                       new Flexible(
-                        child: Image.network(
-                            (list == null ||
-                                    list.isEmpty ||
-                                    list[index].image == null)
-                                ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
-                                : list[index].image,
-                            width: 120),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                              (list == null ||
+                                  list.isEmpty ||
+                                  list[index].image == null)
+                                  ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
+                                  : list[index].image,
+                              width: 120),
+                        ),
                         flex: 1,
                       ),
                       new Flexible(

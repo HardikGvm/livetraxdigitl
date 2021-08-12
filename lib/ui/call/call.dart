@@ -8,13 +8,16 @@ import 'package:agora_rtm/agora_rtm.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:tomo_app/ui/Artist/data.dart';
+import 'package:tomo_app/ui/Music/MusicPlayList.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/config/settings.dart';
 import 'package:tomo_app/ui/model/message.dart';
 import 'package:tomo_app/ui/server/LiveStatusEvent.dart';
 import 'package:tomo_app/ui/server/listvirtualgift.dart';
 import 'package:tomo_app/ui/server/listvirtualgift_model.dart';
+import 'package:tomo_app/ui/server/musicplaylist.dart';
 import 'package:tomo_app/widgets/HearAnim.dart';
 import 'package:tomo_app/widgets/background_image_another.dart';
 import 'package:tomo_app/widgets/easyDialog2.dart';
@@ -34,8 +37,12 @@ class CallScreen extends StatefulWidget {
 
   static data sample;
 
+
+
   /// non-modifiable client role of the page
   final ClientRole role;
+
+
 
   /// Creates a call page with given channel name.
   const CallScreen(
@@ -48,6 +55,8 @@ class CallScreen extends StatefulWidget {
       this.token})
       : super(key: key);
 
+
+
   @override
   _CallPageState createState() => _CallPageState();
 }
@@ -59,6 +68,8 @@ class _CallPageState extends State<CallScreen> {
   RtcEngine _engine;
   bool requested = false;
 
+  List<AudioSource> _mList = List<AudioSource>();
+  List<MusicData> list = new List();
   bool _isLogin = false;
   bool _isInChannel = false;
   List<data> _responseList = [];
@@ -104,6 +115,7 @@ class _CallPageState extends State<CallScreen> {
 
   LoadVirtualgift() {
     _waits(true);
+    callAPI();
     listVirtualGift(_success, _error);
   }
 
@@ -1188,9 +1200,9 @@ class _CallPageState extends State<CallScreen> {
             height: MediaQuery.of(context).size.height,
             width: double.infinity,
             child: ListView.builder(
-                itemCount: details.length,
+                itemCount: _mList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ProductList(context, index);
+                  return ProductList(context, index,list);
                 }),
           ),
         ],
@@ -1230,4 +1242,40 @@ class _CallPageState extends State<CallScreen> {
       ),
     );
   }
+
+  void callAPI() {
+    _waits(true);
+    if (list != null && list.length > 0) {
+      print(":::Call API:::");
+      list.clear();
+    }
+    _music(1, 5);
+  }
+
+  _music(int page, int limit) {
+    print("::::Data::::");
+
+    musicList(page, limit, _onSuccessMusicList, _error);
+  }
+
+  _onSuccessMusicList(List<MusicData> list) {
+    _waits(false);
+    this.list = list;
+    var i;
+
+
+    for (int i = 0; i < list.length; i++) {
+      print(":::ID::: " + list[i].id.toString());
+      _mList.add(AudioSource.uri(
+        Uri.parse(list[i].music),
+        tag: AudioMetadata(
+          album: list[i].title,
+          title: list[i].desc,
+          artwork: list[i].image,
+        ),
+      ));
+    }
+
+  }
+
 }

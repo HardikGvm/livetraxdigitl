@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:tomo_app/main.dart';
 import 'package:tomo_app/ui/Artist/data.dart';
+import 'package:tomo_app/ui/server/musicplaylist.dart';
 
-Widget ProductList(BuildContext context, int index) {
+Widget ProductList(BuildContext context, int index,List<MusicData> list) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.only(),
@@ -33,7 +35,7 @@ Widget ProductList(BuildContext context, int index) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   new Flexible(child: Text(
-                    details[index]['name'],
+                    list[index].title,
                     maxLines: 2,
                     style: TextStyle(
                         color: Colors.blueGrey,
