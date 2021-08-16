@@ -37,12 +37,8 @@ class CallScreen extends StatefulWidget {
 
   static data sample;
 
-
-
   /// non-modifiable client role of the page
   final ClientRole role;
-
-
 
   /// Creates a call page with given channel name.
   const CallScreen(
@@ -54,8 +50,6 @@ class CallScreen extends StatefulWidget {
       this.userImage,
       this.token})
       : super(key: key);
-
-
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -160,6 +154,7 @@ class _CallPageState extends State<CallScreen> {
     _client =
         await AgoraRtmClient.createInstance('b42ce8d86225475c9558e478f1ed4e8e');
     _client.onMessageReceived = (AgoraRtmMessage message, String peerId) {
+      print("TAGGGGG -------- > 1" + message.text);
       _logPeer(message.text);
     };
     _client.onConnectionStateChanged = (int state, int reason) {
@@ -260,10 +255,22 @@ class _CallPageState extends State<CallScreen> {
     };
     channel.onMessageReceived =
         (AgoraRtmMessage message, AgoraRtmMember member) {
+      print("TAGGGGG -------- > 2 " + message.text);
       _logPeer(message.text);
       var img = "https://image.flaticon.com/icons/png/128/3135/3135715.png";
       userMap.putIfAbsent(member.userId, () => img);
-      _logInsert(user: member.userId, info: message.text, type: 'message');
+      print("TAGGGGG -------- > 3 " +
+          message.text +
+          " << " +
+          (message.text.contains("m1x2y3z4p5t6l7i8")).toString());
+      if (message.text.contains("m1x2y3z4p5t6l7i8")) {
+        List<String> path = message.text.split(" ");
+        if (path[1] != null) {
+          _logInsert(user: member.userId, info: path[1], type: 'image');
+        }
+      } else {
+        _logInsert(user: member.userId, info: message.text, type: 'message');
+      }
     };
     return channel;
   }
@@ -562,6 +569,10 @@ class _CallPageState extends State<CallScreen> {
     return openVirtualDialog("Virtual Gift", (s) {
       setState(() {
         print("Updated VALUE IS HERE --->> " + s.toString());
+        _logInsert(user: widget.userName, info: s.toString(), type: 'image');
+        _channel.sendMessage(
+            AgoraRtmMessage.fromText('m1x2y3z4p5t6l7i8 ' + s.toString()));
+        _show = 0;
       });
     });
   }
@@ -662,7 +673,10 @@ class _CallPageState extends State<CallScreen> {
       });
     } else {
       setState(() {
-        print("Check Value here >>" + (_show != 1).toString() + " >> " + _show.toString());
+        print("Check Value here >>" +
+            (_show != 1).toString() +
+            " >> " +
+            _show.toString());
         if (_show != 0) {
           _show = 0;
         } else {
@@ -863,7 +877,7 @@ class _CallPageState extends State<CallScreen> {
                   vertical: 3,
                   horizontal: 10,
                 ),
-                child: (_infoStrings[index].type == 'join')
+                child: (_infoStrings[index].type == 'image')
                     ? Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Row(
@@ -885,13 +899,20 @@ class _CallPageState extends State<CallScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
+                                horizontal: 40,
                               ),
-                              child: Text(
-                                '${_infoStrings[index].user} joined',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
+                              child: CachedNetworkImage(
+                                imageUrl: _infoStrings[index].message,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 70.0,
+                                  height: 70.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
                               ),
                             ),
@@ -1023,6 +1044,13 @@ class _CallPageState extends State<CallScreen> {
   void _logInsert({String info, String type, String user}) {
     if (type == 'message' && info.contains('m1x2y3z4p5t6l7k8')) {
       popUp();
+    } else if (type == 'image' && info.contains('m1x2y3z4p5t6l7i8')) {
+      // stopFunction();
+      var image = userMap[user];
+      Message m = new Message(message: info, type: type, user: user, image: image);
+      setState(() {
+        _infoStrings.insert(0, m);
+      });
     } else if (type == 'message' && info.contains('E1m2I3l4i5E6')) {
       // stopFunction();
     } else {
@@ -1202,7 +1230,7 @@ class _CallPageState extends State<CallScreen> {
             child: ListView.builder(
                 itemCount: _mList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ProductList(context, index,list);
+                  return ProductList(context, index, list);
                 }),
           ),
         ],
@@ -1263,7 +1291,6 @@ class _CallPageState extends State<CallScreen> {
     this.list = list;
     var i;
 
-
     for (int i = 0; i < list.length; i++) {
       print(":::ID::: " + list[i].id.toString());
       _mList.add(AudioSource.uri(
@@ -1275,7 +1302,5 @@ class _CallPageState extends State<CallScreen> {
         ),
       ));
     }
-
   }
-
 }

@@ -89,7 +89,7 @@ class _SamplePageState extends State<SampleList> {
                                     print("Check Selection here >> VALSS " +
                                         CallScreen.sample.price);
                                     setState(() {
-                                      widget.callBack("refresshhh");
+
                                     });
                                   },
                                   child: Container(
@@ -192,7 +192,9 @@ class _SamplePageState extends State<SampleList> {
                           text: strings.get(19), // Change
                           textStyle: theme.text14boldWhite,
                           pressButton: () {
-                            setState(() {});
+                            setState(() {
+                              widget.callBack(CallScreen.sample.image);
+                            });
                           }),
                     ),
                   ],

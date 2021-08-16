@@ -171,7 +171,6 @@ class _LoginScreenState extends State<Login> {
               style: new TextStyle(fontSize: 25.0, color: Colors.white)),
         ),
         SizedBox(
-
           height: windowHeight * 0.15,
         ),
         Container(

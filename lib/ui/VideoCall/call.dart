@@ -60,12 +60,12 @@ class _CallPageState extends State<CallPage> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     await _engine.enableWebSdkInteroperability(true);
-    /*VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1920, 1080);
-    await _engine.setVideoEncoderConfiguration(configuration);*/
+    await _engine.setVideoEncoderConfiguration(configuration);
 
-    await _engine.setParameters(
-        '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
+    /*await _engine.setParameters(
+        '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');*/
     await _engine.joinChannel(widget.Token, widget.channelName, null, 0);
   }
 
@@ -139,6 +139,21 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
+
+  Widget _expandedSmallVideoRow(List<Widget> views) {
+    final wrappedViews = views.map<Widget>(_videoView).toList();
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: SizedBox(
+        width: 120,
+        height: 150,
+        child: Row(
+          children: wrappedViews,
+        ),
+      ),
+    );
+  }
+
   /// Video layout wrapper
   Widget _viewRows() {
     final views = _getRenderViews();
@@ -150,10 +165,12 @@ class _CallPageState extends State<CallPage> {
         ));
       case 2:
         return Container(
-            child: Column(
+            child: Stack(
           children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
+            //_expandedVideoRow([views[0]]),
+            _expandedSmallVideoRow([views[0]]),
+            _expandedVideoRow([views[1]]),
+
           ],
         ));
       case 3:
@@ -298,7 +315,7 @@ class _CallPageState extends State<CallPage> {
       appBar: AppBar(
         title: Text(""),
       ),
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       body: Center(
         child: Stack(
           children: <Widget>[

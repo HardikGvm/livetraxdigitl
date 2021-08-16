@@ -42,8 +42,6 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-
-
   _pressEditProfileButton() {
     print("User pressed Edit profile");
     _openDialogs("EditProfile");
@@ -193,16 +191,14 @@ class _AccountScreenState extends State<AccountScreen> {
           margin: EdgeInsets.only(left: 30, right: 30),
           child: _changePassword()));
 
+    //if (account.role == "artist") {
+    list.add(SizedBox(
+      height: 15,
+    ));
 
-    if (account.role == "artist") {
-      list.add(SizedBox(
-        height: 15,
-      ));
-
-      list.add(Container(
-          margin: EdgeInsets.only(left: 30, right: 30),
-          child: _ClickWallet()));
-    }
+    list.add(Container(
+        margin: EdgeInsets.only(left: 30, right: 30), child: _ClickWallet()));
+    //}
 
     list.add(SizedBox(
       height: 100,
