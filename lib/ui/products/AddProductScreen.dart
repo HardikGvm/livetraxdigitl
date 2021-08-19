@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photofilters/filters/preset_filters.dart';
 import 'package:photofilters/widgets/photo_filter.dart';
@@ -54,6 +56,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   var editControllerIngredients = TextEditingController();
 
   var _categoryValueOnForm = 0;
+  var _experienceValueOnForm = 0;
   var _restaurantValueOnForm = 0;
   var _extrasGroupValueOnForm = 0;
   var _nutritionGroupValueOnForm = 0;
@@ -219,7 +222,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         int numberOfDigits) {
       _image = image;
       _foods = foods;
+      print("Check List here Well >> " + foods.length.toString());
       _restaurants = restaurants;
+      print("Check List here Well 1>> " + restaurants.length.toString());
       _extrasGroup = extrasGroup;
       _nutritionGroup = nutritionGroup;
       _numberOfDigits = numberOfDigits;
@@ -347,22 +352,39 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           ),
                         ),
                       ]),
+                      if (_categoryValueOnForm.toString() == "3")
+                        TableRow(children: [
+                          GetTitle(strings.get(2284)),
+                          Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: Container(
+                              height: 40,
+                              child: _experienceComboBoxInForm(),
+                            ),
+                          ),
+                        ]) ,
+
+                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
                       TableRow(children: [
                         GetTitle(strings.get(2263)),
                         GetDigitEdit(editControllerquantity, strings.get(2267)),
                       ]),
+                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
                       TableRow(children: [
                         GetTitle(strings.get(2264)),
                         GetDigitEdit(editControllerSize, strings.get(2262)),
                       ]),
+                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
                       TableRow(children: [
                         GetTitle(strings.get(2265)),
                         GetTextEdit(editControllerBrand, strings.get(170)),
                       ]),
+                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
                       TableRow(children: [
                         GetTitle(strings.get(2266)),
                         GetTextEdit(editControllerColor, strings.get(170)),
                       ]),
+
                       TableRow(children: [
                         GetTitle(strings.get(2269)),
                         GetDigitEdit(editControllerPrice, strings.get(2262)),
@@ -376,7 +398,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         height: 20,
       ));
       list.add(Text(
-        strings.get(2270),
+          (_categoryValueOnForm.toString() == "1") ? strings.get(2285) : strings.get(2270),
         style: theme.text12bold,
       )); // "Select Nutritions"
       list.add(SizedBox(
@@ -462,6 +484,62 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 items: menuItems,
                 onChanged: (value) {
                   _categoryValueOnForm = value;
+
+                  print("Selected Vals > " + _categoryValueOnForm.toString());
+
+                  setState(() {});
+                })));
+  }
+
+  _experienceComboBoxInForm() {
+    var menuItems = List<DropdownMenuItem>();
+    menuItems.add(
+      DropdownMenuItem(
+        child: Text(
+          strings.get(189),
+          style: theme.text12grey,
+        ), // No
+        value: 0,
+      ),
+    );
+    List<CategoriesData> _exp=List<CategoriesData>();
+
+    _exp.add(CategoriesData(id: 1,name: "Tour Bus Ride"));
+    _exp.add(CategoriesData(id: 2,name: "Artist/Band get Together"));
+    _exp.add(CategoriesData(id: 3,name: "Meet & Greet"));
+    _exp.add(CategoriesData(id: 4,name: "Video Call"));
+    _exp.add(CategoriesData(id: 5,name: "Lunch Backstage"));
+
+
+
+    print("Check Candyyd here " + (_exp != null).toString() + " CHECK " + _exp.length.toString());
+    if (_exp != null) {
+      for (var item in _exp) {
+        menuItems.add(
+          DropdownMenuItem(
+            child: Text(
+              item.name,
+              style: theme.text12bold,
+            ),
+            value: item.id,
+          ),
+        );
+      }
+    }
+
+    return Container(
+        width: windowWidth,
+        child: ButtonTheme(
+            alignedDropdown: true,
+            child: DropdownButton(
+                isExpanded: true,
+                value: _experienceValueOnForm,
+                items: menuItems,
+                onChanged: (value) {
+                  _experienceValueOnForm = value;
+
+                  print("Selected Vals 2> " + _experienceValueOnForm.toString());
+
                   setState(() {});
                 })));
   }
@@ -692,7 +770,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           setState(() {
                             _show = 0;
                           });
-                          getImage2(ImageSource.gallery);
+                          //getImage2(ImageSource.gallery);
+                          _openFileExplorer();
                         })),
               ],
             )),
@@ -712,6 +791,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
+  String _fileName = '...';
+  String _path = '...';
+  String _extension;
+  bool _hasValidMime = false;
+  FileType _pickingType;
+
+  void _openFileExplorer() async {
+    if (_pickingType != FileType.AUDIO || _hasValidMime) {
+      try {
+        _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
+        print("Check Image Here >> " + _path);
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        _fileName = _path != null ? _path.split('/').last : '...';
+        print("Check Image Here _fileName>> " + _fileName);
+      });
+    }
+  }
+
+
   selectImage(double windowWidth, Function callback) {
     return Stack(
       children: [
@@ -729,7 +833,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: Opacity(
                 opacity: 0.6,
                 child: Text(
-                  strings.get(125),
+                  (_categoryValueOnForm.toString() == "1") ?
+                  strings.get(2286) : strings.get(125),
                   style: theme.text12bold,
                 ) // Click here for select Image
                 ),
@@ -811,7 +916,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (editControllerDesc.text.isEmpty)
       return _openDialogError(
           strings.get(2274)); // "The Name field is request",
-    if (editControllerSize.text.isEmpty)
+    if (editControllerSize.text.isEmpty && _categoryValueOnForm.toString() == "2")
       return _openDialogError(
           strings.get(2275)); // "The Price field is request",
     if (editControllerPrice.text.isEmpty)

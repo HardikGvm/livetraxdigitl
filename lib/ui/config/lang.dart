@@ -411,6 +411,9 @@ class Lang {
     2281 : "ID:",
     2282 : "Last update:",
     2283 : "Wallet",
+    2284 : "Types",
+    2285 : "Please select Music",
+    2286 : "Click here for select Music",
 
   };
 

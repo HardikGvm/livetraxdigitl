@@ -47,6 +47,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
   @override
   void initState() {
     _loadFoodsList();
+    print("Check List here LOADING >> ");
     super.initState();
   }
 
@@ -59,6 +60,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
         int numberOfDigits) {
       _image = image;
       _foods = foods;
+      print("Check List here Well >> " + foods.length.toString());
       _restaurants = restaurants;
       _extrasGroup = extrasGroup;
       _nutritionGroup = nutritionGroup;
@@ -130,9 +132,9 @@ class _ListProductScreenState extends State<ListProductScreen> {
   _addProduct() {
     var list = List<Widget>();
 
-
+    print("Check List here Well SIZE> " + _foods.length.toString());
     for (var item in _foods){
-
+    print("Check List here Well > " + item.id + " > " + item.name);
      // if (item.name.toUpperCase().contains(_searchValue)){
         /*if (_ensureVisibleId == item.id.toString()) {
           if (count > 0)

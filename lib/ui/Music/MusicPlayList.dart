@@ -213,6 +213,9 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
                 },
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
             ControlButtons(_player),
             StreamBuilder<PositionData>(
               stream: _positionDataStream,
@@ -261,7 +264,7 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
                   child: Text(
                       "Playlist",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white,fontSize: 25)
+                      style: TextStyle(color: Colors.white,fontSize: 20)
                   ),
                 ),
                 StreamBuilder<bool>(
@@ -403,34 +406,43 @@ class ControlButtons extends StatelessWidget {
             final playing = playerState?.playing;
             if (processingState == ProcessingState.loading ||
                 processingState == ProcessingState.buffering) {
+
               return Container(
                 margin: EdgeInsets.all(8.0),
                 width: 64.0,
                 height: 64.0,
                 child: CircularProgressIndicator(),
               );
+
             } else if (playing != true) {
+
               return IconButton(
                 icon: Icon(Icons.play_arrow,color: Colors.white,),
                 iconSize: 64.0,
                 onPressed: player.play,
               );
+
             } else if (processingState != ProcessingState.completed) {
+
               return IconButton(
                 icon: Icon(Icons.pause,color: Colors.white),
                 iconSize: 64.0,
                 onPressed: player.pause,
               );
+
             } else {
+
               return IconButton(
                 icon: Icon(Icons.replay,color: Colors.white),
                 iconSize: 64.0,
                 onPressed: () => player.seek(Duration.zero,
                     index: player.effectiveIndices.first),
               );
+
             }
           },
         ),
+
         StreamBuilder<SequenceState>(
           stream: player.sequenceStateStream,
           builder: (context, snapshot) => IconButton(

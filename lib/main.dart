@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tomo_app/ui/call/messaging.dart';
 import 'package:tomo_app/ui/checkout/addCreditCard.dart';
 import 'package:tomo_app/ui/checkout/paymentMethod.dart';
@@ -6,6 +8,7 @@ import 'package:tomo_app/ui/checkout/shippingAddress.dart';
 import 'package:tomo_app/ui/config/lang.dart';
 import 'package:tomo_app/ui/config/theme.dart';
 import 'package:tomo_app/ui/home/home.dart';
+import 'package:tomo_app/ui/home/main.dart';
 import 'package:tomo_app/ui/login/UserSelection.dart';
 import 'package:tomo_app/ui/login/forgot.dart';
 import 'package:tomo_app/ui/login/login.dart';
@@ -18,7 +21,6 @@ import 'package:tomo_app/ui/profile/account.dart';
 import 'package:tomo_app/ui/signup/signup.dart';
 import 'package:tomo_app/ui/start/splash.dart';
 import 'package:tomo_app/widgets/route.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +45,9 @@ Pref pref = Pref();
 AppThemeData theme = AppThemeData();
 AppFoodRoute route = AppFoodRoute();
 
-
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    new FlutterLocalNotificationsPlugin();
 
 class LiveStreamApp extends StatelessWidget {
   @override
@@ -83,14 +87,7 @@ class LiveStreamApp extends StatelessWidget {
         '/checkout/addCreditCard': (context) => AddCreditCard(),
         '/addproducts': (context) => AddProductScreen(),
         //0'/addproducts': (context) => ListProductScreen(),
-
-
       },
     );
   }
-
-
-
-
 }
-
