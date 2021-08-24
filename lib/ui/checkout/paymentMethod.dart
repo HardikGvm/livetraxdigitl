@@ -44,10 +44,8 @@ class _PaymentMethodState extends State<PaymentMethod> {
                 //_onSuccess("PayPal: $w");
                 print("Paypal Payment Done Here >>");
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConfirmPurchaseScreen()),
-                );
+                _showMyDialog();
+
 
               }),
         ),
@@ -67,6 +65,36 @@ class _PaymentMethodState extends State<PaymentMethod> {
         ),
       );
     }
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Your transaction successfully completed.',style: TextStyle(fontSize: 18),),
+          content: SingleChildScrollView(
+            child: Container(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConfirmPurchaseScreen()),
+                );
+
+              },
+            ),
+
+          ],
+        );
+      },
+    );
   }
 
   listPaymentMethod() async {

@@ -171,11 +171,14 @@ class PaypalPaymentState extends State<PaypalPayment> {
                     .executePayment(executeUrl, payerID, accessToken)
                     .then((id) {
                   widget.onFinish(id);
+                  print("Paypal Payment Done Here  111>>");
                   Navigator.of(context).pop();
                 });
               } else {
+                print("Paypal Payment Done Here  222>>");
                 Navigator.of(context).pop();
               }
+              print("Paypal Payment Done Here  333>>");
               Navigator.of(context).pop();
             }
             if (request.url.contains(cancelURL)) {

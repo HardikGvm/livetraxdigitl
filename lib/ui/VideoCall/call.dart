@@ -171,16 +171,6 @@ class _CallPageState extends State<CallPage> {
           children: <Widget>[
             //_expandedVideoRow([views[0]]),
             _expandedVideoRow([views[1]]),
-            new Positioned(
-              right: 0.0,
-              bottom: 3.0,
-              child: Container(
-                color: Colors.red,
-                  constraints: new BoxConstraints(
-                      maxHeight: 50.0,
-                      maxWidth: 50.0
-                  ))),
-
             _expandedSmallVideoRow([views[0]]),
           ],
         ));
