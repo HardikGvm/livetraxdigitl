@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
-import 'package:tomo_app/payment/PaypalServices.dart';
-import 'package:tomo_app/ui/server/ArtistListAPI.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/payment/PaypalServices.dart';
+import 'package:livetraxdigitl/ui/server/ArtistListAPI.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import '../../main.dart';
 import 'ArtistDetailScreen.dart';
 

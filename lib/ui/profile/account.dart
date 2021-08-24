@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
-import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/server/changePassword.dart';
-import 'package:tomo_app/ui/server/changeProfile.dart';
-import 'package:tomo_app/ui/server/uploadavatar.dart';
-import 'package:tomo_app/ui/wallet/WalletScreen.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/iAvatarWithPhotoFileCaching.dart';
-import 'package:tomo_app/widgets/iappBar.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
-import 'package:tomo_app/widgets/ibutton5.dart';
-import 'package:tomo_app/widgets/ilist4.dart';
+import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/server/changePassword.dart';
+import 'package:livetraxdigitl/ui/server/changeProfile.dart';
+import 'package:livetraxdigitl/ui/server/uploadavatar.dart';
+import 'package:livetraxdigitl/ui/wallet/WalletScreen.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/iAvatarWithPhotoFileCaching.dart';
+import 'package:livetraxdigitl/widgets/iappBar.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/widgets/ibutton5.dart';
+import 'package:livetraxdigitl/widgets/ilist4.dart';
 
 import '../../main.dart';
 

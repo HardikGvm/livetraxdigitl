@@ -3,13 +3,13 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tomo_app/ui/Music/MusicPlayList.dart';
-import 'package:tomo_app/ui/call/call.dart';
-import 'package:tomo_app/ui/config/constant.dart';
-import 'package:tomo_app/ui/server/EventListAPI.dart';
-import 'package:tomo_app/ui/server/getagoratoken.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/ui/Music/MusicPlayList.dart';
+import 'package:livetraxdigitl/ui/call/call.dart';
+import 'package:livetraxdigitl/ui/config/constant.dart';
+import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
+import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import '../../main.dart';
 
 class ArtistDetailScreen extends StatefulWidget {

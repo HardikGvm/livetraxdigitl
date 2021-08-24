@@ -1,6 +1,6 @@
 
 
-import 'package:tomo_app/ui/server/mainwindowdata.dart';
+import 'package:livetraxdigitl/ui/server/mainwindowdata.dart';
 
 List<Restaurants> nearYourRestaurants = [];
 List<Restaurants> topRestaurants = [];

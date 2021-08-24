@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
-import 'package:tomo_app/ui/model/categories.dart';
-import 'package:tomo_app/ui/server/mainwindowdata.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
+import 'package:livetraxdigitl/ui/model/categories.dart';
+import 'package:livetraxdigitl/ui/server/mainwindowdata.dart';
 import '../main.dart';
 import 'ICard12FileCaching.dart';
 import 'ICard21FileCaching.dart';

@@ -1,9 +1,10 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:tomo_app/payment/PaypalPayment.dart';
-import 'package:tomo_app/ui/config/UserService.dart';
-import 'package:tomo_app/widgets/internetConnection.dart';
+import 'package:livetraxdigitl/payment/PaypalPayment.dart';
+import 'package:livetraxdigitl/ui/checkout/ConfirmPurchaseScreen.dart';
+import 'package:livetraxdigitl/ui/config/UserService.dart';
+import 'package:livetraxdigitl/widgets/internetConnection.dart';
 
 import 'checkoutAppBar.dart';
 
@@ -30,6 +31,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
         context,
         MaterialPageRoute(
           builder: (context) => PaypalPayment(
+              //payAmount: _total,
               /*currency: code,
               userFirstName: "",
               userLastName: "",
@@ -40,6 +42,13 @@ class _PaymentMethodState extends State<PaymentMethod> {
               sandBoxMode: homeScreen.mainWindowData.payments.payPalSandBoxMode,*/
               onFinish: (w) {
                 //_onSuccess("PayPal: $w");
+                print("Paypal Payment Done Here >>");
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ConfirmPurchaseScreen()),
+                );
+
               }),
         ),
       );

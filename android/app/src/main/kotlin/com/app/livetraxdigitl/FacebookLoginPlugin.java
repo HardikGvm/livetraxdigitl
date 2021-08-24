@@ -1,4 +1,4 @@
-package com.app.tomo_app;
+package com.app.livetraxdigitl;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -15,7 +15,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class FacebookLoginPlugin implements MethodCallHandler {
-    private static final String CHANNEL_NAME = "com.app.tomo_app/flutter_facebook_login";
+    private static final String CHANNEL_NAME = "com.app.livetraxdigitl/flutter_facebook_login";
 
     private static final String ERROR_UNKNOWN_LOGIN_BEHAVIOR = "unknown_login_behavior";
 

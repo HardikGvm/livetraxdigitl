@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:hive/hive.dart';
-import 'package:tomo_app/Helper/songs_count.dart';
+import 'package:livetraxdigitl/Helper/songs_count.dart';
 
 bool checkPlaylist(String name, String key) {
   if (name != 'Favorite Songs') {

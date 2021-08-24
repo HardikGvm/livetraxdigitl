@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/model/utils.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/model/utils.dart';
 
 deleteEventAPI(String id, int index, Function(String message, int index) callback,
     Function(String) callbackError) async {

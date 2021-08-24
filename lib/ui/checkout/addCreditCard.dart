@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tomo_app/ui/config/UserService.dart';
-import 'package:tomo_app/widgets/internetConnection.dart';
+import 'package:livetraxdigitl/ui/config/UserService.dart';
+import 'package:livetraxdigitl/widgets/internetConnection.dart';
 
 import 'checkoutAppBar.dart';
 import 'creditCardFormatter.dart';

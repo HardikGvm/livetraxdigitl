@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
-import 'package:tomo_app/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
 
 import '../../main.dart';
 

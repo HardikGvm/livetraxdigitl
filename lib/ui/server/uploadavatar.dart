@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image/image.dart';
-import 'package:tomo_app/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
 
 uploadAvatar(String _avatarFile, String uid, Function(String) callback, Function(String) callbackError) async {
   //

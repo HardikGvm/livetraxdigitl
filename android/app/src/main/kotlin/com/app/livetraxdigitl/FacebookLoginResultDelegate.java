@@ -1,4 +1,4 @@
-package com.app.tomo_app;
+package com.app.livetraxdigitl;
 
 import android.content.Intent;
 

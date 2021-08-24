@@ -1,23 +1,25 @@
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/Artist/ArtistList.dart';
-import 'package:tomo_app/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
-import 'package:tomo_app/ui/call/call.dart';
-import 'package:tomo_app/ui/event/EventListScreen.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/Artist/ArtistList.dart';
+import 'package:livetraxdigitl/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
+import 'package:livetraxdigitl/ui/call/call.dart';
+import 'package:livetraxdigitl/ui/event/EventListScreen.dart';
+import 'package:livetraxdigitl/ui/home/data_user.dart';
 
-import 'package:tomo_app/ui/server/getagoratoken.dart';
-import 'package:tomo_app/widgets/background_image.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
+import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -28,8 +30,7 @@ class _HomeScreenState extends State<Home> {
   _pressLoginButton() {
     print("User pressed \"LOGIN\" button");
     print(
-        "Login: ${editControllerName.text}, password: ${editControllerPassword
-            .text}");
+        "Login: ${editControllerName.text}, password: ${editControllerPassword.text}");
     if (editControllerName.text.isEmpty)
       return openDialog(strings.get(10)); // "Enter Login",
     if (!validateEmail(editControllerName.text))
@@ -78,12 +79,13 @@ class _HomeScreenState extends State<Home> {
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
-
-    var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
 
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidRecieveLocalNotification);
@@ -91,7 +93,7 @@ class _HomeScreenState extends State<Home> {
     MacOSInitializationSettings _MacOSInitializationSettings;
 
     var initializationSettings = new InitializationSettings(
-        android: initializationSettingsAndroid, iOS:initializationSettingsIOS);
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
@@ -118,27 +120,30 @@ class _HomeScreenState extends State<Home> {
     });
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      print("TOKEN HERE >> "+token);
+      print("TOKEN HERE >> " + token);
     });
 
     super.initState();
   }
 
-  Future displayNotification(Map<String, dynamic> message) async{
+  Future displayNotification(Map<String, dynamic> message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channelid', 'flutterfcm', 'your channel description',
         importance: Importance.max, priority: Priority.high);
 
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
       message['notification']['title'],
       message['notification']['body'],
       platformChannelSpecifics,
-      payload: 'hello',);
+      payload: 'hello',
+    );
   }
+
   Future onSelectNotification(String payload) async {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
@@ -150,14 +155,12 @@ class _HomeScreenState extends State<Home> {
         timeInSecForIos: 1,
         backgroundColor: Colors.black54,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
     /*Navigator.push(
       context,
       new MaterialPageRoute(builder: (context) => new SecondScreen(payload)),
     );*/
   }
-
 
   Future onDidRecieveLocalNotification(
       int id, String title, String body, String payload) async {
@@ -180,15 +183,13 @@ class _HomeScreenState extends State<Home> {
                   timeInSecForIos: 1,
                   backgroundColor: Colors.black54,
                   textColor: Colors.white,
-                  fontSize: 16.0
-              );
+                  fontSize: 16.0);
             },
           ),
         ],
       ),
     );
   }
-
 
   @override
   void dispose() {
@@ -199,14 +200,8 @@ class _HomeScreenState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    windowWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    windowHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    windowWidth = MediaQuery.of(context).size.width;
+    windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: theme.colorBackground,
       body: Stack(
@@ -220,8 +215,11 @@ class _HomeScreenState extends State<Home> {
             child: Scaffold(
                 backgroundColor: Colors.transparent,
                 body: Container(
-                    child: Stack(
-                        children: <Widget>[GetBottomOption(), _toolbar()]))),
+                    child: Stack(children: <Widget>[
+                  GetBottomOption(),
+                  _toolbar(),
+                  _messageList()
+                ]))),
           ),
           if (_wait)
             (Container(
@@ -264,10 +262,11 @@ class _HomeScreenState extends State<Home> {
         crossAxisCount: 3,
         padding: EdgeInsets.all(3.0),
         children: <Widget>[
-
-          makeDashboardItem("Artist", Icons.supervised_user_circle_sharp,"assets/artists.png"),
-          makeDashboardItem("Live Event", Icons.music_note,"assets/play.png"),
-          makeDashboardItem("Exclusive\nAccess", Icons.verified_user,"assets/vip.png"),
+          makeDashboardItem("Artist", Icons.supervised_user_circle_sharp,
+              "assets/artists.png"),
+          makeDashboardItem("Live Event", Icons.music_note, "assets/play.png"),
+          makeDashboardItem(
+              "Exclusive\nAccess", Icons.verified_user, "assets/vip.png"),
         ],
       ),
     );
@@ -304,7 +303,6 @@ class _HomeScreenState extends State<Home> {
                       print("Press Profile");
                       Navigator.pushNamed(context, "/account");
                       //Navigator.pushNamed(context, "/homescreen");
-
                     }),
                 SizedBox(height: 5.0),
                 GestureDetector(
@@ -320,7 +318,6 @@ class _HomeScreenState extends State<Home> {
                       Navigator.pushNamed(context, "/account");
                       //Navigator.pushNamed(context, "/homescreen");
                     }),
-
                 SizedBox(height: 15.0),
                 if (account.role == "artist")
                   GestureDetector(
@@ -339,7 +336,6 @@ class _HomeScreenState extends State<Home> {
                       })
                 else
                   Container(),
-
                 if (account.role == "artist")
                   SizedBox(height: 5.0)
                 else
@@ -359,7 +355,6 @@ class _HomeScreenState extends State<Home> {
                       })
                 else
                   Container()
-
               ],
             ),
           ),
@@ -392,9 +387,9 @@ class _HomeScreenState extends State<Home> {
       crossAxisCount: 3,
       padding: EdgeInsets.all(3.0),
       children: <Widget>[
-        makeDashboardItem("Ordbog", Icons.book,""),
-        makeDashboardItem("Alphabet", Icons.alarm,""),
-        makeDashboardItem("Sample", Icons.ac_unit_rounded,""),
+        makeDashboardItem("Ordbog", Icons.book, ""),
+        makeDashboardItem("Alphabet", Icons.alarm, ""),
+        makeDashboardItem("Sample", Icons.ac_unit_rounded, ""),
       ],
     );
   }
@@ -451,7 +446,7 @@ class _HomeScreenState extends State<Home> {
     log("TAGGGG " + "Print Exclusive");
   }
 
-  Card makeDashboardItem(String title, IconData icon,String icons) {
+  Card makeDashboardItem(String title, IconData icon, String icons) {
     return Card(
         elevation: 1.0,
         color: Colors.transparent,
@@ -488,7 +483,7 @@ class _HomeScreenState extends State<Home> {
               children: <Widget>[
                 SizedBox(height: 5.0),
                 Center(
-                    /*child: Icon(
+                  /*child: Icon(
                       icon,
                       size: 40.0,
                       color: Colors.white,
@@ -500,13 +495,12 @@ class _HomeScreenState extends State<Home> {
                         height: 40,
                         alignment: Alignment.topCenter),
                   ),
-
                 ),
                 SizedBox(height: 15.0),
                 new Center(
                   child: new Text(title,
                       style:
-                      new TextStyle(fontSize: 16.0, color: Colors.white)),
+                          new TextStyle(fontSize: 16.0, color: Colors.white)),
                 )
               ],
             ),
@@ -525,8 +519,8 @@ class _HomeScreenState extends State<Home> {
     //}
   }
 
-  token_success(String channelname, int Eventid, String username,
-      String _response) {
+  token_success(
+      String channelname, int Eventid, String username, String _response) {
     _waits(false);
     _Token = _response;
     print("CALL _success Done ---> " + _response.toString());
@@ -536,14 +530,13 @@ class _HomeScreenState extends State<Home> {
     }
 
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) =>
-            CallScreen(
+        builder: (context) => CallScreen(
               channelName: channelname,
               Eventid: 0,
               userName: username,
               role: _role,
               userImage:
-              "https://image.flaticon.com/icons/png/128/3135/3135715.png",
+                  "https://image.flaticon.com/icons/png/128/3135/3135715.png",
               token: _response,
             )));
   }
@@ -558,5 +551,97 @@ class _HomeScreenState extends State<Home> {
   Future<void> _handleMicPermission() {
     final status = Permission.microphone.request();
     print(status);
+  }
+
+  Widget _messageList() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      alignment: Alignment.centerLeft,
+      child: FractionallySizedBox(
+        heightFactor: 0.6,
+        widthFactor: 0.55,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: ListView.builder(
+            reverse: true,
+            itemCount: details_user.length,
+            itemBuilder: (BuildContext context, int index) {
+              if (details_user.isEmpty) {
+                return null;
+              }
+              return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 5, top: 5, left: 10, right: 10),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                        children: <Widget>[
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: Colors.white54,
+                              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                              border: Border.all(width: 1.0, color: Colors.white),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                CachedNetworkImage(
+                                  imageUrl: details_user[index]["image"],
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                        width: 40.0,
+                                        height: 40.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      child: Text(
+                                        details_user[index]["name"],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Icon(
+                              Icons.music_note_outlined,
+                              color: Colors.green,
+                            ),
+                            width: 30.0,
+                            height: 30.0,
+                          )
+
+
+                        ]),
+                  ));
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

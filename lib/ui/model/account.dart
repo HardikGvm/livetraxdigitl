@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/config/server/fcbToken.dart';
-import 'package:tomo_app/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/config/server/fcbToken.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
 
 import '../../main.dart';
 

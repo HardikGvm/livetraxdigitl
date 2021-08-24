@@ -4,7 +4,7 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/config/settings.dart';
+import 'package:livetraxdigitl/ui/config/settings.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -61,11 +61,11 @@ class _CallPageState extends State<CallPage> {
     _addAgoraEventHandlers();
     await _engine.enableWebSdkInteroperability(true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = VideoDimensions(1920, 1080);
-    await _engine.setVideoEncoderConfiguration(configuration);
+    /*configuration.dimensions = VideoDimensions(1920, 1080);
+    await _engine.setVideoEncoderConfiguration(configuration);*/
 
-    /*await _engine.setParameters(
-        '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');*/
+    await _engine.setParameters(
+        '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await _engine.joinChannel(widget.Token, widget.channelName, null, 0);
   }
 
@@ -142,9 +142,11 @@ class _CallPageState extends State<CallPage> {
 
   Widget _expandedSmallVideoRow(List<Widget> views) {
     final wrappedViews = views.map<Widget>(_videoView).toList();
+    //getFlutterView().setZOrderOnTop(true);
+    //getFlutterView().getHolder().setFormat(PixelFormat.TRANSPARENT);
     return Align(
       alignment: Alignment.bottomRight,
-      child: SizedBox(
+      child: Container(
         width: 120,
         height: 150,
         child: Row(
@@ -165,12 +167,21 @@ class _CallPageState extends State<CallPage> {
         ));
       case 2:
         return Container(
-            child: Stack(
+            child: Column(
           children: <Widget>[
             //_expandedVideoRow([views[0]]),
-            _expandedSmallVideoRow([views[0]]),
             _expandedVideoRow([views[1]]),
+            new Positioned(
+              right: 0.0,
+              bottom: 3.0,
+              child: Container(
+                color: Colors.red,
+                  constraints: new BoxConstraints(
+                      maxHeight: 50.0,
+                      maxWidth: 50.0
+                  ))),
 
+            _expandedSmallVideoRow([views[0]]),
           ],
         ));
       case 3:

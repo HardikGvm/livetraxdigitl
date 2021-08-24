@@ -4,19 +4,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/merchandise/homescreenModel.dart';
-import 'package:tomo_app/ui/model/utils.dart';
-import 'package:tomo_app/ui/server/register.dart';
-import 'package:tomo_app/ui/social/google.dart';
-import 'package:tomo_app/widgets/background_image.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/iappBar.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
-import 'package:tomo_app/widgets/ibutton4.dart';
-import 'package:tomo_app/widgets/iinputField2PasswordA.dart';
-import 'package:tomo_app/widgets/iinputField2a.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
+import 'package:livetraxdigitl/ui/model/utils.dart';
+import 'package:livetraxdigitl/ui/server/register.dart';
+import 'package:livetraxdigitl/ui/social/google.dart';
+import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/iappBar.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/widgets/ibutton4.dart';
+import 'package:livetraxdigitl/widgets/iinputField2PasswordA.dart';
+import 'package:livetraxdigitl/widgets/iinputField2a.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   @override
@@ -626,6 +626,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
 
     register(
         "$id@$type.com", id, name, type, photo, _okUserEnter, _error, userRole,"");
+
   }
 
   double _show = 0;

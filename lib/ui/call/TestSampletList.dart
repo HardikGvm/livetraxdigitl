@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/server/listvirtualgift.dart';
-import 'package:tomo_app/ui/server/listvirtualgift_model.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/ibutton10.dart';
+import 'package:livetraxdigitl/ui/server/listvirtualgift.dart';
+import 'package:livetraxdigitl/ui/server/listvirtualgift_model.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/ibutton10.dart';
 
 import '../../main.dart';
 

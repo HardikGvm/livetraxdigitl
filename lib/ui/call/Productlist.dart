@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/Artist/data.dart';
-import 'package:tomo_app/ui/server/musicplaylist.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/Artist/data.dart';
+import 'package:livetraxdigitl/ui/server/musicplaylist.dart';
 
 Widget ProductList(BuildContext context, int index,List<MusicData> list) {
   return Container(

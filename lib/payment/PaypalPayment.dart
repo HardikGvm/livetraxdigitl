@@ -6,6 +6,7 @@ import 'PaypalServices.dart';
 
 class PaypalPayment extends StatefulWidget {
   final Function onFinish;
+  String total;
 
   PaypalPayment({this.onFinish});
 

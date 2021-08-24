@@ -2,10 +2,11 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/VideoCall/call.dart';
-import 'package:tomo_app/ui/server/getagoratoken.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/VideoCall/ConfirmCallScreen.dart';
+import 'package:livetraxdigitl/ui/VideoCall/call.dart';
+import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
 
 class ExclusiveAccessScreen extends StatefulWidget {
   const ExclusiveAccessScreen({Key key}) : super(key: key);
@@ -40,6 +41,10 @@ class _ExclusiveAccessScreenState extends State<ExclusiveAccessScreen> {
     windowHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+        appBar: AppBar(
+          title: Text(""),
+          backgroundColor: Colors.transparent,
+        ),
         body: Stack(children: [
       Container(
         decoration: BoxDecoration(
@@ -229,7 +234,7 @@ class _ExclusiveAccessScreenState extends State<ExclusiveAccessScreen> {
     }
 
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => CallPage(
+        builder: (context) => ConfirmCallScreen(
               channelName: channelname,
               role: _role,
               Token: _response,

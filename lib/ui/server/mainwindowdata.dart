@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/model/utils.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/model/utils.dart';
 import 'dart:convert';
 
 import '../../main.dart';

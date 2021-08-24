@@ -2,8 +2,8 @@ import 'dart:convert';
 
 
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/server/products.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/server/products.dart';
 
 import '../../main.dart';
 import 'category.dart';

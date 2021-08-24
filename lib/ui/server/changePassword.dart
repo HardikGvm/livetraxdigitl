@@ -2,7 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:tomo_app/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
 
 changePassword(String uid, String oldPassword, String newPassword,
     Function() callback, Function(String) callbackError) async {

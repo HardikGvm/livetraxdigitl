@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/social/google.dart';
-import 'package:tomo_app/widgets/background_image.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/iappBar.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/social/google.dart';
+import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/iappBar.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 
 class UserSelection extends StatefulWidget {
   @override

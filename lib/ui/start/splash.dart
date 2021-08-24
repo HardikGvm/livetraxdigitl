@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/widgets/background_image.dart';
-import 'package:tomo_app/widgets/ibackground4.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/widgets/ibackground4.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

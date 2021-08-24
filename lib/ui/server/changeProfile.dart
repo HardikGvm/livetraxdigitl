@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
 
 changeProfile(String uid, String name, String email, String phone,
     Function() callback, Function(String) callbackError) async {

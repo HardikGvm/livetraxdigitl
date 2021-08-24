@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/merchandise/home.dart';
-import 'package:tomo_app/widgets/widgets.dart';
+import 'package:livetraxdigitl/ui/merchandise/home.dart';
+import 'package:livetraxdigitl/widgets/widgets.dart';
 
 // 11.10.2020 radius and shadow
 

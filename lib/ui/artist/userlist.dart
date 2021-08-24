@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/Artist/data.dart';
+import 'package:livetraxdigitl/ui/Artist/data.dart';
 
 Widget userList(BuildContext context, int index) {
   return Container(

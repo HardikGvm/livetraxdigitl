@@ -3,13 +3,17 @@ import 'dart:async';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:need_resume/need_resume.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tomo_app/Helper/common.dart';
-import 'package:tomo_app/ui/server/musicplaylist.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/Helper/common.dart';
+import 'package:livetraxdigitl/ui/Music/data_song.dart';
+import 'package:livetraxdigitl/ui/artist/data.dart';
+import 'package:livetraxdigitl/ui/server/musicplaylist.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 
 //import 'package:audioplayers/audioplayers.dart';
 import '../../main.dart';
@@ -34,7 +38,7 @@ class AudioMetadata {
 }
 
 class _MusicPlayListState extends ResumableState<MusicPlayList> {
-  bool _wait = false,dataReady=false;
+  bool _wait = false, dataReady = false;
   var windowWidth;
   var windowHeight;
   bool isChanges = false;
@@ -53,9 +57,7 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
 
   _waits(bool value) {
     _wait = value;
-    if (mounted)
-      setState(() {
-      });
+    if (mounted) setState(() {});
   }
 
   _error(String error) {
@@ -82,10 +84,17 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
   openDialog(String _text) {
     _dialogBody = Column(
       children: [
-        Text(
-          _text,
-          style: theme.text14,
-        ),
+        SingleChildScrollView(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: 300,
+                  child: Html(
+                    data: _text,
+                  ),
+                ),
+              ],
+            )),
         SizedBox(
           height: 40,
         ),
@@ -136,7 +145,7 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
     _playlist = ConcatenatingAudioSource(children: _mList);
     _init();
     setState(() {
-      dataReady =true;
+      dataReady = true;
     });
   }
 
@@ -144,7 +153,6 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
   void initState() {
     _player = AudioPlayer();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-
 
     super.initState();
   }
@@ -161,8 +169,8 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
     // Listen to errors during playback.
     _player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace stackTrace) {
-          print('A stream error occurred: $e');
-        });
+      print('A stream error occurred: $e');
+    });
     try {
       await _player.setAudioSource(_playlist);
     } catch (e) {
@@ -176,133 +184,147 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
           _player.positionStream,
           _player.bufferedPositionStream,
           _player.durationStream,
-              (position, bufferedPosition, duration) => PositionData(
+          (position, bufferedPosition, duration) => PositionData(
               position, bufferedPosition, duration ?? Duration.zero));
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: !_wait && _mList.length>0 && dataReady
-            ?  Container(color: Colors.black87, child:Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: StreamBuilder<SequenceState>(
-                stream: _player.sequenceStateStream,
-                builder: (context, snapshot) {
-                  final state = snapshot.data;
-                  if (state.sequence.isEmpty ?? true) return SizedBox();
-                  final metadata = state.currentSource.tag as AudioMetadata;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child:
-                          Center(child: Image.network(metadata.artwork)),
+        body: !_wait && _mList.length > 0 && dataReady
+            ? Stack(children: <Widget>[
+                Container(
+                    color: Colors.black87,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: StreamBuilder<SequenceState>(
+                            stream: _player.sequenceStateStream,
+                            builder: (context, snapshot) {
+                              final state = snapshot.data;
+                              try {
+                                if (state == null &&
+                                    state.sequence.toString().trim() == "")
+                                  return Container();
+                              } catch (e) {
+                                return Container();
+                              }
+
+                              final metadata =
+                                  state.currentSource.tag as AudioMetadata;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child:
+                                              Image.network(metadata.artwork)),
+                                    ),
+                                  ),
+                                  Text(metadata.album,
+                                      style: TextStyle(color: Colors.white)),
+                                  Text(metadata.title,
+                                      style: TextStyle(color: Colors.white)),
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      Text(metadata.album,
-                          style: TextStyle(color: Colors.white)),
-                      Text(metadata.title,style: TextStyle(color: Colors.white)),
-                    ],
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            ControlButtons(_player),
-            StreamBuilder<PositionData>(
-              stream: _positionDataStream,
-              builder: (context, snapshot) {
-                final positionData = snapshot.data;
-                return SeekBar(
-                  duration: positionData?.duration ?? Duration.zero,
-                  position: positionData?.position ?? Duration.zero,
-                  bufferedPosition:
-                  positionData?.bufferedPosition ?? Duration.zero,
-                  onChangeEnd: (newPosition) {
-                    _player.seek(newPosition);
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 8.0),
-            Row(
-              children: [
-                StreamBuilder<LoopMode>(
-                  stream: _player.loopModeStream,
-                  builder: (context, snapshot) {
-                    final loopMode = snapshot.data ?? LoopMode.off;
-                    const icons = [
-                      Icon(Icons.repeat, color: Colors.grey),
-                      Icon(Icons.repeat, color: Colors.orange),
-                      Icon(Icons.repeat_one, color: Colors.orange),
-                    ];
-                    const cycleModes = [
-                      LoopMode.off,
-                      LoopMode.all,
-                      LoopMode.one,
-                    ];
-                    final index = cycleModes.indexOf(loopMode);
-                    return IconButton(
-                      icon: icons[index],
-                      onPressed: () {
-                        _player.setLoopMode(cycleModes[
-                        (cycleModes.indexOf(loopMode) + 1) %
-                            cycleModes.length]);
-                      },
-                    );
-                  },
-                ),
-                Expanded(
-                  child: Text(
-                      "Playlist",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white,fontSize: 20)
-                  ),
-                ),
-                StreamBuilder<bool>(
-                  stream: _player.shuffleModeEnabledStream,
-                  builder: (context, snapshot) {
-                    final shuffleModeEnabled = snapshot.data ?? false;
-                    return IconButton(
-                      icon: shuffleModeEnabled
-                          ? Icon(Icons.shuffle, color: Colors.orange)
-                          : Icon(Icons.shuffle, color: Colors.grey),
-                      onPressed: () async {
-                        final enable = !shuffleModeEnabled;
-                        if (enable) {
-                          await _player.shuffle();
-                        }
-                        await _player.setShuffleModeEnabled(enable);
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
-            Container(
-              height: 240.0,
-              child: StreamBuilder<SequenceState>(
-                stream: _player.sequenceStateStream,
-                builder: (context, snapshot) {
-                  final state = snapshot.data;
-                  final sequence = state?.sequence ?? [];
-                  return ListView(
-                    /*  onReorder: (int oldIndex, int newIndex) {
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ControlButtons(_player, ShowDialog),
+                        StreamBuilder<PositionData>(
+                          stream: _positionDataStream,
+                          builder: (context, snapshot) {
+                            final positionData = snapshot.data;
+                            return SeekBar(
+                              duration: positionData?.duration ?? Duration.zero,
+                              position: positionData?.position ?? Duration.zero,
+                              bufferedPosition:
+                                  positionData?.bufferedPosition ??
+                                      Duration.zero,
+                              onChangeEnd: (newPosition) {
+                                _player.seek(newPosition);
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(height: 8.0),
+                        Row(
+                          children: [
+                            StreamBuilder<LoopMode>(
+                              stream: _player.loopModeStream,
+                              builder: (context, snapshot) {
+                                final loopMode = snapshot.data ?? LoopMode.off;
+                                const icons = [
+                                  Icon(Icons.repeat, color: Colors.grey),
+                                  Icon(Icons.repeat, color: Colors.orange),
+                                  Icon(Icons.repeat_one, color: Colors.orange),
+                                ];
+                                const cycleModes = [
+                                  LoopMode.off,
+                                  LoopMode.all,
+                                  LoopMode.one,
+                                ];
+                                final index = cycleModes.indexOf(loopMode);
+                                return IconButton(
+                                  icon: icons[index],
+                                  onPressed: () {
+                                    _player.setLoopMode(cycleModes[
+                                        (cycleModes.indexOf(loopMode) + 1) %
+                                            cycleModes.length]);
+                                  },
+                                );
+                              },
+                            ),
+                            Expanded(
+                              child: Text("Playlist",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20)),
+                            ),
+                            StreamBuilder<bool>(
+                              stream: _player.shuffleModeEnabledStream,
+                              builder: (context, snapshot) {
+                                final shuffleModeEnabled =
+                                    snapshot.data ?? false;
+                                return IconButton(
+                                  icon: shuffleModeEnabled
+                                      ? Icon(Icons.shuffle,
+                                          color: Colors.orange)
+                                      : Icon(Icons.shuffle, color: Colors.grey),
+                                  onPressed: () async {
+                                    final enable = !shuffleModeEnabled;
+                                    if (enable) {
+                                      await _player.shuffle();
+                                    }
+                                    await _player.setShuffleModeEnabled(enable);
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: 240.0,
+                          child: StreamBuilder<SequenceState>(
+                            stream: _player.sequenceStateStream,
+                            builder: (context, snapshot) {
+                              final state = snapshot.data;
+                              final sequence = state?.sequence ?? [];
+                              return ListView(
+                                /*  onReorder: (int oldIndex, int newIndex) {
                     if (oldIndex < newIndex) newIndex--;
                     _playlist.move(oldIndex, newIndex);
                   },*/
 
-                    children: [
-                      for (var i = 0; i < sequence.length; i++)
-                      /*  Dismissible(
+                                children: [
+                                  for (var i = 0; i < sequence.length; i++)
+                                    /*  Dismissible(
                         key: ValueKey(sequence[i]),
                         background: Container(
                           color: Colors.redAccent,
@@ -315,61 +337,80 @@ class _MusicPlayListState extends ResumableState<MusicPlayList> {
                         onDismissed: (dismissDirection) {
                           _playlist.removeAt(i);
                         },
-                        child:*/ Material(
-                          color: i == state.currentIndex
-                              ? Colors.black87
-                              : null,
-                          child:
-                          ListTile(
-                            leading: Image.network(
-                              sequence[i].tag.artwork,
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text(
-                              sequence[i].tag.title,
-                              style: TextStyle(color: i == state.currentIndex?Colors.green:Colors.white),
-                            ),
-                            subtitle: Text(
-                              sequence[i].tag.album,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _player.seek(Duration.zero, index: i);
-                              });
-
+                        child:*/
+                                    Material(
+                                        color: i == state.currentIndex
+                                            ? Colors.black87
+                                            : null,
+                                        child: ListTile(
+                                          leading: Image.network(
+                                            sequence[i].tag.artwork,
+                                            height: 60,
+                                            width: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            sequence[i].tag.title,
+                                            style: TextStyle(
+                                                color: i == state.currentIndex
+                                                    ? Colors.green
+                                                    : Colors.white),
+                                          ),
+                                          subtitle: Text(
+                                            sequence[i].tag.album,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _player.seek(Duration.zero,
+                                                  index: i);
+                                            });
+                                          },
+                                        )),
+                                  //  ),
+                                ],
+                              );
                             },
-                          )
-                      ),
-                      //  ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        )):Container(
-          width: windowWidth,
-          height: windowHeight,
-          child: Center(
-            child: ColorLoader2(
-              color1: theme.colorPrimary,
-              color2: theme.colorCompanion,
-              color3: theme.colorPrimary,
-            ),
-          ),
-        )
+                          ),
+                        ),
+                      ],
+                    )),
+                IEasyDialog2(
+                  setPosition: (double value) {
+                    _show = value;
+                  },
+                  getPosition: () {
+                    return _show;
+                  },
+                  color: theme.colorGrey,
+                  body: _dialogBody,
+                  backgroundColor: theme.colorBackground,
+                ),
+              ])
+            : Container(
+                width: windowWidth,
+                height: windowHeight,
+                child: Center(
+                  child: ColorLoader2(
+                    color1: theme.colorPrimary,
+                    color2: theme.colorCompanion,
+                    color3: theme.colorPrimary,
+                  ),
+                ),
+              ));
+  }
 
-    );
+  ShowDialog(String check) {
+    openDialog(songs);
   }
 }
 
 class ControlButtons extends StatelessWidget {
   final AudioPlayer player;
+  Function(String) sample;
 
-  ControlButtons(this.player);
+  ControlButtons(this.player, this.sample);
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +418,7 @@ class ControlButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-          icon: Icon(Icons.volume_up,color: Colors.white),
+          icon: Icon(Icons.volume_up, color: Colors.white),
           onPressed: () {
             showSliderDialog(
               context: context,
@@ -394,7 +435,7 @@ class ControlButtons extends StatelessWidget {
         StreamBuilder<SequenceState>(
           stream: player.sequenceStateStream,
           builder: (context, snapshot) => IconButton(
-            icon: Icon(Icons.skip_previous,color: Colors.white),
+            icon: Icon(Icons.skip_previous, color: Colors.white),
             onPressed: player.hasPrevious ? player.seekToPrevious : null,
           ),
         ),
@@ -406,55 +447,53 @@ class ControlButtons extends StatelessWidget {
             final playing = playerState?.playing;
             if (processingState == ProcessingState.loading ||
                 processingState == ProcessingState.buffering) {
-
               return Container(
                 margin: EdgeInsets.all(8.0),
                 width: 64.0,
                 height: 64.0,
                 child: CircularProgressIndicator(),
               );
-
             } else if (playing != true) {
-
               return IconButton(
-                icon: Icon(Icons.play_arrow,color: Colors.white,),
+                icon: Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                ),
                 iconSize: 64.0,
                 onPressed: player.play,
               );
-
             } else if (processingState != ProcessingState.completed) {
-
               return IconButton(
-                icon: Icon(Icons.pause,color: Colors.white),
+                icon: Icon(Icons.pause, color: Colors.white),
                 iconSize: 64.0,
                 onPressed: player.pause,
               );
-
             } else {
-
               return IconButton(
-                icon: Icon(Icons.replay,color: Colors.white),
+                icon: Icon(Icons.replay, color: Colors.white),
                 iconSize: 64.0,
                 onPressed: () => player.seek(Duration.zero,
                     index: player.effectiveIndices.first),
               );
-
             }
           },
         ),
-
         StreamBuilder<SequenceState>(
           stream: player.sequenceStateStream,
           builder: (context, snapshot) => IconButton(
-            icon: Icon(Icons.skip_next,color: Colors.white,),
+            icon: Icon(
+              Icons.skip_next,
+              color: Colors.white,
+            ),
             onPressed: player.hasNext ? player.seekToNext : null,
           ),
         ),
-        StreamBuilder<double>(
+        /*StreamBuilder<double>(
           stream: player.speedStream,
           builder: (context, snapshot) => IconButton(
             icon: Text("${snapshot.data?.toStringAsFixed(1)}x",
-                style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white)),
             onPressed: () {
               showSliderDialog(
                 context: context,
@@ -468,9 +507,23 @@ class ControlButtons extends StatelessWidget {
               );
             },
           ),
-        ),
+        ),*/
+        StreamBuilder<SequenceState>(
+          stream: player.sequenceStateStream,
+          builder: (context, snapshot) => IconButton(
+            icon: Icon(
+              Icons.list_sharp,
+              color: Colors.white,
+            ),
+            onPressed: ClickShow,
+          ),
+        )
       ],
     );
+  }
+
+  ClickShow() {
+    sample("");
   }
 }
 

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:need_resume/need_resume.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tomo_app/ui/artist/data.dart';
-import 'package:tomo_app/ui/call/call.dart';
-import 'package:tomo_app/ui/event/AddEventScreen.dart';
-import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/products/AddProductScreen.dart';
-import 'package:tomo_app/ui/server/DeleteEvent.dart';
-import 'package:tomo_app/ui/server/EventListAPI.dart';
-import 'package:tomo_app/ui/server/getagoratoken.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/ui/artist/data.dart';
+import 'package:livetraxdigitl/ui/call/call.dart';
+import 'package:livetraxdigitl/ui/event/AddEventScreen.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/products/AddProductScreen.dart';
+import 'package:livetraxdigitl/ui/server/DeleteEvent.dart';
+import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
+import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 
 import '../../main.dart';
 

@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tomo_app/widgets/widgets.dart';
+import 'package:livetraxdigitl/widgets/widgets.dart';
 
 import '../main.dart';
 

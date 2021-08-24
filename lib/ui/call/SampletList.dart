@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/call/call.dart';
-import 'package:tomo_app/ui/server/listvirtualgift_model.dart';
-import 'package:tomo_app/widgets/ibutton10.dart';
+import 'package:livetraxdigitl/ui/call/call.dart';
+import 'package:livetraxdigitl/ui/server/listvirtualgift_model.dart';
+import 'package:livetraxdigitl/widgets/ibutton10.dart';
 
 import '../../main.dart';
 

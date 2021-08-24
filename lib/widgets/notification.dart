@@ -1,6 +1,6 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:tomo_app/main.dart';
+import 'package:livetraxdigitl/main.dart';
 
 
 final FirebaseMessaging firebaseMessaging = FirebaseMessaging();

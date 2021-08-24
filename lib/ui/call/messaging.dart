@@ -1,6 +1,6 @@
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/config/settings.dart';
+import 'package:livetraxdigitl/ui/config/settings.dart';
 
 class RealTimeMessaging extends StatefulWidget {
   final String channelName;

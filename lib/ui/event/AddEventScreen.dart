@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/server/AddEvent.dart';
-import 'package:tomo_app/ui/server/uploadImage.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/iAvatarWithPhotoFileCaching.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/server/AddEvent.dart';
+import 'package:livetraxdigitl/ui/server/uploadImage.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/iAvatarWithPhotoFileCaching.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
 
 import '../../main.dart';
 

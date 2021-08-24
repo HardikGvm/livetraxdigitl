@@ -1,4 +1,4 @@
-package com.app.tomo_app;
+package com.app.livetraxdigitl;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookException;

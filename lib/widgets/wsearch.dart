@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/model/categories.dart';
-import 'package:tomo_app/ui/model/topRestourants.dart';
+import 'package:livetraxdigitl/ui/model/categories.dart';
+import 'package:livetraxdigitl/ui/model/topRestourants.dart';
 
 import '../main.dart';
 

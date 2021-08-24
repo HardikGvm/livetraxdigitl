@@ -1,10 +1,10 @@
-import 'package:tomo_app/ui/model/categories.dart';
-import 'package:tomo_app/ui/model/foods.dart';
-import 'package:tomo_app/ui/model/geolocator.dart';
-import 'package:tomo_app/ui/model/pref.dart';
-import 'package:tomo_app/ui/server/mainwindowdata.dart';
-import 'package:tomo_app/ui/server/secondstep.dart';
-import 'package:tomo_app/ui/config/constant.dart';
+import 'package:livetraxdigitl/ui/model/categories.dart';
+import 'package:livetraxdigitl/ui/model/foods.dart';
+import 'package:livetraxdigitl/ui/model/geolocator.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
+import 'package:livetraxdigitl/ui/server/mainwindowdata.dart';
+import 'package:livetraxdigitl/ui/server/secondstep.dart';
+import 'package:livetraxdigitl/ui/config/constant.dart';
 import '../../main.dart';
 
 AppSettings appSettings = AppSettings();

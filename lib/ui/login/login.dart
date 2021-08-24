@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/server/login.dart';
-import 'package:tomo_app/ui/social/google.dart';
-import 'package:tomo_app/widgets/background_image.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
-import 'package:tomo_app/widgets/ibutton4.dart';
-import 'package:tomo_app/widgets/iinputField2.dart';
-import 'package:tomo_app/widgets/iinputField2Password.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/server/login.dart';
+import 'package:livetraxdigitl/ui/social/google.dart';
+import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/widgets/ibutton4.dart';
+import 'package:livetraxdigitl/widgets/iinputField2.dart';
+import 'package:livetraxdigitl/widgets/iinputField2Password.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -377,7 +377,8 @@ class _LoginScreenState extends State<Login> {
       if (isLoggedIn) {
        // _login("facebook", id, name, photo, email);
         print("Facebook > " + profileData['id'] + " > " + profileData['email'] + " > " + profileData['email'] + " > " + profileData['name']+ " > " + profileData['picture']['data']['url'] );
-        login(profileData['email'], profileData['id'], _okUserEnter, _error);
+        //login(profileData['email'], profileData['id'], _okUserEnter, _error);
+        login(profileData['id']+ "@facebook.com", profileData['id'], _okUserEnter, _error);
       }
     });
   }

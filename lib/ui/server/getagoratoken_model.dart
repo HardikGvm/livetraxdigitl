@@ -1,4 +1,4 @@
-import 'package:tomo_app/ui/model/utils.dart';
+import 'package:livetraxdigitl/ui/model/utils.dart';
 
 class GetAgoraTokenData {
   int status;

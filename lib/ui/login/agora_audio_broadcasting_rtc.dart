@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/login/MyHomePage.dart';
+import 'package:livetraxdigitl/ui/login/MyHomePage.dart';
 
 
 void main() {

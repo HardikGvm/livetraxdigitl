@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:983645832261:android:44d9b39f11fe078bb38f2c",
+        "mobilesdk_app_id": "1:983645832261:android:f1886e59554bc7c8b38f2c",
         "android_client_info": {
-          "package_name": "com.app.tomo_app"
+          "package_name": "com.app.livetraxdigitl"
         }
       },
       "oauth_client": [
         {
-          "client_id": "983645832261-fm2c4jiirkjo2j6jlugiklg2tii0938u.apps.googleusercontent.com",
+          "client_id": "983645832261-h1s4lritmjkh1j5f0vsb3r5e1037c2cp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.app.tomo_app",
-            "certificate_hash": "f325f0c3c2e02618d45ed17dada1a36f04007922"
+            "package_name": "com.app.livetraxdigitl",
+            "certificate_hash": "a0270a225cdc819e54394b0b11e7c5702a4cc566"
           }
         },
         {
@@ -37,6 +37,65 @@
             {
               "client_id": "983645832261-706k016c589a291nqh3r5sfrf9evfiig.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "983645832261-81pqjcjm96t33l5so1m8r5anl9ous6ah.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.tomoApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983645832261:android:44d9b39f11fe078bb38f2c",
+        "android_client_info": {
+          "package_name": "com.app.tomo_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983645832261-fm2c4jiirkjo2j6jlugiklg2tii0938u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.tomo_app",
+            "certificate_hash": "f325f0c3c2e02618d45ed17dada1a36f04007922"
+          }
+        },
+        {
+          "client_id": "983645832261-pj6an288hkcs9au6mr85v4klcrk0n7t3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.tomo_app",
+            "certificate_hash": "a0270a225cdc819e54394b0b11e7c5702a4cc566"
+          }
+        },
+        {
+          "client_id": "983645832261-706k016c589a291nqh3r5sfrf9evfiig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC37Cb_GkOcHpMqWvhY4hTIW-KH507SDSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983645832261-706k016c589a291nqh3r5sfrf9evfiig.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "983645832261-81pqjcjm96t33l5so1m8r5anl9ous6ah.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.tomoApp"
+              }
             }
           ]
         }

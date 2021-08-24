@@ -7,19 +7,22 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photofilters/filters/preset_filters.dart';
 import 'package:photofilters/widgets/photo_filter.dart';
-import 'package:tomo_app/ui/Fliter/filtermain.dart';
-import 'package:tomo_app/ui/checkout/checkoutAppBar.dart';
-import 'package:tomo_app/ui/config/api.dart';
-import 'package:tomo_app/ui/products/productAppBar.dart';
-import 'package:tomo_app/ui/server/category.dart';
-import 'package:tomo_app/ui/server/foodDelete.dart';
-import 'package:tomo_app/ui/server/productSave.dart';
-import 'package:tomo_app/ui/server/products.dart';
-import 'package:tomo_app/ui/server/uploadImage.dart';
-import 'package:tomo_app/widgets/colorloader2.dart';
-import 'package:tomo_app/widgets/easyDialog2.dart';
-import 'package:tomo_app/widgets/ibutton3.dart';
-import 'package:tomo_app/widgets/widgets.dart';
+import 'package:livetraxdigitl/ui/Fliter/filtermain.dart';
+import 'package:livetraxdigitl/ui/checkout/checkoutAppBar.dart';
+import 'package:livetraxdigitl/ui/config/UserService.dart';
+import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/products/productAppBar.dart';
+import 'package:livetraxdigitl/ui/server/category.dart';
+import 'package:livetraxdigitl/ui/server/foodDelete.dart';
+import 'package:livetraxdigitl/ui/server/productSave.dart';
+import 'package:livetraxdigitl/ui/server/products.dart';
+import 'package:livetraxdigitl/ui/server/uploadFile.dart';
+import 'package:livetraxdigitl/ui/server/uploadImage.dart';
+import 'package:livetraxdigitl/widgets/colorloader2.dart';
+import 'package:livetraxdigitl/widgets/easyDialog2.dart';
+import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:livetraxdigitl/widgets/internetConnection.dart';
+import 'package:livetraxdigitl/widgets/widgets.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:path/path.dart' as path;
 
@@ -77,12 +80,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   bool _wait = false;
   bool isListMode = true;
+  UserService _userService = new UserService();
 
   @override
-  void initState() {
-    _loadCategoryList();
-    _loadFoodsList();
+  Future<void> initState() {
+    CallStart();
+
     super.initState();
+  }
+
+  CallStart() async {
+    bool connectionStatus = await _userService.checkInternetConnectivity();
+    if (connectionStatus) {
+      _loadCategoryList();
+      _loadFoodsList();
+    } else {
+      internetConnectionDialog(context);
+    }
   }
 
   String _vendor;
@@ -208,12 +222,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     editControllerquantity.dispose();
     editControllerSize.dispose();
     editControllerIngredients.dispose();
-    _imagePath="";
+    _imagePath = "";
     super.dispose();
   }
 
-  _loadFoodsList() {
+  _loadFoodsList() async {
     _wait = true;
+
     productsLoad(account.token, (List<ImageData> image,
         List<FoodsData> foods,
         List<RestaurantData> restaurants,
@@ -328,77 +343,76 @@ class _AddProductScreenState extends State<AddProductScreen> {
       list.add(Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  margin:
-                      EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 0),
-                  child: Table(
-                    columnWidths: {
-                      0: FixedColumnWidth(90),
-                      1: FlexColumnWidth()
-                    },
-                    border: TableBorder.symmetric(
-                        inside: BorderSide(width: 0.5, color: Colors.blueGrey)),
-                    children: [
-                      TableRow(children: [
-                        GetTitle(strings.get(2261)),
-                        Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Container(
-                            height: 40,
-                            child: _categoryComboBoxInForm(),
-                          ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
+              Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 0),
+              child: Table(
+                columnWidths: {0: FixedColumnWidth(90), 1: FlexColumnWidth()},
+                border: TableBorder.symmetric(
+                    inside: BorderSide(width: 0.5, color: Colors.blueGrey)),
+                children: [
+                  TableRow(children: [
+                    GetTitle(strings.get(2261)),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Container(
+                        height: 40,
+                        child: _categoryComboBoxInForm(),
+                      ),
+                    ),
+                  ]),
+                  if (_categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2284)),
+                      Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Container(
+                          height: 40,
+                          child: _experienceComboBoxInForm(),
                         ),
-                      ]),
-                      if (_categoryValueOnForm.toString() == "3")
-                        TableRow(children: [
-                          GetTitle(strings.get(2284)),
-                          Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: Container(
-                              height: 40,
-                              child: _experienceComboBoxInForm(),
-                            ),
-                          ),
-                        ]) ,
-
-                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
-                      TableRow(children: [
-                        GetTitle(strings.get(2263)),
-                        GetDigitEdit(editControllerquantity, strings.get(2267)),
-                      ]),
-                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
-                      TableRow(children: [
-                        GetTitle(strings.get(2264)),
-                        GetDigitEdit(editControllerSize, strings.get(2262)),
-                      ]),
-                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
-                      TableRow(children: [
-                        GetTitle(strings.get(2265)),
-                        GetTextEdit(editControllerBrand, strings.get(170)),
-                      ]),
-                      if (_categoryValueOnForm.toString() != "1" || _categoryValueOnForm.toString() == "3")
-                      TableRow(children: [
-                        GetTitle(strings.get(2266)),
-                        GetTextEdit(editControllerColor, strings.get(170)),
-                      ]),
-
-                      TableRow(children: [
-                        GetTitle(strings.get(2269)),
-                        GetDigitEdit(editControllerPrice, strings.get(2262)),
-                      ]),
-                    ],
-                  ),
-                ),
-              ])));
+                      ),
+                    ]),
+                  if (_categoryValueOnForm.toString() != "1" ||
+                      _categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2263)),
+                      GetDigitEdit(editControllerquantity, strings.get(2267)),
+                    ]),
+                  if (_categoryValueOnForm.toString() != "1" ||
+                      _categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2264)),
+                      GetDigitEdit(editControllerSize, strings.get(2262)),
+                    ]),
+                  if (_categoryValueOnForm.toString() != "1" ||
+                      _categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2265)),
+                      GetTextEdit(editControllerBrand, strings.get(170)),
+                    ]),
+                  if (_categoryValueOnForm.toString() != "1" ||
+                      _categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2266)),
+                      GetTextEdit(editControllerColor, strings.get(170)),
+                    ]),
+                  TableRow(children: [
+                    GetTitle(strings.get(2269)),
+                    GetDigitEdit(editControllerPrice, strings.get(2262)),
+                  ]),
+                ],
+              ),
+            ),
+          ])));
 
       list.add(SizedBox(
         height: 20,
       ));
       list.add(Text(
-          (_categoryValueOnForm.toString() == "1") ? strings.get(2285) : strings.get(2270),
+        (_categoryValueOnForm.toString() == "1")
+            ? strings.get(2285)
+            : strings.get(2270),
         style: theme.text12bold,
       )); // "Select Nutritions"
       list.add(SizedBox(
@@ -502,17 +516,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
         value: 0,
       ),
     );
-    List<CategoriesData> _exp=List<CategoriesData>();
+    List<CategoriesData> _exp = List<CategoriesData>();
 
-    _exp.add(CategoriesData(id: 1,name: "Tour Bus Ride"));
-    _exp.add(CategoriesData(id: 2,name: "Artist/Band get Together"));
-    _exp.add(CategoriesData(id: 3,name: "Meet & Greet"));
-    _exp.add(CategoriesData(id: 4,name: "Video Call"));
-    _exp.add(CategoriesData(id: 5,name: "Lunch Backstage"));
+    _exp.add(CategoriesData(id: 1, name: "Tour Bus Ride"));
+    _exp.add(CategoriesData(id: 2, name: "Artist/Band get Together"));
+    _exp.add(CategoriesData(id: 3, name: "Meet & Greet"));
+    _exp.add(CategoriesData(id: 4, name: "Video Call"));
+    _exp.add(CategoriesData(id: 5, name: "Lunch Backstage"));
 
-
-
-    print("Check Candyyd here " + (_exp != null).toString() + " CHECK " + _exp.length.toString());
+    print("Check Candyyd here " +
+        (_exp != null).toString() +
+        " CHECK " +
+        _exp.length.toString());
     if (_exp != null) {
       for (var item in _exp) {
         menuItems.add(
@@ -538,7 +553,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 onChanged: (value) {
                   _experienceValueOnForm = value;
 
-                  print("Selected Vals 2> " + _experienceValueOnForm.toString());
+                  print(
+                      "Selected Vals 2> " + _experienceValueOnForm.toString());
 
                   setState(() {});
                 })));
@@ -734,7 +750,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         child: Column(
           children: [
             Text(
-              strings.get(126),
+              (_categoryValueOnForm.toString() == "1")
+                  ? strings.get(2287)
+                  : strings.get(126),
               textAlign: TextAlign.center,
               style: theme.text18boldPrimary,
             ), // "Select image from",
@@ -745,18 +763,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                    width: windowWidth / 2 - 25,
-                    child: IButton3(
-                        color: theme.colorPrimary,
-                        text: strings.get(127), // "Camera",
-                        textStyle: theme.text14boldWhite,
-                        pressButton: () {
-                          setState(() {
-                            _show = 0;
-                          });
-                          getImage2(ImageSource.camera);
-                        })),
+                (_categoryValueOnForm.toString() != "1")
+                    ? Container(
+                        width: windowWidth / 2 - 25,
+                        child: IButton3(
+                            color: theme.colorPrimary,
+                            text: strings.get(127), // "Camera",
+                            textStyle: theme.text14boldWhite,
+                            pressButton: () {
+                              setState(() {
+                                _show = 0;
+                              });
+                              getImage2(ImageSource.camera);
+                            }))
+                    : Container(),
                 SizedBox(
                   width: 10,
                 ),
@@ -770,8 +790,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           setState(() {
                             _show = 0;
                           });
-                          //getImage2(ImageSource.gallery);
-                          _openFileExplorer();
+                          if (_categoryValueOnForm.toString() == "1") {
+                            _openFileExplorer();
+                          } else {
+                            getImage2(ImageSource.gallery);
+                          }
                         })),
               ],
             )),
@@ -800,7 +823,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void _openFileExplorer() async {
     if (_pickingType != FileType.AUDIO || _hasValidMime) {
       try {
-        _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
+        _path = await FilePicker.getFilePath(
+            type: _pickingType, fileExtension: _extension);
         print("Check Image Here >> " + _path);
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
@@ -814,7 +838,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       });
     }
   }
-
 
   selectImage(double windowWidth, Function callback) {
     return Stack(
@@ -833,8 +856,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: Opacity(
                 opacity: 0.6,
                 child: Text(
-                  (_categoryValueOnForm.toString() == "1") ?
-                  strings.get(2286) : strings.get(125),
+                  (_categoryValueOnForm.toString() == "1")
+                      ? strings.get(2286)
+                      : strings.get(125),
                   style: theme.text12bold,
                 ) // Click here for select Image
                 ),
@@ -876,33 +900,36 @@ class _AddProductScreenState extends State<AddProductScreen> {
             fit: BoxFit.contain,
           ));
     else {
-      if (serverImage.isNotEmpty)
+      if (serverImage.isNotEmpty ||
+          (_fileName.isNotEmpty && _fileName != "..."))
         return Container(
           width: windowWidth,
           height: 100,
           child: Container(
             width: windowWidth,
-            child: CachedNetworkImage(
-              placeholder: (context, url) => UnconstrainedBox(
-                  child: Container(
-                alignment: Alignment.center,
-                width: 40,
-                height: 40,
-                child: CircularProgressIndicator(
-                  backgroundColor: theme.colorPrimary,
-                ),
-              )),
-              imageUrl: serverImage,
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.contain,
+            child: (_categoryValueOnForm.toString() == "1")
+                ? Image.asset("assets/musicaudio.png", fit: BoxFit.contain)
+                : CachedNetworkImage(
+                    placeholder: (context, url) => UnconstrainedBox(
+                        child: Container(
+                      alignment: Alignment.center,
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(
+                        backgroundColor: theme.colorPrimary,
+                      ),
+                    )),
+                    imageUrl: serverImage,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
-                ),
-              ),
-              errorWidget: (context, url, error) => new Icon(Icons.error),
-            ),
           ),
         );
     }
@@ -916,7 +943,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (editControllerDesc.text.isEmpty)
       return _openDialogError(
           strings.get(2274)); // "The Name field is request",
-    if (editControllerSize.text.isEmpty && _categoryValueOnForm.toString() == "2")
+    if (editControllerSize.text.isEmpty &&
+        _categoryValueOnForm.toString() == "2")
       return _openDialogError(
           strings.get(2275)); // "The Price field is request",
     if (editControllerPrice.text.isEmpty)
@@ -928,12 +956,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
           strings.get(193)); // "The Category field is request",
     _waits(true);
 
-    if (_imagePath.isNotEmpty) {
+    if (_imagePath.isNotEmpty && (_categoryValueOnForm.toString() != "1")) {
       /* uploadImage(_imagePath, account.token, (String path, String id) {
         _foodSave(id);
       }, _openDialogError);*/
 
       uploadImage(_imagePath, account.token, (String avatar, int id) async {
+        // account.setUserAvatar(avatar);
+        print(":::Date::: --> " + avatar);
+        _waits(false);
+        _foodSave(id.toString());
+        setState(() {});
+      }, (String error) {
+        _waits(false);
+        _openDialogError(
+            "${strings.get(128)} $error"); // "Something went wrong. ",
+      });
+    } else if (_fileName.isNotEmpty &&
+        (_fileName != "...") &&
+        (_categoryValueOnForm.toString() == "1")) {
+      uploadFile(_imagePath, account.token, (String avatar, int id) async {
         // account.setUserAvatar(avatar);
         print(":::Date::: --> " + avatar);
         _waits(false);
@@ -976,8 +1018,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _extrasGroup = extrasGroup;
       _nutritionGroup = nutritionGroup;
       _state = "viewFoodsList";
-      isListMode=true;
-      _imagePath="";
+      isListMode = true;
+      _imagePath = "";
       _ensureVisibleId = id;
       _waits(false);
       setState(() {});
@@ -1091,7 +1133,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         print("*** Click Edit ***");
         _editItem = true;
         _editItemId = id;
-        isListMode=false;
+        isListMode = false;
         setState(() {});
       }
   }
@@ -1137,7 +1179,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           _ensureVisibleId = "";
                           print("Check status >> " + _state);
                           _deleteFood(id);
-
                         })),
                 SizedBox(
                   width: 10,
@@ -1169,17 +1210,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return serverImgNoImage;
   }
 
-  _deleteFood(String id){
-    _wait=true;
-    foodDelete(id,
-            (List<ImageData> image, List<FoodsData> foods, List<RestaurantData> restaurants,
-            List<ExtrasGroupData> extrasGroup, List<NutritionGroupData> nutritionGroup) {
-          _image = image;
-          _foods = foods;
-          _restaurants = restaurants;
-          _extrasGroup = extrasGroup;
-          _nutritionGroup = nutritionGroup;
-          _waits(false);
-        }, _openDialogError);
+  _deleteFood(String id) {
+    _wait = true;
+    foodDelete(id, (List<ImageData> image,
+        List<FoodsData> foods,
+        List<RestaurantData> restaurants,
+        List<ExtrasGroupData> extrasGroup,
+        List<NutritionGroupData> nutritionGroup) {
+      _image = image;
+      _foods = foods;
+      _restaurants = restaurants;
+      _extrasGroup = extrasGroup;
+      _nutritionGroup = nutritionGroup;
+      _waits(false);
+    }, _openDialogError);
   }
 }

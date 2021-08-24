@@ -2,12 +2,12 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:tomo_app/ui/checkout/shippingAddressInput.dart';
-import 'package:tomo_app/ui/config/UserService.dart';
-import 'package:tomo_app/ui/server/addressDelete.dart';
-import 'package:tomo_app/ui/server/addressGet.dart';
-import 'package:tomo_app/ui/server/addressSave.dart';
-import 'package:tomo_app/widgets/internetConnection.dart';
+import 'package:livetraxdigitl/ui/checkout/shippingAddressInput.dart';
+import 'package:livetraxdigitl/ui/config/UserService.dart';
+import 'package:livetraxdigitl/ui/server/addressDelete.dart';
+import 'package:livetraxdigitl/ui/server/addressGet.dart';
+import 'package:livetraxdigitl/ui/server/addressSave.dart';
+import 'package:livetraxdigitl/widgets/internetConnection.dart';
 
 import '../../main.dart';
 import 'checkoutAppBar.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:tomo_app/main.dart';
-import 'package:tomo_app/ui/model/pref.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
 
 
 class LangData{
@@ -414,6 +414,12 @@ class Lang {
     2284 : "Types",
     2285 : "Please select Music",
     2286 : "Click here for select Music",
+    2287 : "Select music from:",
+    2288 : "Continue",
+    2289 : "Thank you for your purchase we appreciate your support!",
+    2290 : "Click below button to start your call!",
+    2291 : "Video Call",
+
 
   };
 

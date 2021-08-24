@@ -1,6 +1,6 @@
 
 
-import 'package:tomo_app/ui/server/login.dart';
+import 'package:livetraxdigitl/ui/server/login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleLogin {
