@@ -7,6 +7,7 @@ class Pref {
   static String userName = "userName";
   static String userEmail = "userEmail";
   static String userPassword = "userPassword";
+  static String userDescription = "userDescription";
   static String userAvatar = "userAvatar";
   static String userRole = "userRole";
   static String typeReg = "typeReg";
@@ -81,6 +82,7 @@ class Pref {
     print("DATA SET HERE ----------------------------->>> CLEAR ");
     set(Pref.userEmail, "");
     set(Pref.userPassword, "");
+    set(Pref.userDescription, "");
     set(Pref.userAvatar, "");
     set(Pref.userRole, "");
     set(Pref.userName, "");

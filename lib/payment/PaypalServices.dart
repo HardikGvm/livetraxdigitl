@@ -9,20 +9,20 @@ class PaypalServices {
 //  String domain = "https://api.paypal.com"; // for production mode
 
   // change clientId and secret with your own, provided by paypal
-  String clientId =
-      'AYUvVuSYsEOsCG3xYhSaZushbWGcjkWolZd2vcFIqm0xILHMeS4wfQHbAD_z7p5sN2Oqxr14VbV5I1U9'; // Ami account
   /*String clientId =
-      'Ae8TssmqSQ52X47YCzr--AQpIakbd2rM4joPEwxPShJSiIyapqFcdlh2bBDH_5HtnPIdO5fcEsewx5ZY';*/// Mine dev account
-
-  String secret =
-      'EIhcXuXZeCPCKcpc9jz2zd_V7wb2t7cD2nUAOZGENnELBDZJMSLjQtGuTRPQaQap2koMJAy3oPo1aV_2';// Ami Account
+      'AYUvVuSYsEOsCG3xYhSaZushbWGcjkWolZd2vcFIqm0xILHMeS4wfQHbAD_z7p5sN2Oqxr14VbV5I1U9';*/ // Ami account
+  String clientId =
+      'Ae8TssmqSQ52X47YCzr--AQpIakbd2rM4joPEwxPShJSiIyapqFcdlh2bBDH_5HtnPIdO5fcEsewx5ZY';// Mine dev account
 
   /*String secret =
-      'EF339lt0-tb4OS5TCtoUi44SM03Ysb6GkgRI7DiMBTy3Fh8ospzVif3YqB-zJN6AS5L63sO0xMRIlPel';*/ // Mine dev Account
+      'EIhcXuXZeCPCKcpc9jz2zd_V7wb2t7cD2nUAOZGENnELBDZJMSLjQtGuTRPQaQap2koMJAy3oPo1aV_2';*/// Ami Account
+
+  String secret =
+      'EF339lt0-tb4OS5TCtoUi44SM03Ysb6GkgRI7DiMBTy3Fh8ospzVif3YqB-zJN6AS5L63sO0xMRIlPel'; // Mine dev Account
 
 
 
-  // for getting the access token from Paypal
+  // for getting the accesse token from Paypal
   Future<String> getAccessToken() async {
     try {
       var client = BasicAuthClient(clientId, secret);

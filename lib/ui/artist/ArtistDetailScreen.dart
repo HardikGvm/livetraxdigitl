@@ -1,15 +1,19 @@
+import 'dart:ui';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:livetraxdigitl/ui/Music/MusicPlayList.dart';
+import 'package:livetraxdigitl/ui/artist/CustomAppBar.dart';
 import 'package:livetraxdigitl/ui/call/call.dart';
 import 'package:livetraxdigitl/ui/config/constant.dart';
+import 'package:livetraxdigitl/ui/event/EventListScreen.dart';
 import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
 import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
 import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../main.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
@@ -50,7 +54,8 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       _waits(true);
       event_list_api(account.userId, 1, 10, _onSuccessEventList, _error);
     }
-
+    print("IDDDDDD===");
+    print(widget.artist_id);
     super.initState();
   }
 
@@ -61,11 +66,27 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text('Artist'),
-        backgroundColor: Colors.blueGrey,
-      ),
+      appBar: CustomAppBar('Cancel', '', this.addNewCard, widget.artist_name),
       body: Stack(children: [
+        Container(
+            constraints: BoxConstraints.expand(),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  (widget.artist_image != null) ? widget.artist_image : "",
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 5,
+                sigmaY: 5,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.1),
+              ),
+            )),
         Container(
           width: MediaQuery.of(context).size.width,
           // For background Image
@@ -73,7 +94,8 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               image: DecorationImage(
                   image: new NetworkImage(
                       (widget.artist_image != null) ? widget.artist_image : ""),
-                  fit: BoxFit.cover)),
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center)),
           child: Stack(
             children: [
               Column(
@@ -147,50 +169,165 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
         else
           (Container()),
       ]),
-      floatingActionButton: FabCircularMenu(
-        key: fabKey,
-        fabOpenIcon: Icon(Icons.menu, color: Colors.red),
-        fabCloseIcon: Icon(Icons.close, color: Colors.red),
-        fabColor: Colors.white,
-        ringDiameter: 340.0,
-        ringWidth: 90.0,
-        ringColor: Colors.white70,
-        children: [
-          IconButton(
-              icon: Icon(Icons.event, color: Colors.red),
-              iconSize: 28,
-              onPressed: () {
-                fabKey.currentState.close();
-                print('Live Event');
-              }),
-          IconButton(
-              icon: Icon(Icons.music_note, color: Colors.red),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MusicPlayList()),
-                );
-              }),
-          IconButton(
-              icon: Icon(Icons.shopping_cart, color: Colors.red),
-              iconSize: 28,
-              onPressed: () {
-                fabKey.currentState.close();
+      floatingActionButton: (account.role == "artist")
+          ? FabCircularMenu(
+              key: fabKey,
+              fabOpenIcon: Icon(Icons.menu, color: Colors.red),
+              fabCloseIcon: Icon(Icons.close, color: Colors.red),
+              fabColor: Colors.white,
+              ringDiameter: 340.0,
+              ringWidth: 90.0,
+              ringColor: Colors.white70,
+              children: [
+                IconButton(
+                    icon: Icon(Icons.person, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
+                      Navigator.pushNamed(context, "/account");
+                      print('Profile');
+                    }),
+                IconButton(
+                    icon: Icon(Icons.event, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
+                      // if (account.role == "artist") {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EventListScreen(
+                                  artist_id: widget.artist_id,
+                                )),
+                      );
+                      // }
+                      print('Live Event');
+                    }),
+                IconButton(
+                    icon: Icon(Icons.music_note, color: Colors.red),
+                    onPressed: () {
+                      print("Artist Name====");
+                      print(widget.artist_name);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MusicPlayList(
+                                  title: widget.artist_name,
+                                  artistId: widget.artist_id,
+                                )),
+                      );
+                    }),
+                IconButton(
+                    icon: Icon(Icons.add_shopping_cart, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
 
-                String Value = widget.artist_id.toString();
-                print('Buy Merchandise ID HERE >> ' +
-                    widget.artist_id.toString() +
-                    " VAL " +
-                    Value);
-                setState(() {
-                  Artistid = Value;
-                });
+                      String Value = widget.artist_id.toString();
+                      print('Buy Merchandise ID HERE >> ' +
+                          widget.artist_id.toString() +
+                          " VAL " +
+                          Value);
+                      setState(() {
+                        Artistid = Value;
+                      });
 
-                Navigator.pushNamed(context, "/homescreen",
-                    arguments: {"artist_id": Value});
-              })
-        ],
-      ),
+                      if (account.role == "artist") {
+                        Navigator.pushNamed(context, "/addproducts");
+                      } else {
+                        Navigator.pushNamed(context, "/homescreen",
+                            arguments: {"artist_id": Value});
+                      }
+                    }),
+                IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
+
+                      String Value = widget.artist_id.toString();
+                      print('Buy Merchandise ID HERE >> ' +
+                          widget.artist_id.toString() +
+                          " VAL " +
+                          Value);
+                      setState(() {
+                        Artistid = Value;
+                      });
+
+                      Navigator.pushNamed(context, "/homescreen",
+                          arguments: {"artist_id": Value});
+                    })
+              ],
+            )
+          : FabCircularMenu(
+              key: fabKey,
+              fabOpenIcon: Icon(Icons.menu, color: Colors.red),
+              fabCloseIcon: Icon(Icons.close, color: Colors.red),
+              fabColor: Colors.white,
+              ringDiameter: 340.0,
+              ringWidth: 90.0,
+              ringColor: Colors.white70,
+              children: [
+                IconButton(
+                    icon: Icon(Icons.event, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
+                      print("List Event Click 111");
+                      print(widget.artist_id);
+                      // if (account.role == "artist") {
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EventListScreen(artist_id: widget.artist_id)),
+                      );
+                      // }
+                      print('Live Event');
+                    }),
+                IconButton(
+                    icon: Icon(Icons.music_note, color: Colors.red),
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           MusicPlayList(title: widget.artist_name)),
+                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MusicPlayList(
+                                  title: widget.artist_name,
+                                  artistId: widget.artist_id,
+                                )),
+                      );
+                    }),
+                IconButton(
+                    icon: Icon(Icons.shopping_cart, color: Colors.red),
+                    iconSize: 28,
+                    onPressed: () {
+                      fabKey.currentState.close();
+
+                      String Value = widget.artist_id.toString();
+                      print('Buy Merchandise ID HERE >> ' +
+                          widget.artist_id.toString() +
+                          " VAL " +
+                          Value);
+                      setState(() {
+                        Artistid = Value;
+                      });
+
+                      if (account.role == "artist") {
+                        Navigator.pushNamed(context, "/addproducts");
+                      } else {
+                        Navigator.pushNamed(context, "/homescreen",
+                            arguments: {"artist_id": Value});
+                      }
+                    })
+              ],
+            ),
     );
   }
 
@@ -199,19 +336,35 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   AgoraToken(String title, int Eventid) async {
     if (isLive && (_Current != null)) {
       await _handleMicPermission();
+      await _handleCameraPermission();
+      await _handleStoragePermission();
+
       title = title.toString().toLowerCase().replaceAll(" ", "");
       _waits(true);
       print("User Name > " +
           account.userName.trim().replaceAll(" ", "") +
           " Title > " +
           title);
-      GetAgoraToken(title, Eventid, account.userName.trim().replaceAll(" ", ""),
+      String _userName = account.userName.replaceAll(new RegExp('\\W+'), '');
+      GetAgoraToken(title, Eventid, _userName.trim().replaceAll(" ", ""),
           token_success, token_error);
     }
   }
 
+  addNewCard() {}
+
   Future<void> _handleMicPermission() {
     final status = Permission.microphone.request();
+    print(status);
+  }
+
+  Future<void> _handleCameraPermission() {
+    final status = Permission.camera.request();
+    print(status);
+  }
+
+  Future<void> _handleStoragePermission() {
+    final status = Permission.storage.request();
     print(status);
   }
 

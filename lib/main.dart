@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:livetraxdigitl/demotest.dart';
 import 'package:livetraxdigitl/ui/call/messaging.dart';
 import 'package:livetraxdigitl/ui/checkout/addCreditCard.dart';
 import 'package:livetraxdigitl/ui/checkout/paymentMethod.dart';
@@ -8,7 +9,6 @@ import 'package:livetraxdigitl/ui/checkout/shippingAddress.dart';
 import 'package:livetraxdigitl/ui/config/lang.dart';
 import 'package:livetraxdigitl/ui/config/theme.dart';
 import 'package:livetraxdigitl/ui/home/home.dart';
-import 'package:livetraxdigitl/ui/home/main.dart';
 import 'package:livetraxdigitl/ui/login/UserSelection.dart';
 import 'package:livetraxdigitl/ui/login/forgot.dart';
 import 'package:livetraxdigitl/ui/login/login.dart';
@@ -16,14 +16,14 @@ import 'package:livetraxdigitl/ui/merchandise/home.dart';
 import 'package:livetraxdigitl/ui/model/account.dart';
 import 'package:livetraxdigitl/ui/model/pref.dart';
 import 'package:livetraxdigitl/ui/products/AddProductScreen.dart';
-import 'package:livetraxdigitl/ui/products/ListProductScreen.dart';
 import 'package:livetraxdigitl/ui/profile/account.dart';
 import 'package:livetraxdigitl/ui/signup/signup.dart';
 import 'package:livetraxdigitl/ui/start/splash.dart';
 import 'package:livetraxdigitl/widgets/route.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   pref.init().then((instance) {
     theme.init();
     // language
@@ -65,12 +65,12 @@ class LiveStreamApp extends StatelessWidget {
         primarySwatch: theme.primarySwatch,
       );
     }
-
     return MaterialApp(
       title: strings.get(10),
       // "Food Delivery Flutter App UI Kit",
       debugShowCheckedModeBanner: false,
       theme: _theme,
+      // home:  DemoApp(),
       initialRoute: '/splash',
       routes: {
         '/splash': (BuildContext context) => SplashScreen(),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/artist/ArtistDetailScreen.dart';
 import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
 import 'package:livetraxdigitl/ui/model/utils.dart';
 import 'package:livetraxdigitl/ui/server/register.dart';
@@ -78,8 +79,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
       );
 
     _waits(true);
-    register(editControllerEmail.text, editControllerPassword1.text,
-        editControllerName.text, "email", "", _okUserEnter, _error, userRole, value ? editReferralCode.text : "");
+    register(editControllerEmail.text.trim(), editControllerPassword1.text.trim(),
+        editControllerName.text.trim(), "email", "", _okUserEnter, _error, userRole, value ? editReferralCode.text.trim() : "");
   }
 
   bool validateStructure(String value) {
@@ -142,8 +143,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen>
     _waits(false);
     print("CHeck Response Done ==> " + name + " uid " + uid + " TOK " + token);
     account.okUserEnter(
-        name, password, avatar, email, token, "", 0, uid, typeReg, userRole,referral_code);
-    Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
+        name, password,"", avatar, email, token, "", 0, uid, typeReg, userRole,referral_code);
+    if (account.role == "artist") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ArtistDetailScreen(
+                artist_id: account.userId,
+                artist_name: account.userName,
+                artist_description: account.description,
+                artist_image: account.userAvatar)),
+      );
+
+    }else{
+      Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
+    }
   }
 
   bool _wait = false;

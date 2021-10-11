@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:math' as math;
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -15,6 +16,7 @@ import 'package:livetraxdigitl/ui/call/messaging.dart';
 import 'package:livetraxdigitl/ui/config/settings.dart';
 import 'package:livetraxdigitl/ui/model/message.dart';
 import 'package:livetraxdigitl/ui/server/LiveStatusEvent.dart';
+import 'package:livetraxdigitl/ui/server/getplaylistByArtist.dart';
 import 'package:livetraxdigitl/ui/server/listvirtualgift.dart';
 import 'package:livetraxdigitl/ui/server/listvirtualgift_model.dart';
 import 'package:livetraxdigitl/ui/server/musicplaylist.dart';
@@ -22,6 +24,7 @@ import 'package:livetraxdigitl/widgets/HearAnim.dart';
 import 'package:livetraxdigitl/widgets/background_image_another.dart';
 import 'package:livetraxdigitl/widgets/easyDialog2.dart';
 import 'package:livetraxdigitl/ui/call/giftView.dart';
+import 'package:livetraxdigitl/widgets/ibutton10.dart';
 
 import '../../main.dart';
 import 'Productlist.dart';
@@ -43,12 +46,12 @@ class CallScreen extends StatefulWidget {
   /// Creates a call page with given channel name.
   const CallScreen(
       {Key key,
-      this.channelName,
-      this.Eventid,
-      this.userName,
-      this.role,
-      this.userImage,
-      this.token})
+        this.channelName,
+        this.Eventid,
+        this.userName,
+        this.role,
+        this.userImage,
+        this.token})
       : super(key: key);
 
   @override
@@ -58,12 +61,12 @@ class CallScreen extends StatefulWidget {
 class _CallPageState extends State<CallScreen> {
   final _users = <int>[];
   final _infoStrings = <Message>[];
-  bool muted = false;
+  bool muted = false, visual = true;
   RtcEngine _engine;
   bool requested = false;
 
   List<AudioSource> _mList = List<AudioSource>();
-  List<MusicData> list = new List();
+  List<PalyList> list = new List();
   bool _isLogin = false;
   bool _isInChannel = false;
   List<data> _responseList = [];
@@ -86,10 +89,11 @@ class _CallPageState extends State<CallScreen> {
   void dispose() {
     // clear users
     _users.clear();
+
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
-
+    visual = false;
     SetStatusEvent(0);
 
     super.dispose();
@@ -98,7 +102,12 @@ class _CallPageState extends State<CallScreen> {
   @override
   void initState() {
     super.initState();
+
+    print("User Name ------------------- > " + widget.userName + " sentense>> ");
     // initialize agora sdk
+    if (account.role == "artist") {
+      visual = false;
+    }
     initialize();
     userMap = {widget.userName: widget.userImage};
     _createClient();
@@ -152,7 +161,7 @@ class _CallPageState extends State<CallScreen> {
 
   void _createClient() async {
     _client =
-        await AgoraRtmClient.createInstance('b42ce8d86225475c9558e478f1ed4e8e');
+    await AgoraRtmClient.createInstance('b42ce8d86225475c9558e478f1ed4e8e');
     _client.onMessageReceived = (AgoraRtmMessage message, String peerId) {
       print("TAGGGGG -------- > 1" + message.text);
       _logPeer(message.text);
@@ -305,53 +314,69 @@ class _CallPageState extends State<CallScreen> {
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(APP_ID);
-    await _engine.enableAudio();
+    //await _engine.enableAudio();
+    await _engine.enableVideo();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await _engine.setClientRole(widget.role);
   }
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
-    _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
-      setState(() {
-        final info = 'onError: $code';
-        //_infoStrings.add(info);
-        print("TAGGGG ------------->>><>>> " + info);
-      });
-    }, joinChannelSuccess: (channel, uid, elapsed) {
-      setState(() {
-        final info = 'onJoinChannel: $channel, uid: $uid';
-        //_infoStrings.add(info);
-        print("TAGGGG ------------->>><>>> " +
-            'onJoinChannel: $channel, uid: $uid');
-      });
-    }, leaveChannel: (stats) {
-      setState(() {
-        //_infoStrings.add('onLeaveChannel');
-        print("TAGGGG ------------->>><>>> " + "onLeaveChannel");
-        _users.clear();
-      });
-    }, userJoined: (uid, elapsed) {
-      setState(() {
-        final info = 'userJoined: $uid';
-        print("TAGGGG ------------->>><>>> " + info);
-        //_infoStrings.add(info);
-        _users.add(uid);
-      });
-    }, userOffline: (uid, elapsed) {
-      setState(() {
-        final info = 'userOffline: $uid';
-        //_infoStrings.add(info);
-        print("TAGGGG ------------->>><>>> " + info);
-        _users.remove(uid);
-      });
-    }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
-      setState(() {
-        final info = 'firstRemoteVideo: $uid ${width}x $height';
-        //_infoStrings.add(info);
-        print("TAGGGG ------------->>><>>> " + info);
-      });
-    }));
+    _engine.setEventHandler(RtcEngineEventHandler(
+      error: (code) {
+        setState(() {
+          final info = 'onError: $code';
+          //_infoStrings.add(info);
+          print("TAGGGG ------------->>><>>> " + info);
+        });
+      },
+      joinChannelSuccess: (channel, uid, elapsed) {
+        setState(() {
+          final info = 'onJoinChannel: $channel, uid: $uid';
+          //_infoStrings.add(info);
+          print("TAGGGG ------------->>><>>> " +
+              'onJoinChannel: $channel, uid: $uid');
+        });
+      },
+      leaveChannel: (stats) {
+        setState(() {
+          //_infoStrings.add('onLeaveChannel');
+          print("TAGGGG ------------->>><>>> " + "onLeaveChannel");
+          _users.clear();
+        });
+      },
+      userJoined: (uid, elapsed) {
+        setState(() {
+          final info = 'userJoined: $uid';
+          print("TAGGGG ------------->>><>>> " + info);
+          //_infoStrings.add(info);
+          _users.add(uid);
+        });
+      },
+      userOffline: (uid, elapsed) {
+        setState(() {
+          final info = 'userOffline: $uid';
+          //_infoStrings.add(info);
+          print("TAGGGG ------------->>><>>> " + info);
+          _users.remove(uid);
+        });
+      },
+      firstRemoteVideoFrame: (uid, width, height, elapsed) {
+        setState(() {
+          final info = 'firstRemoteVideo: $uid ${width}x $height';
+          //_infoStrings.add(info);
+          print("TAGGGG ------------->>><>>> " + info);
+        });
+      },
+      remoteVideoStateChanged: (uid, state, reason, elapsed) {
+        if (state == VideoRemoteState.Stopped) {
+          visual = true;
+        } else if (state == VideoRemoteState.Decoding) {
+          visual = false;
+        }
+        setState(() {});
+      },
+    ));
   }
 
   /// Helper function to get list of native views
@@ -386,32 +411,32 @@ class _CallPageState extends State<CallScreen> {
       case 1:
         return Container(
             child: Column(
-          children: <Widget>[_videoView(views[0])],
-        ));
+              children: <Widget>[_videoView(views[0])],
+            ));
       case 2:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow([views[0]]),
+                _expandedVideoRow([views[1]])
+              ],
+            ));
       case 3:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 3))
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow(views.sublist(0, 2)),
+                _expandedVideoRow(views.sublist(2, 3))
+              ],
+            ));
       case 4:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow(views.sublist(0, 2)),
+                _expandedVideoRow(views.sublist(2, 4))
+              ],
+            ));
       default:
     }
     return Container();
@@ -495,6 +520,21 @@ class _CallPageState extends State<CallScreen> {
                     padding: const EdgeInsets.all(12.0),
                   ),
                 ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: RawMaterialButton(
+                    onPressed: _onToggleVideo,
+                    child: Icon(
+                      visual ? Icons.videocam_off : Icons.videocam,
+                      color: visual ? Colors.white : Colors.blueAccent,
+                      size: 20.0,
+                    ),
+                    shape: CircleBorder(),
+                    elevation: 2.0,
+                    fillColor: visual ? Colors.blueAccent : Colors.white,
+                    padding: const EdgeInsets.all(12.0),
+                  ),
+                ),
               ],
             ),
           ),
@@ -564,6 +604,13 @@ class _CallPageState extends State<CallScreen> {
     _engine.muteLocalAudioStream(muted);
   }
 
+  void _onToggleVideo() {
+    setState(() {
+      visual = !visual;
+    });
+    _engine.muteLocalVideoStream(visual);
+  }
+
   void _onVirtualGift() {
     setState(() {});
     return openVirtualDialog("Virtual Gift", (s) {
@@ -579,7 +626,28 @@ class _CallPageState extends State<CallScreen> {
 
   void _onMerchandise() {
     setState(() {});
-    return openDialog("Merchandise");
+    return openDialog("Virtual Gift", (s, bool, price) {
+      setState(() {
+        print("Updated VALUE IS HERE --->> " +
+            (s as MusicData).title +
+            " UPDATE " +
+            (s as MusicData).isSelected.toString());
+        if (bool) {
+          setState(() {
+            TotalPay = TotalPay -
+                double.parse(price.toString().trim().replaceFirst("\$", ""));
+          });
+        } else {
+          setState(() {
+            TotalPay = TotalPay -
+                double.parse(price.toString().trim().replaceFirst("\$", ""));
+          });
+        }
+
+        setState(() {});
+      });
+    });
+    // return openDialog("Merchandise");
   }
 
   void _onSwitchCamera() {
@@ -610,20 +678,33 @@ class _CallPageState extends State<CallScreen> {
     return WillPopScope(
         child: SafeArea(
           child: Scaffold(
+            //resizeToAvoidBottomInset: false,
             backgroundColor: Colors.black,
             body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: (visual) ?
+              BoxDecoration(
+                image: DecorationImage(
+                  image: ExactAssetImage('assets/images/sample.png'),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.topCenter,
+                ),
+              ) : BoxDecoration(),
               child: Center(
                 child: Stack(
                   children: <Widget>[
-                    _viewRows(),
-                    background_image_another(),
+                    (!visual) ? _viewRows() : Center(),
+                    //(visual) ? background_image_another() : Container(),
                     _liveText(),
                     //_panel(),
                     _toolbar(),
                     _messageList(),
                     if (heart == true && completed == false) heartPop(),
-                    if (widget.role == ClientRole.Broadcaster) _endCall(),
+                    _endCall(),
+
                     _buildSendChannelMessage(),
+
                     if (tryingToEnd == true) endLive(),
                     IEasyDialog2(
                       setPosition: (double value) {
@@ -643,27 +724,6 @@ class _CallPageState extends State<CallScreen> {
           ),
         ),
         onWillPop: _willPopCallback);
-    /* return Scaffold(
-      appBar: AppBar(
-        title: Text('Agora Flutter QuickStart'),
-      ),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _viewRows(),
-            _endCall(),
-            _liveText(),
-            _panel(),
-            _toolbar(),
-            _messageList(),
-            if (heart == true && completed == false) heartPop(),
-            _buildSendChannelMessage(),
-          ],
-        ),
-      ),
-        onWillPop: _willPopCallback
-    );*/
   }
 
   Future<bool> _willPopCallback() async {
@@ -703,7 +763,7 @@ class _CallPageState extends State<CallScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(4.0))),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
+                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
                 child: Text(
                   'LIVE',
                   style: TextStyle(
@@ -793,31 +853,36 @@ class _CallPageState extends State<CallScreen> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8, top: 5, right: 8, bottom: 5),
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             new Expanded(
                 child: Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
-              child: new TextField(
-                  cursorColor: Colors.blue,
-                  textInputAction: TextInputAction.go,
-                  //onSubmitted: _toggleSendChannelMessage,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: _channelMessageController,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: 'Comment',
-                    hintStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                        borderSide: BorderSide(color: Colors.white)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                        borderSide: BorderSide(color: Colors.white)),
-                  )),
-            )),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
+                  child: new GestureDetector(
+                      child: new TextField(
+                          cursorColor: Colors.blue,
+                          textInputAction: TextInputAction.go,
+                          //onSubmitted: _toggleSendChannelMessage,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          controller: _channelMessageController,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            hintText: 'Comment',
+                            hintStyle: TextStyle(color: Colors.white),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                                borderSide: BorderSide(color: Colors.white)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                                borderSide: BorderSide(color: Colors.white)),
+                          )),
+                      onTap: () {
+                        // call this method here to hide soft keyboard
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      }),
+                )),
             Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
               child: MaterialButton(
@@ -879,107 +944,107 @@ class _CallPageState extends State<CallScreen> {
                 ),
                 child: (_infoStrings[index].type == 'image')
                     ? Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            CachedNetworkImage(
-                              imageUrl: _infoStrings[index].image,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 32.0,
-                                height: 32.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: _infoStrings[index].image,
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              width: 32.0,
+                              height: 32.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 40,
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: _infoStrings[index].message,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  width: 70.0,
-                                  height: 70.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
                         ),
-                      )
-                    : (_infoStrings[index].type == 'message')
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                CachedNetworkImage(
-                                  imageUrl: _infoStrings[index].image,
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    width: 32.0,
-                                    height: 32.0,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover),
-                                    ),
-                                  ),
+                        child: CachedNetworkImage(
+                          imageUrl: _infoStrings[index].message,
+                          imageBuilder: (context, imageProvider) =>
+                              Container(
+                                width: 70.0,
+                                height: 70.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Text(
-                                        _infoStrings[index].user,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Container(
-                                        width: 180,
-                                        child: Text(
-                                          _infoStrings[index].message,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                    : (_infoStrings[index].type == 'message')
+                    ? Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: _infoStrings[index].image,
+                        imageBuilder: (context, imageProvider) =>
+                            Container(
+                              width: 32.0,
+                              height: 32.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover),
+                              ),
                             ),
-                          )
-                        : null,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            child: Text(
+                              _infoStrings[index].user,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                            ),
+                            child: Container(
+                              width: 180,
+                              child: Text(
+                                _infoStrings[index].message,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+                    : null,
               );
             },
           ),
@@ -1000,12 +1065,12 @@ class _CallPageState extends State<CallScreen> {
     });
     Timer(
         Duration(seconds: 4),
-        () => {
-              _timer.cancel(),
-              setState(() {
-                heart = false;
-              })
-            });
+            () => {
+          _timer.cancel(),
+          setState(() {
+            heart = false;
+          })
+        });
     _timer = Timer.periodic(Duration(milliseconds: 125), (Timer t) {
       setState(() {
         height += _random.nextInt(20);
@@ -1022,6 +1087,8 @@ class _CallPageState extends State<CallScreen> {
       return;
     }
     try {
+      String sentense = widget.userName.replaceAll(new RegExp('\\W+'), '');
+      print("User Name ------------------- > " + widget.userName + " sentense>> " + sentense);
       await _channel.sendMessage(AgoraRtmMessage.fromText(text));
       //_log(text);
       _logInsert(user: widget.userName, info: text, type: 'message');
@@ -1047,7 +1114,8 @@ class _CallPageState extends State<CallScreen> {
     } else if (type == 'image' && info.contains('m1x2y3z4p5t6l7i8')) {
       // stopFunction();
       var image = userMap[user];
-      Message m = new Message(message: info, type: type, user: user, image: image);
+      Message m =
+      new Message(message: info, type: type, user: user, image: image);
       setState(() {
         _infoStrings.insert(0, m);
       });
@@ -1203,8 +1271,8 @@ class _CallPageState extends State<CallScreen> {
   Widget _dialogBody = Container();
   double _show = 0;
 
-  openDialog(String _text) {
-    _dialogBody = SingleChildScrollView();
+  openDialog(String _text, Function callBack) {
+    _dialogBody = SingleChildScrollView(callBack);
     setState(() {
       _show = 1;
     });
@@ -1217,24 +1285,12 @@ class _CallPageState extends State<CallScreen> {
     });
   }
 
-  Widget SingleChildScrollView() {
+  Widget SingleChildScrollView(Function callBack) {
     return Container(
       color: Colors.white,
       height: MediaQuery.of(context).size.height * 0.5,
       width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: ListView.builder(
-                itemCount: _mList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ProductList(context, index, list);
-                }),
-          ),
-        ],
-      ),
+      child: ProductList(list),
     );
   }
 
@@ -1282,11 +1338,15 @@ class _CallPageState extends State<CallScreen> {
 
   _music(int page, int limit) {
     print("::::Data::::");
+    print("=====CALL Method Call=====");
+    print("Token===UI=" + account.userId);
+    // musicList(page, limit, _onSuccessMusicList, _error);
+    // getplaylistByArtist(account.token,_onSuccessMusicList, _error);
+    print("Tokaaaan===="+account.token);
 
-    musicList(page, limit, _onSuccessMusicList, _error);
   }
 
-  _onSuccessMusicList(List<MusicData> list) {
+  _onSuccessMusicList(List<PalyList> list) {
     _waits(false);
     this.list = list;
     var i;

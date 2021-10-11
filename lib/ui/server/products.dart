@@ -20,12 +20,15 @@ productsLoad(String uid,
   });
   try {
     print('Response status URI ::- ${url}');
-    print('Response status URI ::T' +   uid);
+    print('TOK :: ' +   uid);
+    print('body :: ' +   body);
     var response = await http.post(Uri.parse(url), headers: requestHeaders, body: body).timeout(const Duration(seconds: 30));
     print('Response status::- ${response.statusCode}');
     print('Response body::- ${response.body}');
     if (response.statusCode == 200) {
       var jsonResult = json.decode(response.body);
+      print("Decode====");
+      print(jsonResult);
       if (jsonResult["error"] != "0")
         return callbackError(jsonResult["error"]);
       ResponseFoods ret = ResponseFoods.fromJson(jsonResult);
@@ -47,8 +50,7 @@ class ResponseFoods {
   List<NutritionGroupData> nutritionGroupData;
   int numberOfDigits;
 
-  ResponseFoods({this.error, this.images, this.foods, this.id,
-    this.restaurants, this.extrasGroupData, this.nutritionGroupData, this.numberOfDigits});
+  ResponseFoods({this.error, this.images, this.foods, this.id, this.restaurants, this.extrasGroupData, this.nutritionGroupData, this.numberOfDigits});
 
   factory ResponseFoods.fromJson(Map<String, dynamic> json){
 
@@ -91,6 +93,8 @@ class FoodsData {
   String updatedAt;
   String name;
   int imageid;
+  int audioid;
+  int lyricsid;
   String price;
   String desc;
   int restaurant;
@@ -100,7 +104,7 @@ class FoodsData {
   int extras;
   int nutrition;
 
-  FoodsData({this.id, this.name, this.updatedAt, this.desc, this.imageid, this.price,
+  FoodsData({this.id, this.name, this.updatedAt, this.desc, this.imageid,this.audioid,this.lyricsid, this.price,
     this.ingredients, this.visible, this.extras, this.nutrition,
     this.restaurant, this.category
   });
@@ -110,6 +114,8 @@ class FoodsData {
       updatedAt : json['updated_at'].toString(),
       name: json['name'].toString(),
       imageid: toInt(json['imageid'].toString()),
+      audioid: toInt(json['audioid'].toString()),
+      lyricsid: toInt(json['lyricsid'].toString()),
       price : json['price'].toString(),
       desc : json['desc'].toString(),
       ingredients : json['ingredients'].toString(),

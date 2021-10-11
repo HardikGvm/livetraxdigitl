@@ -58,14 +58,14 @@ class _ListProductScreenState extends State<ListProductScreen> {
         List<ExtrasGroupData> extrasGroup,
         List<NutritionGroupData> nutritionGroup,
         int numberOfDigits) {
-      _image = image;
-      _foods = foods;
-      print("Check List here Well >> " + foods.length.toString());
-      _restaurants = restaurants;
-      _extrasGroup = extrasGroup;
-      _nutritionGroup = nutritionGroup;
-      _numberOfDigits = numberOfDigits;
-      setState(() {});
+        _image = image;
+        _foods = foods;
+        print("Check List here Well >> " + foods.length.toString());
+        _restaurants = restaurants;
+        _extrasGroup = extrasGroup;
+        _nutritionGroup = nutritionGroup;
+        _numberOfDigits = numberOfDigits;
+        setState(() {});
     }, _openDialogError);
   }
 

@@ -21,8 +21,7 @@ class _ForgotScreenState extends State<ForgotScreen>
     if (editControllerEmail.text.isEmpty)
       return openDialog(strings.get(176)); // "Enter your E-mail"
     if (!_validateEmail(editControllerEmail.text))
-      return openDialog(strings.get(178)); // "You E-mail is incorrect"
-
+      return openDialog(strings.get(178)); // "Your E-mail is incorrect"
     _waits(true);
     forgotPassword(editControllerEmail.text, _success, _error);
   }
@@ -31,6 +30,7 @@ class _ForgotScreenState extends State<ForgotScreen>
   var windowHeight;
   final editControllerEmail = TextEditingController();
   bool _wait = false;
+  bool sendButton = true;
 
   _error(String error) {
     _waits(false);
@@ -40,7 +40,9 @@ class _ForgotScreenState extends State<ForgotScreen>
     if (error == "5001")
       return openDialog(strings
           .get(157)); //  "Failed to send Email. Please try again later.",
-    openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
+    if (error == "User not found!") return openDialog(strings.get(178));
+
+    openDialog("${strings.get(178)} $error"); // "Something went wrong. ",
   }
 
   _waits(bool value) {
@@ -50,7 +52,9 @@ class _ForgotScreenState extends State<ForgotScreen>
 
   _success(String message) {
     _waits(false);
-    openDialog(message); // "A letter with a new password has been sent to the specified E-mail",
+    sendButton = false;
+    openDialog(
+        message); // "A letter with a new password has been sent to the specified E-mail",
   }
 
   @override
@@ -67,6 +71,15 @@ class _ForgotScreenState extends State<ForgotScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (!sendButton) {
+      Future.delayed(const Duration(seconds: 60), () {
+        if (this.mounted) {
+          setState(() {
+            sendButton = true;
+          });
+        }
+      });
+    }
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -160,14 +173,23 @@ class _ForgotScreenState extends State<ForgotScreen>
         ),
         Container(
             margin: EdgeInsets.only(left: 20, right: 20),
-            child: IButton3(
-                color: Colors.blue,
-                text: strings.get(19),
-                textStyle: theme.text14boldWhite,
-                // SEND
-                pressButton: () {
-                  _pressSendButton();
-                })),
+            child: sendButton
+                ? IButton3(
+                    color: Colors.blue,
+                    text: strings.get(19),
+                    textStyle: theme.text14boldWhite,
+                    // SEND
+                    pressButton: () {
+                      _pressSendButton();
+                    })
+                : IButton3(
+                    color: Colors.grey,
+                    text: strings.get(19),
+                    textStyle: theme.text14boldWhite,
+                    // SEND
+                    pressButton: () {
+                      // _pressSendButton();
+                    })),
         SizedBox(
           height: 25,
         ),

@@ -135,13 +135,19 @@ class _HomeScreenState extends State<Home> {
     var platformChannelSpecifics = new NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
+    var _rows;
+    if (message[''] != null) {
+      _rows = message[''].cast<String>().toList();
+      print("Check Message " + _rows.toString());
+    }
+    print("Check Message " + message.toString());
+    /*await flutterLocalNotificationsPlugin.show(
       0,
       message['notification']['title'],
       message['notification']['body'],
       platformChannelSpecifics,
       payload: 'hello',
-    );
+    );*/
   }
 
   Future onSelectNotification(String payload) async {
@@ -208,6 +214,10 @@ class _HomeScreenState extends State<Home> {
         children: <Widget>[
           //IBackground4(width: windowWidth, colorsGradient: theme.colorsGradient),
           background_image(),
+          Image(
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.width * 0.45,
+              image: AssetImage('assets/applogo.png')),
           Container(
             margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
             alignment: Alignment.bottomCenter,
@@ -472,7 +482,7 @@ class _HomeScreenState extends State<Home> {
                 //AgoraToken();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EventListScreen()),
+                  MaterialPageRoute(builder: (context) => EventListScreen(artist_id: "",)),
                 );
               }
             },
@@ -577,66 +587,68 @@ class _HomeScreenState extends State<Home> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         bottom: 5, top: 5, left: 10, right: 10),
-                    child: Stack(
-                      alignment: Alignment.topRight,
-                        children: <Widget>[
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              color: Colors.white54,
-                              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                              border: Border.all(width: 1.0, color: Colors.white),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                CachedNetworkImage(
-                                  imageUrl: details_user[index]["image"],
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                        width: 40.0,
-                                        height: 40.0,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
+                    child:
+                        Stack(alignment: Alignment.topRight, children: <Widget>[
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          border: Border.all(width: 1.0, color: Colors.white),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              imageUrl: details_user[index]["image"],
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 40.0,
+                                height: 40.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Text(
-                                        details_user[index]["name"],
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                    details_user[index]["name"],
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ],
                             ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 10, top: 10, left: 0, right: 0),
+                          child: Icon(
+                            Icons.music_note_outlined,
+                            color: Colors.green,
                           ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Icon(
-                              Icons.music_note_outlined,
-                              color: Colors.green,
-                            ),
-                            width: 30.0,
-                            height: 30.0,
-                          )
-
-
-                        ]),
+                        ),
+                        width: 30.0,
+                        height: 30.0,
+                      )
+                    ]),
                   ));
             },
           ),

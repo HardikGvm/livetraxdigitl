@@ -31,7 +31,13 @@ class AppThemeData{
   List<Color> colorsGradient = [];
   Color colorDarkModeLight = Color.fromARGB(255, 40, 40, 40); // for dialog background in dark mode
   //
-
+  static const Color lightBlue1 = Color(0xff375efd);
+  static const Color lightBlue2 = Color(0xff3554d3);
+  static const Color navyBlue1 = Color(0xff15294a);
+  static const Color lightNavyBlue = Color(0xff6d7f99);
+  static const Color navyBlue2 = Color(0xff2c405b);
+  static const Color yellow = Color(0xfffbbd5c);
+  static const Color yellow2 = Color(0xffe7ad03);
   double radius = 4;
   int shadow = 5;
 

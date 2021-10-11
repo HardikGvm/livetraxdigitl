@@ -3,10 +3,7 @@ import 'dart:convert';
 import 'package:livetraxdigitl/ui/config/api.dart';
 import 'package:livetraxdigitl/ui/model/utils.dart';
 
-musicList(
-    int page,
-    int limit,
-    Function(List<MusicData> list) callback,
+musicList(int page, int limit, Function(List<MusicData> list) callback,
     Function(String) callbackError) async {
   try {
     Map<String, String> requestHeaders = {
@@ -26,14 +23,11 @@ musicList(
         .timeout(const Duration(seconds: 30));
 
     if (response.statusCode == 200) {
-
       var jsonResult = json.decode(response.body);
       Response ret = Response.fromJson(jsonResult);
 
       if (ret.data != null) {
-        for (int i = 0; i < ret.data.length; i++) {
-
-        }
+        for (int i = 0; i < ret.data.length; i++) {}
         callback(ret.data);
       } else
         callbackError("error:ret.data=null");
@@ -49,13 +43,13 @@ class Response {
   String message;
   List<MusicData> data;
 
-  Response({this.status,this.message, this.pages,  this.data});
+  Response({this.status, this.message, this.pages, this.data});
 
   factory Response.fromJson(Map<String, dynamic> json) {
     var list = json['data'] as List;
 
     List<MusicData> imagesList =
-    list.map((i) => MusicData.fromJson(i)).toList();
+        list.map((i) => MusicData.fromJson(i)).toList();
 
     return Response(
       status: toInt(json['status'].toString()),
@@ -75,15 +69,17 @@ class MusicData {
   String audio;
   String music;
   String image;
+  bool isSelected = false;
 
-  MusicData({this.id,
-    this.album_id,
-    this.title,
-    this.desc,
-    this.imageid,
-    this.audio,
-    this.music,
-    this.image});
+  MusicData(
+      {this.id,
+      this.album_id,
+      this.title,
+      this.desc,
+      this.imageid,
+      this.audio,
+      this.music,
+      this.image});
 
   factory MusicData.fromJson(Map<String, dynamic> json) {
     return MusicData(
@@ -94,6 +90,7 @@ class MusicData {
       imageid: json['imageid'],
       audio: json['audio'],
       music: json['music'],
-      image: json['image'],);
+      image: json['image'],
+    );
   }
 }

@@ -122,7 +122,10 @@ class IndexState extends State<IndexPage> {
         MaterialPageRoute(
           builder: (context) => CallPage(
             channelName: _channelController.text,
-            role: _role, Token:""
+            role: _role,
+            Token: "",
+            valid: null,
+            code: null,
           ),
         ),
       );

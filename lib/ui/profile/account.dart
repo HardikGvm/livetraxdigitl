@@ -241,7 +241,9 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   _userInfo() {
-    print("User Bane >> " + account.email);
+    print("User Bane -->> " + account.email + " >> " + account.description);
+    print("User Bane -->> " + account.referral_code + " >> " + account.userAvatar);
+    print("User Bane -->> " + account.phone + " >> " + account.role);
     return Container(
         margin: EdgeInsets.all(10),
         child: Column(
@@ -304,6 +306,15 @@ class _AccountScreenState extends State<AccountScreen> {
                   )
                 ],
               ),
+            SizedBox(
+              height: 10,
+            ),
+            IList4(
+              text: "${strings.get(2247)}:", // "Description",
+              textStyle: theme.text14bold,
+              text2: account.description,
+              textStyle2: theme.text14bold,
+            ),
             SizedBox(
               height: 10,
             ),
@@ -441,6 +452,7 @@ class _AccountScreenState extends State<AccountScreen> {
   final editControllerName = TextEditingController();
   final editControllerEmail = TextEditingController();
   final editControllerPhone = TextEditingController();
+  final editControllerDescription = TextEditingController();
   final editControllerOldPassword = TextEditingController();
   final editControllerNewPassword1 = TextEditingController();
   final editControllerNewPassword2 = TextEditingController();
@@ -451,6 +463,7 @@ class _AccountScreenState extends State<AccountScreen> {
     editControllerName.text = account.userName;
     editControllerEmail.text = account.email;
     editControllerPhone.text = account.phone;
+    editControllerDescription.text = account.description;
 
     _dialogBody = Directionality(
         textDirection: strings.direction,
@@ -495,6 +508,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 SizedBox(
                   height: 20,
                 ),
+              Text(
+                "${strings.get(2247)}:",
+                style: theme.text12bold,
+              ),
+              _edit(editControllerDescription, strings.get(2296), false, false),
+              SizedBox(
+                height: 20,
+              ),
               if (appSettings.otp != "true")
                 Text(
                   "${strings.get(59)}:",
@@ -594,6 +615,7 @@ class _AccountScreenState extends State<AccountScreen> {
         editControllerName.text,
         editControllerEmail.text,
         editControllerPhone.text,
+        editControllerDescription.text,
         _successChangeProfile,
         _errorChangeProfile);
   }
@@ -635,6 +657,7 @@ class _AccountScreenState extends State<AccountScreen> {
     _openDialogError(strings.get(171)); // "User Profile change",
     account.userName = editControllerName.text;
     account.phone = editControllerPhone.text;
+    account.description = editControllerDescription.text;
     account.email = editControllerEmail.text;
     setState(() {});
   }
@@ -744,6 +767,10 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   _pressChangePasswordButton() {
+    editControllerOldPassword.text = "";
+    editControllerNewPassword1.text = "";
+    editControllerNewPassword2.text = "";
+
     _dialogBody = Directionality(
         textDirection: strings.direction,
         child: Container(

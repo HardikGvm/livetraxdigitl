@@ -4,11 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as imageLib;
 import 'package:image_picker/image_picker.dart';
-import 'package:photofilters/filters/preset_filters.dart';
-import 'package:photofilters/widgets/photo_filter.dart';
-import 'package:livetraxdigitl/ui/Fliter/filtermain.dart';
-import 'package:livetraxdigitl/ui/checkout/checkoutAppBar.dart';
+import 'package:intl/intl.dart';
 import 'package:livetraxdigitl/ui/config/UserService.dart';
 import 'package:livetraxdigitl/ui/config/api.dart';
 import 'package:livetraxdigitl/ui/products/productAppBar.dart';
@@ -23,8 +21,9 @@ import 'package:livetraxdigitl/widgets/easyDialog2.dart';
 import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import 'package:livetraxdigitl/widgets/internetConnection.dart';
 import 'package:livetraxdigitl/widgets/widgets.dart';
-import 'package:image/image.dart' as imageLib;
 import 'package:path/path.dart' as path;
+import 'package:photofilters/filters/preset_filters.dart';
+import 'package:photofilters/widgets/photo_filter.dart';
 
 import '../../main.dart';
 
@@ -42,6 +41,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   var windowHeight;
 
   var _editItem = false;
+  var _editItemComplete = true;
   var _editItemId = "";
   var _ensureVisibleId = "";
   var scrollController = ScrollController();
@@ -57,6 +57,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   var editControllerPrice = TextEditingController();
   var editControllerDesc = TextEditingController();
   var editControllerIngredients = TextEditingController();
+  var editControllerDate = TextEditingController();
+  var editControllerTime = TextEditingController();
 
   var _categoryValueOnForm = 0;
   var _experienceValueOnForm = 0;
@@ -85,7 +87,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Future<void> initState() {
     CallStart();
-
     super.initState();
   }
 
@@ -160,7 +161,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: FloatingActionButton(
               onPressed: () {
                 isListMode = false;
-                setState(() {});
+
+                setState(() {
+                  _editItem = false;
+                  editControllerName.text = "";
+                  editControllerBrand.text = "";
+                  editControllerColor.text = "";
+                  editControllerDesc.text = "";
+                  editControllerPrice.text = "";
+                  editControllerquantity.text = "";
+                  editControllerSize.text = "";
+                  editControllerIngredients.text = "";
+                  editControllerDate.text = "";
+                  editControllerTime.text = "";
+
+                  _imagePath = "";
+                  _serverImagePath = "";
+                  _imageId = "";
+                  _editItemId = "";
+                  _audioId = "";
+                  _path = "";
+                  _txtpath = "";
+                  _serveraudioPath = "";
+                  _serverTextPath = "";
+                  _fileName = "";
+                  _txtfileName = "";
+                });
               },
               child: const Icon(Icons.add),
               backgroundColor: Colors.blueGrey,
@@ -181,6 +207,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
       if (_show != 0) {
         _show = 0;
       } else if (!isListMode) {
+        editControllerName.text = "";
+        editControllerBrand.text = "";
+        editControllerColor.text = "";
+        editControllerDesc.text = "";
+        editControllerPrice.text = "";
+        editControllerquantity.text = "";
+        editControllerSize.text = "";
+        editControllerIngredients.text = "";
+        editControllerDate.text = "";
+        editControllerTime.text = "";
+
+        _imagePath = "";
+        _serverImagePath = "";
+        _imageId = "";
+        _editItemId = "";
+        _path = "";
+        _txtpath = "";
+
+        _serveraudioPath = "";
+        _serverTextPath = "";
+        _audioId = "";
         isListMode = true;
       } else {
         Navigator.pop(context);
@@ -214,6 +261,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void dispose() {
+    editControllerName.text = "";
+    editControllerBrand.text = "";
+    editControllerColor.text = "";
+    editControllerDesc.text = "";
+    editControllerPrice.text = "";
+    editControllerquantity.text = "";
+    editControllerSize.text = "";
+    editControllerIngredients.text = "";
+    editControllerDate.text = "";
+    editControllerTime.text = "";
+
     editControllerName.dispose();
     editControllerBrand.dispose();
     editControllerColor.dispose();
@@ -222,7 +280,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
     editControllerquantity.dispose();
     editControllerSize.dispose();
     editControllerIngredients.dispose();
+    editControllerDate.dispose();
+    editControllerTime.dispose();
     _imagePath = "";
+    _serverImagePath = "";
+    _imageId = "";
+    _editItemId = "";
+    _path = "";
+    _txtpath = "";
+
+    _serveraudioPath = "";
+    _serverTextPath = "";
+    _audioId = "";
     super.dispose();
   }
 
@@ -250,7 +319,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   _addProduct() {
     var list = List<Widget>();
-
     list.add(SizedBox(
       height: 20,
     ));
@@ -373,29 +441,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         ),
                       ),
                     ]),
-                  if (_categoryValueOnForm.toString() != "1" ||
-                      _categoryValueOnForm.toString() == "3")
+                  if (_categoryValueOnForm.toString() == "2")
                     TableRow(children: [
                       GetTitle(strings.get(2263)),
                       GetDigitEdit(editControllerquantity, strings.get(2267)),
                     ]),
-                  if (_categoryValueOnForm.toString() != "1" ||
-                      _categoryValueOnForm.toString() == "3")
+                  if (_categoryValueOnForm.toString() == "2")
                     TableRow(children: [
                       GetTitle(strings.get(2264)),
                       GetDigitEdit(editControllerSize, strings.get(2262)),
                     ]),
-                  if (_categoryValueOnForm.toString() != "1" ||
-                      _categoryValueOnForm.toString() == "3")
+                  if (_categoryValueOnForm.toString() == "2")
                     TableRow(children: [
                       GetTitle(strings.get(2265)),
                       GetTextEdit(editControllerBrand, strings.get(170)),
                     ]),
-                  if (_categoryValueOnForm.toString() != "1" ||
-                      _categoryValueOnForm.toString() == "3")
+                  if (_categoryValueOnForm.toString() == "2")
                     TableRow(children: [
                       GetTitle(strings.get(2266)),
                       GetTextEdit(editControllerColor, strings.get(170)),
+                    ]),
+                  if (_categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2294)),
+                      GetTextEditTime(
+                          editControllerDate, strings.get(2262), true),
+                    ]),
+                  if (_categoryValueOnForm.toString() == "3")
+                    TableRow(children: [
+                      GetTitle(strings.get(2295)),
+                      GetTextEditTime(
+                          editControllerTime, strings.get(2262), false),
                     ]),
                   TableRow(children: [
                     GetTitle(strings.get(2269)),
@@ -418,7 +494,24 @@ class _AddProductScreenState extends State<AddProductScreen> {
       list.add(SizedBox(
         height: 20,
       ));
-      list.add(selectImage(windowWidth, _makeImageDialog)); // select image
+      if (_categoryValueOnForm.toString() == "1") {
+        list.add(selectImage(
+            windowWidth, _makeImageDialog, strings.get(2286))); // select image
+        list.add(SizedBox(
+          height: 20,
+        ));
+        list.add(selectImage(windowWidth, _makeAudioImageDialog,
+            strings.get(125))); // select image
+        list.add(SizedBox(
+          height: 20,
+        ));
+        list.add(selectImage(windowWidth, _SelectTextFileDialog,
+            strings.get(2300))); // select image
+
+      } else {
+        list.add(selectImage(windowWidth, _makeImageDialog, strings.get(125)));
+      }
+
       list.add(SizedBox(
         height: 20,
       ));
@@ -430,8 +523,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
       list.add(SizedBox(
         height: 20,
       ));
+
+      if (_categoryValueOnForm.toString() == "1")
+        list.add(Container(
+            child: ShowSelectedMusic(_fileName, 'music', windowWidth)));
+      list.add(SizedBox(
+        height: 20,
+      ));
+      if (_categoryValueOnForm.toString() == "1")
+        list.add(Container(
+            child: ShowSelectedMusic(_txtfileName, 'text', windowWidth)));
+      list.add(SizedBox(
+        height: 20,
+      ));
       list.add(Container(
           child: drawImage(_imagePath, _serverImagePath, windowWidth)));
+
       list.add(SizedBox(
         height: 20,
       ));
@@ -505,6 +612,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 })));
   }
 
+  String typeValue;
+
   _experienceComboBoxInForm() {
     var menuItems = List<DropdownMenuItem>();
     menuItems.add(
@@ -556,7 +665,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   print(
                       "Selected Vals 2> " + _experienceValueOnForm.toString());
 
-                  setState(() {});
+                  setState(() {
+                    typeValue = _exp[_experienceValueOnForm - 1].name;
+                    print("typeValue====$typeValue");
+                  });
                 })));
   }
 
@@ -790,6 +902,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           setState(() {
                             _show = 0;
                           });
+
                           if (_categoryValueOnForm.toString() == "1") {
                             _openFileExplorer();
                           } else {
@@ -805,41 +918,208 @@ class _AddProductScreenState extends State<AddProductScreen> {
     });
   }
 
+  _SelectTextFileDialog() {
+    _dialogBody = Container(
+        width: windowWidth,
+        child: Column(
+          children: [
+            Text(
+              strings.get(2301),
+              textAlign: TextAlign.center,
+              style: theme.text18boldPrimary,
+            ), // "Select image from",
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    width: windowWidth / 2 - 25,
+                    child: IButton3(
+                        color: theme.colorPrimary,
+                        text: strings.get(2271), // Gallery
+                        textStyle: theme.text14boldWhite,
+                        pressButton: () {
+                          setState(() {
+                            _show = 0;
+                          });
+                          if (_categoryValueOnForm.toString() == "1") {
+                            _openFileExplorerForTextFile();
+                          } else {
+                            getImage2(ImageSource.gallery);
+                          }
+                        })),
+              ],
+            )),
+          ],
+        ));
+    setState(() {
+      _show = 1;
+    });
+  }
+
+  _makeAudioImageDialog() {
+    _dialogBody = Container(
+        width: windowWidth,
+        child: Column(
+          children: [
+            Text(
+              strings.get(126),
+              textAlign: TextAlign.center,
+              style: theme.text18boldPrimary,
+            ), // "Select image from",
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    width: windowWidth / 2 - 25,
+                    child: IButton3(
+                        color: theme.colorPrimary,
+                        text: strings.get(127), // "Camera",
+                        textStyle: theme.text14boldWhite,
+                        pressButton: () {
+                          setState(() {
+                            _show = 0;
+                          });
+                          getImage2(ImageSource.camera);
+                        })),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(
+                    width: windowWidth / 2 - 25,
+                    child: IButton3(
+                        color: theme.colorPrimary,
+                        text: strings.get(2271), // Gallery
+                        textStyle: theme.text14boldWhite,
+                        pressButton: () {
+                          setState(() {
+                            _show = 0;
+                          });
+
+                          getImage2(ImageSource.gallery);
+                        })),
+              ],
+            )),
+          ],
+        ));
+    setState(() {
+      _show = 1;
+    });
+  }
+
   Future getImage2(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
+
     if (pickedFile != null && pickedFile.path != null) {
       print("Photo file: ${pickedFile.path}");
       _imagePath = pickedFile.path;
-      setState(() {});
+      setState(() {
+        print("_editItemComplete=====$_editItemComplete");
+        if (_editItem) {
+          if (_editItemComplete) {
+            _fileName = "";
+            _txtfileName = "";
+            _serveraudioPath = "";
+            _editItemComplete = false;
+          } else {
+            _editItemComplete = true;
+          }
+        }
+      });
     }
   }
 
   String _fileName = '...';
-  String _path = '...';
+  String _txtfileName = '';
+  String _path = '';
+  String _txtpath = '';
+  String _serveraudioPath = "";
+  String _serverTextPath = "";
+  String _audioId = "";
+  String _lyricsid = "";
+
   String _extension;
   bool _hasValidMime = false;
-  FileType _pickingType;
+  FileType _pickingType = FileType.AUDIO;
 
   void _openFileExplorer() async {
-    if (_pickingType != FileType.AUDIO || _hasValidMime) {
+    if (_pickingType == FileType.AUDIO || _hasValidMime) {
       try {
+        _extension = "mp3";
         _path = await FilePicker.getFilePath(
             type: _pickingType, fileExtension: _extension);
-        print("Check Image Here >> " + _path);
+
+        print("Check Image Here --------- >> " +
+            _path +
+            " _extension " +
+            _extension.toString() +
+            " >> " +
+            _pickingType.toString());
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
       }
 
       if (!mounted) return;
-
       setState(() {
-        _fileName = _path != null ? _path.split('/').last : '...';
+        _fileName = _path != null ? _path.split('/').last : "";
         print("Check Image Here _fileName>> " + _fileName);
+        if (_editItem) {
+          if (_editItemComplete) {
+            _imagePath = "";
+            _serverImagePath = "";
+            _editItemComplete = false;
+          } else {
+            _editItemComplete = true;
+          }
+        }
       });
     }
   }
 
-  selectImage(double windowWidth, Function callback) {
+  FileType _pickingTypeText = FileType.CUSTOM;
+
+  void _openFileExplorerForTextFile() async {
+    if (_pickingTypeText == FileType.CUSTOM || _hasValidMime) {
+      try {
+        _extension = "txt";
+        _txtpath = await FilePicker.getFilePath(
+            type: _pickingTypeText, fileExtension: _extension);
+
+        print("Check Image Here --------- >> " +
+            _txtpath +
+            " _extension " +
+            _extension.toString() +
+            " >> " +
+            _pickingTypeText.toString());
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _txtfileName = _txtpath != null ? _txtpath.split('/').last : "";
+        print("Check Image Here _txtfileName>> " + _txtfileName);
+        if (_editItem) {
+          if (_editItemComplete) {
+            // _imagePath = "";
+            // _serverImagePath = "";
+            _editItemComplete = false;
+          } else {
+            _editItemComplete = true;
+          }
+        }
+      });
+    }
+  }
+
+  selectImage(double windowWidth, Function callback, String text) {
     return Stack(
       children: [
         Container(
@@ -856,9 +1136,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: Opacity(
                 opacity: 0.6,
                 child: Text(
-                  (_categoryValueOnForm.toString() == "1")
-                      ? strings.get(2286)
-                      : strings.get(125),
+                  text,
                   style: theme.text12bold,
                 ) // Click here for select Image
                 ),
@@ -900,43 +1178,100 @@ class _AddProductScreenState extends State<AddProductScreen> {
             fit: BoxFit.contain,
           ));
     else {
-      if (serverImage.isNotEmpty ||
-          (_fileName.isNotEmpty && _fileName != "..."))
+      if (serverImage.isNotEmpty || (_fileName.isNotEmpty && _fileName != ""))
         return Container(
           width: windowWidth,
           height: 100,
           child: Container(
             width: windowWidth,
-            child: (_categoryValueOnForm.toString() == "1")
-                ? Image.asset("assets/musicaudio.png", fit: BoxFit.contain)
-                : CachedNetworkImage(
-                    placeholder: (context, url) => UnconstrainedBox(
-                        child: Container(
-                      alignment: Alignment.center,
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        backgroundColor: theme.colorPrimary,
-                      ),
-                    )),
-                    imageUrl: serverImage,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
+            child:
+                // (_categoryValueOnForm.toString() == "1")
+                //     ? Image.asset("assets/musicaudio.png", fit: BoxFit.contain)
+                //     :
+                CachedNetworkImage(
+              placeholder: (context, url) => UnconstrainedBox(
+                  child: Container(
+                alignment: Alignment.center,
+                width: 40,
+                height: 40,
+                child: CircularProgressIndicator(
+                  backgroundColor: theme.colorPrimary,
+                ),
+              )),
+              imageUrl: serverImage,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
                   ),
+                ),
+              ),
+              errorWidget: (context, url, error) => new Icon(Icons.error),
+            ),
           ),
         );
     }
     return Container();
   }
 
+  Widget ShowSelectedMusic(
+      String musicfilename, String filetype, double windowWidth) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(6))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Text(
+              filetype == 'music'
+                  ? musicfilename.isEmpty
+                      ? 'No Music File Selected'
+                      : musicfilename
+                  : musicfilename.isEmpty
+                      ? 'No Lyrics File Selected'
+                      : musicfilename,
+              style: TextStyle(color: Colors.black, fontSize: 14),
+              maxLines: 2,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+          // SizedBox(
+          //     height: 24,
+          //     width: 24,
+          //     child: IconButton(
+          //         padding: https://livetraxs.gvmsoftware.in/adminPanel/public/images/162332402121251Q6TdegwOL._SY355_.jpgnew EdgeInsets.all(0.0),
+          //         onPressed: () {
+          //           setState(() {
+          //             _fileName = "";
+          //             _path = "";
+          //           });
+          //         },
+          //         icon: Icon(
+          //           Icons.close,
+          //           color: Colors.black,
+          //         ))),
+        ],
+      ),
+    );
+
+    // Container(
+    //   height: windowWidth * 0.3,
+    //   child: Text(
+    //     musicfilename.isNotEmpty ? musicfilename : "Please Select Music File",
+    //     style: TextStyle(color: Colors.black, fontSize: 14),
+    //   ));
+  }
+
   _addNewFood() {
+    print(":::DATAS::: --> " + _fileName + " PATH " + _imagePath);
     if (editControllerName.text.isEmpty)
       return _openDialogError(
           strings.get(2273)); // "The Name field is request",
@@ -947,56 +1282,119 @@ class _AddProductScreenState extends State<AddProductScreen> {
         _categoryValueOnForm.toString() == "2")
       return _openDialogError(
           strings.get(2275)); // "The Price field is request",
-    if (editControllerPrice.text.isEmpty)
+    if (editControllerPrice.text.isEmpty || editControllerPrice.text == ".")
       return _openDialogError(
           strings.get(194)); // "The Price field is request",
 
     if (_categoryValueOnForm == 0)
       return _openDialogError(
           strings.get(193)); // "The Category field is request",
+
+    if (_path.isEmpty &&
+        _categoryValueOnForm.toString() == "1") if (_serveraudioPath=="")
+      return _openDialogError(strings.get(2285));
+    // if (_txtpath == "" && _categoryValueOnForm.toString() == "1")
+    //   return _openDialogError(strings.get(2302));
+    if (_txtpath.isEmpty &&
+        _categoryValueOnForm.toString() == "1")
+      if (_serverTextPath=="")
+      return _openDialogError(strings.get(2302));
+
+    print("audiopath$_path");
+    print("_serverImagePath$_serverImagePath");
+    if (_imagePath.isEmpty) {
+      if (_serverImagePath.isEmpty) {
+        return _openDialogError(strings.get(2270));
+      }
+    }
+
     _waits(true);
 
     if (_imagePath.isNotEmpty && (_categoryValueOnForm.toString() != "1")) {
       /* uploadImage(_imagePath, account.token, (String path, String id) {
         _foodSave(id);
       }, _openDialogError);*/
-
+      print(":::Date:_imagePath:: --> " + _imagePath);
       uploadImage(_imagePath, account.token, (String avatar, int id) async {
         // account.setUserAvatar(avatar);
-        print(":::Date::: --> " + avatar);
+
         _waits(false);
-        _foodSave(id.toString());
+        _foodSave(id.toString(), "", "");
         setState(() {});
       }, (String error) {
         _waits(false);
         _openDialogError(
             "${strings.get(128)} $error"); // "Something went wrong. ",
       });
-    } else if (_fileName.isNotEmpty &&
-        (_fileName != "...") &&
-        (_categoryValueOnForm.toString() == "1")) {
-      uploadFile(_imagePath, account.token, (String avatar, int id) async {
-        // account.setUserAvatar(avatar);
-        print(":::Date::: --> " + avatar);
-        _waits(false);
-        _foodSave(id.toString());
-        setState(() {});
-      }, (String error) {
-        _waits(false);
-        _openDialogError(
-            "${strings.get(128)} $error"); // "Something went wrong. ",
-      });
-    } else
-      _foodSave(_imageId);
+    } else if (_categoryValueOnForm.toString() == "1") {
+      print("Final Image Path===$_imagePath");
+      //
+      // if (_path.isNotEmpty && (_path != "...") && _imagePath.isNotEmpty) {
+      //   uploadFile(_path, _imagePath, account.token,
+      //       (String avatar, int imageid, int audioid) async {
+      //     _waits(false);
+      //     _foodSave(imageid.toString(), audioid.toString());
+      //     setState(() {});
+      //   }, (String error) {
+      //     _waits(false);
+      //     _openDialogError(
+      //         "${strings.get(128)} $error"); // "Something went wrong. ",
+      //   });
+      // } else {
+      //   _foodSave(_imageId, _audioId);
+      // }
+      print("---------------DATA CHECK----------------");
+      print(_imagePath);
+      print(_path);
+      print(_txtpath);
+      print("---------------DATA CHECK END----------------");
+      if (_path.isNotEmpty &&
+          (_path != "") &&
+          _imagePath.isNotEmpty &&
+          _txtpath.isNotEmpty) {
+        print("Call ifff");
+        uploadFile(_path, _imagePath, _txtpath, account.token,
+            (String avatar, int imageid, int audioid, int lyricsid) async {
+          _waits(false);
+          _foodSave(
+              imageid.toString(), audioid.toString(), lyricsid.toString());
+          setState(() {});
+        }, (String error) {
+          _waits(false);
+          _openDialogError(
+              "${strings.get(128)} $error"); // "Something went wrong. ",
+        });
+      } else if (_imagePath.isEmpty &&
+          _path.isNotEmpty &&
+          (_path != "") &&
+          _txtpath.isNotEmpty) {
+        return _openDialogError(strings.get(2270));
+      } else if (_imagePath.isNotEmpty && _path.isEmpty ||
+          (_path == "") && _txtpath.isNotEmpty) {
+        print("Call else ifff 22");
+        return _openDialogError(strings.get(2285));
+      } else if (_imagePath.isNotEmpty && _path.isNotEmpty ||
+          (_path != "") && _txtpath.isEmpty) {
+        return _openDialogError(strings.get(2302));
+      } else {
+        print("Call else DONE Last");
+        _foodSave(_imageId, _audioId, _lyricsid);
+      }
+    } else {
+      print("CALL$_imageId");
+      _foodSave(_imageId, _audioId, _lyricsid);
+    }
   }
 
   var _state = "root";
 
-  _foodSave(String imageid) {
+  _foodSave(String imageid, String audioId, String lyricsid) {
     foodSave(
         editControllerName.text,
         editControllerDesc.text,
         imageid,
+        audioId,
+        lyricsid,
         (_published) ? "1" : "0",
         editControllerPrice.text,
         _restaurantValueOnForm.toString(),
@@ -1006,7 +1404,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         _nutritionGroupValueOnForm.toString(),
         (_editItem) ? "1" : "0",
         _editItemId,
-        account.token, (List<ImageData> image,
+        account.token,
+        editControllerDate.text,
+        editControllerTime.text,
+        typeValue, (List<ImageData> image,
             List<FoodsData> foods,
             List<RestaurantData> restaurants,
             List<ExtrasGroupData> extrasGroup,
@@ -1020,6 +1421,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _state = "viewFoodsList";
       isListMode = true;
       _imagePath = "";
+      _path = "";
+      _txtpath = "";
       _ensureVisibleId = id;
       _waits(false);
       setState(() {});
@@ -1052,6 +1455,63 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
       child: formEditSample(strings.get(2267), controller, text, 250),
+    );
+  }
+
+  GetTextEditTime(TextEditingController controller, String text, bool isDate) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 25,
+            child: TextFormField(
+              onTap: () async {
+                FocusScope.of(context).requestFocus(new FocusNode());
+                if (isDate) {
+                  FocusScope.of(context).unfocus();
+                  new TextEditingController().clear();
+
+                  _selectDate();
+                } else {
+                  FocusScope.of(context).unfocus();
+                  new TextEditingController().clear();
+
+                  _selectTime();
+                }
+              },
+              readOnly: true,
+              enableInteractiveSelection: true,
+              focusNode: new AlwaysDisabledFocusNode(),
+              keyboardType: TextInputType.text,
+              cursorColor: theme.colorDefaultText,
+              controller: controller,
+              onChanged: (String value) async {},
+              textAlignVertical: TextAlignVertical.center,
+              maxLines: 1,
+//            maxLength: widget.maxLenght,
+              style: TextStyle(
+                color: theme.colorDefaultText,
+              ),
+              decoration: new InputDecoration(
+                counterText: "",
+                border: InputBorder.none,
+                hintText: text,
+                hintStyle:
+                    TextStyle(color: theme.colorDefaultText, fontSize: 14.0),
+              ),
+            ),
+          ),
+          Container(
+            height: 0.0,
+            color: Colors.black.withAlpha(100),
+          ),
+          SizedBox(
+            height: 1,
+          ),
+        ],
+      ),
     );
   }
 
@@ -1094,6 +1554,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
       setState(() {
         imageFile = imagefile['image_filtered'];
         _imagePath = imageFile.path;
+
+        if (_editItem) {
+          _fileName = "";
+          _serveraudioPath = "";
+          _serverTextPath = "";
+        }
       });
     }
   }
@@ -1116,19 +1582,46 @@ class _AddProductScreenState extends State<AddProductScreen> {
           for (var ex in _nutritionGroup)
             if (ex.id == item.nutrition)
               _nutritionGroupValueOnForm = item.nutrition;
-
+        print("item====");
+        print(item.audioid);
         editControllerIngredients.text = item.ingredients;
         if (item.visible == '1')
           _published = true;
         else
           _published = false;
         _imagePath = "";
+        _path = "";
+        _txtpath = "";
         _serverImagePath = "";
+        _serveraudioPath = "";
+        _serverTextPath = "";
+        _fileName = "";
+        _txtfileName = "";
         for (var image in _image)
           if (image.id == item.imageid) {
             _serverImagePath = "$serverImages${image.filename}";
             _imageId = image.id.toString();
+          } else if (image.id == item.audioid) {
+            _serveraudioPath = "$serverAudio${image.filename}";
+            _audioId = image.id.toString();
+            if (!mounted) return;
+            setState(() {
+              _fileName = image.filename;
+              // _txtfileName = image.filename;
+            });
+
+            print("FileName$_fileName");
+          } else if (image.id == item.lyricsid) {
+            _serverTextPath = "$serverAudio${image.filename}";
+            _lyricsid = image.id.toString();
+            if (!mounted) return;
+            setState(() {
+              _txtfileName = image.filename;
+            });
+
+            print("FileName$_fileName");
           }
+
         _state = "editFood";
         print("*** Click Edit ***");
         _editItem = true;
@@ -1211,6 +1704,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   _deleteFood(String id) {
+    print("id====$id");
     _wait = true;
     foodDelete(id, (List<ImageData> image,
         List<FoodsData> foods,
@@ -1225,4 +1719,56 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _waits(false);
     }, _openDialogError);
   }
+
+  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  String _hour, _minute, _time;
+
+  Future<Null> _selectTime() async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null)
+      setState(() {
+        selectedTime = picked;
+        _hour = selectedTime.hour.toString();
+        _minute = selectedTime.minute.toString();
+        if (_hour.toString().length == 1) {
+          _hour = "0" + _hour;
+        }
+        if (_minute.toString().length == 1) {
+          _minute = "0" + _minute;
+        }
+
+        _time = _hour + ':' + _minute + ':' + "00";
+        editControllerTime.text = _time;
+        /*formatDate(
+            DateTime(2019, 08, 1, selectedTime.hour, selectedTime.minute),
+            [hh, ':', nn, " ", am]).toString();*/
+      });
+  }
+
+  String dateTime;
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectDate() async {
+    DateTime now = new DateTime.now();
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(now.year, now.month, now.day),
+        lastDate: DateTime(2101));
+    if (picked != null)
+      setState(() {
+        selectedDate = picked;
+        editControllerDate.text = DateFormat.yMd().format(selectedDate);
+      });
+  }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

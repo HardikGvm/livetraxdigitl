@@ -12,9 +12,9 @@ uploadImage(String _avatarFile, String uid, Function(String,int id) callback,
   // resize image
   //
   try {
-    Image image = decodeImage(File(_avatarFile).readAsBytesSync());
-    Image thumbnail = copyResize(image, width: 1000);
-    File(_avatarFile)..writeAsBytesSync(encodeJpg(thumbnail));
+    // Image image = decodeImage(File(_avatarFile).readAsBytesSync());
+    // Image thumbnail = copyResize(image, width: 1000);
+    // File(_avatarFile)..writeAsBytesSync(encodeJpg(thumbnail));
 
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',

@@ -11,16 +11,17 @@ login(
             String name,
             String password,
             String avatar,
+            String description,
             String email,
             String token,
             String phone,
             int unreadNotify,
             String,
             String role,
-            String uid,String referral_code)
+            String uid,
+            String referral_code)
         callback,
     Function(String) callbackError) async {
-
   try {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
@@ -54,13 +55,15 @@ login(
             ret.data.name,
             password,
             path,
+            ret.data.description,
             email,
             ret.data.access_token,
             ret.data.phone,
             ret.notify,
             ret.data.typeReg,
             ret.data.role,
-            ret.data.uid,ret.data.referral_code);
+            ret.data.uid,
+            ret.data.referral_code);
         /*}else
           callbackError("error:ret.data=null");*/
       } else {
@@ -102,6 +105,7 @@ class UserData {
   String name;
   String phone;
   String avatar;
+  String description;
   String typeReg;
   String role;
   String uid;
@@ -111,22 +115,27 @@ class UserData {
   UserData(
       {this.name,
       this.avatar,
+      this.description,
       this.phone,
       this.typeReg,
       this.role,
       this.uid,
-      this.access_token, this.referral_code});
+      this.access_token,
+      this.referral_code});
 
   factory UserData.fromJson(Map<String, dynamic> json) {
     return UserData(
       name: json['name'].toString(),
       avatar: json['avatar'].toString(),
       phone: json['phone'].toString(),
+      description: json['description'].toString(),
       typeReg: json['typeReg'].toString(),
       role: json['role'].toString(),
       uid: json['id'].toString(),
       access_token: json['access_token'].toString(),
-      referral_code: json.containsKey('referral_code') ? json['referral_code'].toString() : "",
+      referral_code: json.containsKey('referral_code')
+          ? json['referral_code'].toString()
+          : "",
     );
   }
 }

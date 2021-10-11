@@ -10,7 +10,7 @@ final List<Map> details = [
   {
     "name": "Paid",
     "country": "India",
-    "mobile": "-\$123",
+    "mobile": "\$123",
     "email": "raj@email.com",
     "date":"2021-08-12 12:03:05",
     "isselected":false

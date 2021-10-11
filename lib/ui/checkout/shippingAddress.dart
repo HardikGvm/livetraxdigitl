@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:livetraxdigitl/ui/checkout/paymentMethod.dart';
 import 'package:livetraxdigitl/ui/checkout/shippingAddressInput.dart';
 import 'package:livetraxdigitl/ui/config/UserService.dart';
 import 'package:livetraxdigitl/ui/server/addressDelete.dart';
@@ -13,6 +14,12 @@ import '../../main.dart';
 import 'checkoutAppBar.dart';
 
 class ShippingAddress extends StatefulWidget {
+  final String productId;
+  final String price;
+
+  const ShippingAddress({Key key, this.productId, this.price})
+      : super(key: key);
+
   @override
   _ShippingAddressState createState() => _ShippingAddressState();
 }
@@ -37,13 +44,29 @@ class _ShippingAddressState extends State<ShippingAddress> {
       showInSnackBar(msg, Colors.red);
     } else {
       //Map<String, dynamic> args = ModalRoute.of(context).settings.arguments;
-      AddressData _selected_address=new AddressData();
-      print("Check data here > " + shippingAddress.length.toString() + " select " + selectedAddress.toString());
+      AddressData _selected_address = new AddressData();
+      print("Check data here > " +
+          shippingAddress.length.toString() +
+          " select " +
+          selectedAddress.toString());
       //args['shippingAddress'] = shippingAddress[selectedAddress];
       _selected_address = shippingAddress[selectedAddress];
-      Navigator.of(context)
-          .pushNamed('/checkout/payment', arguments: _selected_address);
-
+      // Navigator.of(context)
+      //     .pushNamed('/checkout/payment', arguments: _selected_address);
+      // Navigator.of(context).pushNamed('/checkout/payment',
+      //     arguments: PaymentMethod(
+      //       isTopup: false,
+      //       productId: widget.productId,
+      //       price: widget.price,
+      //     ));
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PaymentMethod(
+          productId: widget.productId,
+          price: widget.price,
+          isTopup: false,
+          category: "",
+        ),
+      ));
     }
   }
 
@@ -281,7 +304,9 @@ class _ShippingAddressState extends State<ShippingAddress> {
                             style: TextStyle(fontSize: 15.0),
                           ),*/
                           Text(
-                            responseJson["area"] + "," + responseJson["landMark"],
+                            responseJson["area"] +
+                                "," +
+                                responseJson["landMark"],
                             style: TextStyle(fontSize: 15.0),
                           ),
                           Text(
@@ -370,7 +395,8 @@ class _ShippingAddressState extends State<ShippingAddress> {
           ? (shippingAddress.length == 0)
               ? saveNewAddress()
               : showSavedAddress()
-          : ShippingAddressInput(addressValues, this.validateInput,_scaffoldKey),
+          : ShippingAddressInput(
+              addressValues, this.validateInput, _scaffoldKey),
     );
   }
 
@@ -391,7 +417,7 @@ class _ShippingAddressState extends State<ShippingAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CheckoutAppBar('Back', 'Next', this.checkoutAddress,""),
+      appBar: CheckoutAppBar('Back', 'Next', this.checkoutAddress, ""),
       body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),

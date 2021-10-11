@@ -1,22 +1,22 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:need_resume/need_resume.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:livetraxdigitl/ui/call/call.dart';
 import 'package:livetraxdigitl/ui/event/AddEventScreen.dart';
 import 'package:livetraxdigitl/ui/model/pref.dart';
-import 'package:livetraxdigitl/ui/products/AddProductScreen.dart';
 import 'package:livetraxdigitl/ui/server/DeleteEvent.dart';
 import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
 import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
 import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:need_resume/need_resume.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../main.dart';
 
 class EventListScreen extends StatefulWidget {
-  const EventListScreen({key}) : super(key: key);
+  const EventListScreen({key, this.artist_id}) : super(key: key);
+  final String artist_id;
 
   @override
   _EventListScreenState createState() => _EventListScreenState();
@@ -52,16 +52,56 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
     super.onPause();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  var _isVisible;
+  ScrollController _hideButtonController;
+
+  @override
+  void initState() {
+    _isVisible = true;
+    _hideButtonController = new ScrollController();
+
+    _hideButtonController.addListener(() {
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible == true) {
+          /* only set when the previous state is false
+             * Less widget rebuilds
+             */
+          print("TAGGG ${_isVisible} up"); //Move IO away from setState
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      } else {
+        if (_hideButtonController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (_isVisible == false) {
+            /* only set when the previous state is false
+               * Less widget rebuilds
+               */
+            print("TAGGG ${_isVisible} down"); //Move IO away from setState
+            setState(() {
+              _isVisible = true;
+            });
+          }
+        }
+      }
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
-    isArtist = (account.role == "artist");
+    // isArtist = (account.role == "artist");
+
+    if (widget.artist_id == account.userId) {
+      isArtist = true;
+    } else {
+      isArtist = false;
+    }
     print("Check List > " + isArtist.toString());
 
     return Scaffold(
@@ -73,6 +113,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
       body: Stack(
         children: [
           new ListView.separated(
+            controller: _hideButtonController,
             itemCount: list == null || list.isEmpty ? 0 : list.length,
             separatorBuilder: (BuildContext context, int index) {
               return SizedBox(
@@ -95,8 +136,8 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
                               (list == null ||
-                                  list.isEmpty ||
-                                  list[index].image == null)
+                                      list.isEmpty ||
+                                      list[index].image == null)
                                   ? 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'
                                   : list[index].image,
                               width: 120),
@@ -223,7 +264,7 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
         ],
       ),
       floatingActionButton: new Visibility(
-          visible: isArtist,
+          visible: isArtist ? _isVisible : false,
           child: FloatingActionButton(
             onPressed: () {
               push(
@@ -240,9 +281,10 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
 
   _event(String artist, int page, int limit) {
     print("::::Data::::");
-    if (!isArtist) {
-      artist = "";
-    }
+    // if (!isArtist) {
+    //   artist = "";
+    // }
+    print("Artist====$artist");
     event_list_api(artist, page, limit, _onSuccessEventList, _error);
   }
 
@@ -311,7 +353,8 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
       print(":::Call API:::");
       list.clear();
     }
-    _event(account.userId, 1, 0);
+
+    _event(widget.artist_id, 1, 100);
   }
 
   bool isVisibility(int index) {
@@ -330,20 +373,34 @@ class _EventListScreenState extends ResumableState<EventListScreen> {
 
   AgoraToken(String title, int Eventid) async {
     //if (_formKey.currentState.validate()) {
+
     await _handleMicPermission();
+    await _handleCameraPermission();
+    await _handleStoragePermission();
+
     title = title.toString().toLowerCase().replaceAll(" ", "");
     _waits(true);
     print("User Name > " +
         account.userName.trim().replaceAll(" ", "") +
         " Title > " +
         title);
-    GetAgoraToken(title, Eventid, account.userName.trim().replaceAll(" ", ""),
-        token_success, token_error);
+    String _userName = account.userName.replaceAll(new RegExp('\\W+'), '');
+    GetAgoraToken(title, Eventid, _userName, token_success, token_error);
     //}
   }
 
   Future<void> _handleMicPermission() {
     final status = Permission.microphone.request();
+    print(status);
+  }
+
+  Future<void> _handleCameraPermission() {
+    final status = Permission.camera.request();
+    print(status);
+  }
+
+  Future<void> _handleStoragePermission() {
+    final status = Permission.storage.request();
     print(status);
   }
 

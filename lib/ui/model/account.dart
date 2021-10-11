@@ -11,6 +11,7 @@ class Account {
   String userId = "";
   String email = "";
   String phone = "";
+  String description="";
   String userAvatar = "";
   String token = "";
   String role = "";
@@ -29,6 +30,7 @@ class Account {
   okUserEnter(
       String name,
       String password,
+      String _description,
       String avatar,
       String _email,
       String _token,
@@ -45,6 +47,7 @@ class Account {
     if (userAvatar.isEmpty) userAvatar = serverImgNoUserPath;
     email = _email;
     if (_phone != null) phone = _phone;
+    if (_description != null) description = _description;
     if (_role != null) role = _role;
     if (_typeReg != null) typeReg = _typeReg;
     if (_referral_code != null) referral_code = _referral_code;
@@ -56,6 +59,7 @@ class Account {
     pref.set(Pref.userId, userId);
     pref.set(Pref.userEmail, _email);
     pref.set(Pref.userPassword, password);
+    pref.set(Pref.userDescription, description);
     pref.set(Pref.userAvatar, avatar);
     pref.set(Pref.userRole, role);
     pref.set(Pref.typeReg, typeReg);
@@ -65,7 +69,7 @@ class Account {
     pref.set(Pref.referral_code, referral_code);
 
 
-    print("User TESTTTTTT email=$email ,pass=$password ,avatar=$avatar ,userName=$userName ,Code=$referral_code,token=$token ");
+    print("User TESTTTTTT email=$email ,pass=$password ,avatar=$avatar ,userName=$userName ,Code=$referral_code,description=$description ");
     _callAll(true);
     if (_fcbToken != null) addNotificationToken(account.token, _fcbToken);
     chatGetUnread();
@@ -135,6 +139,7 @@ class Account {
       userName = pref.get(Pref.userName);
       userId = pref.get(Pref.userId);
       phone = pref.get(Pref.phone);
+      description = pref.get(Pref.userDescription);
       userAvatar = pref.get(Pref.userAvatar);
       token = pref.get(Pref.token);
       role = pref.get(Pref.userRole);
@@ -220,9 +225,6 @@ class Account {
       }, (String _){});*/
   }
 
-  //
-  //
-  //
   setUserAvatar(String _avatar) {
     userAvatar = _avatar;
     _callAll(true);

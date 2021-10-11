@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -36,6 +37,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
   @override
   void initState() {
     super.initState();
+
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
 
     Future.delayed(Duration.zero, () async {
       try {

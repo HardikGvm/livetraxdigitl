@@ -52,6 +52,7 @@ class _IInputField2State extends State<IInputField2> {
         onChanged: (String value) async {
           if (widget.onChangeText != null)
             widget.onChangeText(value);
+
         },
         textAlignVertical: TextAlignVertical.center,
         maxLines: 1,
