@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:livetraxdigitl/ui/checkout/paymentMethod.dart';
+import 'package:livetraxdigitl/ui/checkout/shippingAddress.dart';
+import 'package:livetraxdigitl/ui/config/constant.dart';
 import 'package:livetraxdigitl/ui/merchandise/home.dart';
 import 'package:livetraxdigitl/widgets/widgets.dart';
 
@@ -31,30 +34,43 @@ class ICard81FileCaching extends StatefulWidget {
   final String discount;
   final Function(String) onAddToCartClick;
   final bool needAddToCart;
+  final String musicFile;
+  final String category;
+  final String audio;
+  final String imageId;
+  final String lyricsid;
+  final String desc;
 
-  ICard81FileCaching(
-      {this.color = Colors.white,
-      this.width = 100,
-      this.height = 100,
-      this.text = "",
-      this.image = "",
-      this.textStyle2,
-      this.price = "",
-      this.getFavoriteState,
-      this.revertFavoriteState,
-      this.id = "",
-      this.textStyle,
-      this.callback,
-      this.colorProgressBar = Colors.black,
-      this.enableFavorites = true,
-      this.text3 = "",
-      this.textStyle3,
-      this.onAddToCartClick,
-      this.radius,
-      this.shadow,
-      this.discountprice,
-      this.discount,
-      this.needAddToCart = true});
+  ICard81FileCaching({
+    this.color = Colors.white,
+    this.width = 100,
+    this.height = 100,
+    this.text = "",
+    this.image = "",
+    this.textStyle2,
+    this.price = "",
+    this.getFavoriteState,
+    this.revertFavoriteState,
+    this.id = "",
+    this.textStyle,
+    this.callback,
+    this.colorProgressBar = Colors.black,
+    this.enableFavorites = true,
+    this.text3 = "",
+    this.textStyle3,
+    this.onAddToCartClick,
+    this.radius,
+    this.shadow,
+    this.discountprice,
+    this.discount,
+    this.needAddToCart = true,
+    this.musicFile,
+    this.category,
+    this.audio,
+    this.imageId,
+    this.lyricsid,
+    this.desc,
+  });
 
   @override
   _ICard81FileCachingState createState() => _ICard81FileCachingState();
@@ -103,6 +119,7 @@ class _ICard81FileCachingState extends State<ICard81FileCaching> {
                     splashColor: Colors.grey[400],
                     onTap: () {
                       print("CLICKKK");
+                      print(Artistid);
                       widget.revertFavoriteState(widget.id);
                     }, // needed
                   )),
@@ -210,11 +227,41 @@ class _ICard81FileCachingState extends State<ICard81FileCaching> {
                       alignment: Alignment.bottomCenter,
                       child: IButton11(
                           color: Colors.orangeAccent,
-                          text: strings.get(2254) + "    " + homeScreen.mainWindowData.currency + widget.price, // Change
+                          text: strings.get(2254) +
+                              "    " +
+                              homeScreen.mainWindowData.currency +
+                              widget.price,
+                          // Change
                           textStyle: theme.text14boldBlack,
                           pressButton: () {
-                            Navigator.pushNamed(context, "/address");
-                            setState(() {});
+                            print("Call Buy");
+                            print(widget.musicFile);
+                            print(widget.musicFile);
+                            print(Artistid);
+                            print(widget.category);
+
+                            // Navigator.pushNamed(context, "/address",
+                            //     arguments: widget.id);
+                            widget.category == "2"
+                                ? Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ShippingAddress(
+                                      productId: widget.id,
+                                      price: widget.price,
+                                    ),
+                                  ))
+                                : Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PaymentMethod(
+                                      productId: widget.id,
+                                      price: widget.price,
+                                      isTopup: false,
+                                      category: widget.category,
+                                      desc: widget.desc,
+                                      Name: widget.text,
+                                      imageId: widget.imageId,
+                                      audio: widget.audio,
+                                      lyricsid: widget.lyricsid,
+                                    ),
+                                  ));
                           }),
                     ),
                   SizedBox(

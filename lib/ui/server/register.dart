@@ -42,7 +42,7 @@ register(
         'typeReg': '$type',
         'photoUrl': "$photoUrl",
         'role': "$role",
-        'referral_code': "$referral_code",
+        'referralCode': "$referral_code",
       });
     } else {
       body = json.encoder.convert({
@@ -69,6 +69,7 @@ register(
       Response ret = Response.fromJson(jsonResult);
       //if (ret.error == "0") {
       print("CHeck Response DATT ==>>> " + (ret.data != null).toString() + " >> " + ret.error);
+      print("CHeck Response ret.data.uid ==>>> " + ret.data.uid);
       if (ret.data != null) {
         var path = "";
         if (ret.data.avatar != null) path = "$serverImages${ret.data.avatar}";

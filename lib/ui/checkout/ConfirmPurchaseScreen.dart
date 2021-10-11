@@ -2,22 +2,21 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:livetraxdigitl/main.dart';
-import 'package:livetraxdigitl/ui/VideoCall/call.dart';
+import 'package:livetraxdigitl/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
+import 'package:livetraxdigitl/ui/Music/MusicPlayList.dart';
+import 'package:livetraxdigitl/ui/config/constant.dart';
 import 'package:livetraxdigitl/ui/home/home.dart';
-import 'package:livetraxdigitl/ui/model/account.dart';
-import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
 import 'package:livetraxdigitl/widgets/background_image.dart';
-import 'package:livetraxdigitl/widgets/colorloader2.dart';
 import 'package:livetraxdigitl/widgets/ibutton11.dart';
-import 'package:livetraxdigitl/widgets/ibutton2.dart';
-import 'package:livetraxdigitl/widgets/ibutton3.dart';
-import 'package:livetraxdigitl/widgets/ibutton4.dart';
-import 'package:livetraxdigitl/widgets/iinputField2.dart';
 
 class ConfirmPurchaseScreen extends StatefulWidget {
-  const ConfirmPurchaseScreen({Key key}) : super(key: key);
+  const ConfirmPurchaseScreen(
+      {Key key, this.category, this.title, this.artistId, })
+      : super(key: key);
+  final String category;
+  final String title;
+  final String artistId;
 
   @override
   _ConfirmPurchaseScreenState createState() => _ConfirmPurchaseScreenState();
@@ -87,15 +86,29 @@ class _ConfirmPurchaseScreenState extends State<ConfirmPurchaseScreen> {
           height: 60,
         ),
         new Center(
-          child: new Text(strings.get(2289),
+          child: new Text(
+              widget.category == '3' ? strings.get(2299) : strings.get(2289),
               textAlign: TextAlign.center,
               style: GoogleFonts.lato(
                   fontStyle: FontStyle.italic,
                   fontSize: 30,
                   color: Colors.white)),
         ),
+        // SizedBox(
+        //   height: windowHeight * 0.10,
+        // ),
+
+        // Visibility(
+        //   visible: widget.videoCallCode != null ? true : false,
+        //   child: new Text(widget.videoCallCode.toString(),
+        //       textAlign: TextAlign.center,
+        //       style: GoogleFonts.lato(
+        //           fontStyle: FontStyle.italic,
+        //           fontSize: 30,
+        //           color: Colors.white)),
+        // ),
         SizedBox(
-          height: windowHeight * 0.15,
+          height: windowHeight * 0.10,
         ),
         Container(
           margin: EdgeInsets.only(left: 10, right: 10),
@@ -104,14 +117,43 @@ class _ConfirmPurchaseScreenState extends State<ConfirmPurchaseScreen> {
             children: [
               IButton11(
                   color: Colors.orangeAccent,
-                  text: strings.get(2288), // Change
+                  text: widget.category == "1"
+                      ? strings.get(2297)
+                      : widget.category == "3"
+                          ? strings.get(2298)
+                          : strings.get(2288),
+                  // Change
                   textStyle: theme.text16boldWhite,
                   pressButton: () {
                     setState(() {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                          ModalRoute.withName("/home"));
+                      if (widget.category == "1") {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MusicPlayList(
+                                      title: "Song Playlist",
+                                      artistId: Artistid,
+                                    )),
+                            ModalRoute.withName("/homescreen"));
+                      } else if (widget.category == "3") {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ExclusiveAccessScreen()),
+                            ModalRoute.withName("/homescreen"));
+                      } else {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                            ModalRoute.withName("/home"));
+                      }
+
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) =>
+                      //           MusicPlayList(title: "Hardik")),
+                      // );
                     });
                   }),
             ],

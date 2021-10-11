@@ -1,18 +1,10 @@
-import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:need_resume/need_resume.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:livetraxdigitl/ui/artist/data.dart';
-import 'package:livetraxdigitl/ui/call/call.dart';
-import 'package:livetraxdigitl/ui/event/AddEventScreen.dart';
-import 'package:livetraxdigitl/ui/model/pref.dart';
-import 'package:livetraxdigitl/ui/products/AddProductScreen.dart';
-import 'package:livetraxdigitl/ui/server/DeleteEvent.dart';
-import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
-import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
+import 'package:livetraxdigitl/ui/server/walletBalance.dart';
+import 'package:livetraxdigitl/ui/server/walletHistory.dart';
+import 'package:livetraxdigitl/ui/wallet/balance_card.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
 import 'package:livetraxdigitl/widgets/ibutton3.dart';
+import 'package:need_resume/need_resume.dart';
 
 import '../../main.dart';
 
@@ -30,21 +22,19 @@ class _WalletListScreenState extends ResumableState<WalletListScreen> {
   bool isChanges = false;
 
   bool isArtist = true;
+  List<History> transactionhistory = [];
+  String availableBalance = "0.0";
 
   @override
   void onReady() {
-    //callAPI();
+    callAPI();
     super.onReady();
   }
 
   @override
   void onResume() {
     print("::: On Resume ::: ");
-    isChanges = pref.getBool(Pref.isChanges);
-    if (isChanges) {
-      pref.setBool(Pref.isChanges, false);
-      callAPI();
-    }
+    callAPI();
     super.onResume();
   }
 
@@ -64,6 +54,7 @@ class _WalletListScreenState extends ResumableState<WalletListScreen> {
     windowHeight = MediaQuery.of(context).size.height;
     //isArtist = (account.role == "artist");
     print("Check List > " + isArtist.toString());
+    print(transactionhistory.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -73,81 +64,242 @@ class _WalletListScreenState extends ResumableState<WalletListScreen> {
       ),
       body: Stack(
         children: [
-          new ListView.separated(
-            itemCount: details == null || details.isEmpty ? 0 : details.length,
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: 5,
-                child: const DecoratedBox(
-                  decoration: const BoxDecoration(color: Colors.black),
-                ),
-              );
-            },
-            itemBuilder: (BuildContext ctxt, int index) {
-              return Container(
-                //height: 180,
-                color: Color.fromARGB(247, 247, 247, 255),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Row(
-                    children: [
-                      new Flexible(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Container(
-                            child: Icon(
-                              (details[index]['mobile'].toString().contains("-")) ?
-                              Icons.arrow_circle_down : Icons.arrow_circle_up,
-                              color: (details[index]['mobile'].toString().contains("-")) ? Colors.redAccent : Colors.green,
-                            ),
-                            width: 60.0,
-                            height: 60.0,
-                          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: BalanceCard(
+                      balance: availableBalance,
+                    ),
+                  ),
+                  Text("Transactions History"),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  new ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: transactionhistory.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        height: 5,
+                        child: const DecoratedBox(
+                          decoration: const BoxDecoration(color: Colors.black),
                         ),
-                        flex: 1,
-                      ),
-                      new Flexible(
+                      );
+                    },
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return Container(
+                        //height: 180,
+                        color: Color.fromARGB(247, 247, 247, 255),
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          padding: const EdgeInsets.all(5),
+                          child: Row(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(details[index]['name'],
-                                      style: theme.text16boldPimary,
+                              new Flexible(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Container(
+                                    child: Icon(
+                                      (transactionhistory[index].arrival == 0)
+                                          ? Icons.arrow_circle_down
+                                          : Icons.arrow_circle_up,
+                                      color:
+                                          (transactionhistory[index].arrival ==
+                                                  0)
+                                              ? Colors.redAccent
+                                              : Colors.green,
                                     ),
+                                    width: 60.0,
+                                    height: 60.0,
                                   ),
-                                  Visibility(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Text(
-                                        details[index]['mobile'],
-                                        style: (details[index]['mobile'].toString().contains("-")) ? theme.text16boldRed : theme.text16boldGreen,
+                                ),
+                                flex: 1,
+                              ),
+                              new Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              (transactionhistory[index]
+                                                          .arrival ==
+                                                      0)
+                                                  ? transactionhistory[index]
+                                                      .productname
+                                                      .toString()
+                                                  : transactionhistory[index]
+                                                                  .touser ==
+                                                              0 &&
+                                                          transactionhistory[
+                                                                      index]
+                                                                  .productid ==
+                                                              0
+                                                      ? "You Add Money"
+                                                      : transactionhistory[
+                                                              index]
+                                                          .username
+                                                          .toString(),
+                                              style: theme.text16boldPimary,
+                                            ),
+                                          ),
+                                          Visibility(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(0),
+                                              child: Text(
+                                                (transactionhistory[index]
+                                                            .arrival ==
+                                                        0)
+                                                    ? "-" +
+                                                        transactionhistory[
+                                                                index]
+                                                            .amount +
+                                                        "\$"
+                                                    : "+" +
+                                                        transactionhistory[
+                                                                index]
+                                                            .amount +
+                                                        "\$",
+                                                style:
+                                                    (transactionhistory[index]
+                                                                .arrival ==
+                                                            0)
+                                                        ? theme.text16boldRed
+                                                        : theme.text16boldGreen,
+                                              ),
+                                            ),
+                                            visible: isArtist,
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                    visible: isArtist,
-                                  )
-                                ],
-                              ),
-                              Text(
-                                details[index]['date'],
-                                style: theme.text12grey,
-                              ),
+                                      Text(
+                                        transactionhistory[index].updatedAt,
+                                        style: theme.text12grey,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                flex: 2,
+                              )
                             ],
                           ),
                         ),
-                        flex: 2,
-                      )
-                    ],
+                      );
+                    },
                   ),
-                ),
-              );
-            },
+                  // new ListView.separated(
+                  //   shrinkWrap: true,
+                  //   scrollDirection: Axis.vertical,
+                  //   itemCount: transactionhistory.length,
+                  //   separatorBuilder: (BuildContext context, int index) {
+                  //     return SizedBox(
+                  //       height: 5,
+                  //       child: const DecoratedBox(
+                  //         decoration: const BoxDecoration(color: Colors.black),
+                  //       ),
+                  //     );
+                  //   },
+                  //   itemBuilder: (BuildContext ctxt, int index) {
+                  //     return Container(
+                  //       //height: 180,
+                  //       color: Color.fromARGB(247, 247, 247, 255),
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.all(5),
+                  //         child: Row(
+                  //           children: [
+                  //             new Flexible(
+                  //               child: ClipRRect(
+                  //                 borderRadius: BorderRadius.circular(8.0),
+                  //                 child: Container(
+                  //                   child: Icon(
+                  //                     (transactionhistory[index].comment == "Payed")
+                  //                         ? Icons.arrow_circle_down
+                  //                         : Icons.arrow_circle_up,
+                  //                     color: (transactionhistory[index].comment ==
+                  //                             "Payed")
+                  //                         ? Colors.redAccent
+                  //                         : Colors.green,
+                  //                   ),
+                  //                   width: 60.0,
+                  //                   height: 60.0,
+                  //                 ),
+                  //               ),
+                  //               flex: 1,
+                  //             ),
+                  //             new Flexible(
+                  //               child: Padding(
+                  //                 padding: const EdgeInsets.only(left: 8.0),
+                  //                 child: Column(
+                  //                   mainAxisAlignment:
+                  //                       MainAxisAlignment.spaceEvenly,
+                  //                   crossAxisAlignment: CrossAxisAlignment.start,
+                  //                   children: [
+                  //                     Row(
+                  //                       mainAxisAlignment:
+                  //                           MainAxisAlignment.spaceBetween,
+                  //                       children: <Widget>[
+                  //                         Expanded(
+                  //                           child: Text(
+                  //                             transactionhistory[index]
+                  //                                 .user
+                  //                                 .toString(),
+                  //                             style: theme.text16boldPimary,
+                  //                           ),
+                  //                         ),
+                  //                         Visibility(
+                  //                           child: Padding(
+                  //                             padding: const EdgeInsets.all(0),
+                  //                             child: Text(
+                  //                               transactionhistory[index].amount,
+                  //                               style: (transactionhistory[index]
+                  //                                       .amount
+                  //                                       .toString()
+                  //                                       .contains("-"))
+                  //                                   ? theme.text16boldRed
+                  //                                   : theme.text16boldGreen,
+                  //                             ),
+                  //                           ),
+                  //                           visible: isArtist,
+                  //                         )
+                  //                       ],
+                  //                     ),
+                  //                     Text(
+                  //                       transactionhistory[index].updatedAt,
+                  //                       style: theme.text12grey,
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //               flex: 2,
+                  //             )
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+                ],
+              ),
+            ),
+            // child: SingleChildScrollView(
+            //   physics: ScrollPhysics(),
+            //   child: new
           ),
           if (_wait)
             (Container(
@@ -168,23 +320,9 @@ class _WalletListScreenState extends ResumableState<WalletListScreen> {
     );
   }
 
-  _event(String artist, int page, int limit) {
-    print("::::Data::::");
-    if (!isArtist) {
-      artist = "";
-    }
-    event_list_api(artist, page, limit, _onSuccessEventList, _error);
-  }
-
   _waits(bool value) {
     _wait = value;
     if (mounted) setState(() {});
-  }
-
-  _error(String error) {
-    _waits(false);
-    print("Get message here " + error);
-    openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
   }
 
   double _show = 0;
@@ -217,31 +355,36 @@ class _WalletListScreenState extends ResumableState<WalletListScreen> {
     });
   }
 
-  _onSuccessEventList(List<EventData> list) {
+  _error(String error) {
     _waits(false);
-
-    setState(() {});
+    print("Get message here " + error);
+    openDialog("$error"); // "Something went wrong. ",
   }
 
-  _onSuccessDelete(String message, int index) {
+  _onSuccess(List<History> history) {
     _waits(false);
+    setState(() {
+      print(history.length);
+      transactionhistory = history;
+    });
+  }
 
-    print("::: Data deleted :::" + index.toString());
-
-    setState(() {});
+  _onSuccessGetbalance(String balance) {
+    _waits(false);
+    setState(() {
+      availableBalance = balance;
+      print(balance);
+    });
   }
 
   void callAPI() {
     _waits(true);
-
-    _event(account.userId, 1, 0);
+    walletHistory(account.token, _onSuccess, _error);
+    walletBalance(account.token, _onSuccessGetbalance, _error);
   }
 
   bool isVisibility(int index) {
     bool isVisible = false;
-
     return isVisible;
   }
-
-
 }

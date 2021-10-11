@@ -9,10 +9,10 @@ import 'package:livetraxdigitl/ui/server/products.dart';
 import 'category.dart';
 
 
-foodSave(String name, String desc, String image, String published,
+foodSave(String name, String desc, String image,String audio, String lyricsid,String published,
     String price, String restaurant, String category, String ingredients, String extras, String nutritions,
     String edit, String editid,
-    String uid, Function(List<ImageData>, List<FoodsData>, List<RestaurantData>, List<ExtrasGroupData>, List<NutritionGroupData>, String id) callback, Function(String) callbackError) async {
+    String uid,  String date,String time,String exptype,Function(List<ImageData>, List<FoodsData>, List<RestaurantData>, List<ExtrasGroupData>, List<NutritionGroupData>, String id) callback, Function(String) callbackError) async {
 
   var url = '${serverPath}foodSave';
   Map<String, String> requestHeaders = {
@@ -23,6 +23,8 @@ foodSave(String name, String desc, String image, String published,
   var body = json.encoder.convert({
     "name": name,
     "imageid": image,
+    "audioid": audio,
+    "lyricsid": lyricsid,
     "price": price,
     "desc" : desc,
     "restaurant" : restaurant,
@@ -32,7 +34,10 @@ foodSave(String name, String desc, String image, String published,
     "extras": extras,
     "nutritions": nutritions,
     "edit": edit,
-    "editId" : editid
+    "editId" : editid,
+    "date" : "$date",
+    "time" : "$time",
+    "type" : "$exptype",
   });
   print('URL: $url');
   print('body: $body');

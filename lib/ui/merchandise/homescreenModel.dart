@@ -1,10 +1,11 @@
+import 'package:livetraxdigitl/ui/config/constant.dart';
 import 'package:livetraxdigitl/ui/model/categories.dart';
 import 'package:livetraxdigitl/ui/model/foods.dart';
 import 'package:livetraxdigitl/ui/model/geolocator.dart';
 import 'package:livetraxdigitl/ui/model/pref.dart';
 import 'package:livetraxdigitl/ui/server/mainwindowdata.dart';
 import 'package:livetraxdigitl/ui/server/secondstep.dart';
-import 'package:livetraxdigitl/ui/config/constant.dart';
+
 import '../../main.dart';
 
 AppSettings appSettings = AppSettings();
@@ -18,7 +19,6 @@ class HomeScreenModel {
   Function() _callback;
   var location = MyLocation();
 
-
   _error(String error) {
     print(error);
     _callbackError(error);
@@ -28,13 +28,10 @@ class HomeScreenModel {
 
   _dataLoad(MainWindowData _data) async {
     if (!_data.success) return _error("_data = null");
-
     if (_init) return _callback();
-
-    //
     appSettings = _data.settings;
     theme.setAppSettings();
-    //
+
 
     //basket.defCurrency = _data.currency;
     //basket.taxes = _data.defaultTax;
@@ -84,8 +81,16 @@ class HomeScreenModel {
 
   _secondDataLoad(SecondStepData _secondStepData) {
     if (_secondStepData.error == "0") {
+
       secondStepData = _secondStepData;
       addFoods(secondStepData.foods);
+      print("======DATA Display======");
+      print(secondStepData.foods.first.name);
+      print(secondStepData.foods.first.category);
+      print(secondStepData.foods.first.desc);
+      print(secondStepData.foods.first.imageid);
+      print(secondStepData.foods.first.audio);
+      print("======DATA Display END======");
       account.redraw();
     }
   }

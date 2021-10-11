@@ -1,4 +1,4 @@
-final String songs = "<p><br>Teri Meri Gallan Ho Gayi Mashoor<br>"+
+final String songs = "<center><br>Teri Meri Gallan Ho Gayi Mashoor<br>"+
 "<br>Kar Na Kabhi Tu Mujhe Najron Se Door<br>"+
     "<br>Kithe Chali Ae Tu Kithe Chali Ae Tu<br>"+
     "<br>Kithe Chali Ae Kithe Chali Ae<br>"+
@@ -23,4 +23,4 @@ final String songs = "<p><br>Teri Meri Gallan Ho Gayi Mashoor<br>"+
     "<br>Kehnde Ne Sajjna<br>"+
     "<br>Tu Hi Chan Mere Is Dil Da<br>"+
     "<br>Man Le Ve Sajjna<br>"+
-    "<br>";
+    "<br></center>";

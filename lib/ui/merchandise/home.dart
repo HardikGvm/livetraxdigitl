@@ -192,9 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     windowWidth = MediaQuery.of(context).size.width;
     windowHeight = MediaQuery.of(context).size.height;
-
     final arguments = ModalRoute.of(context).settings.arguments as Map;
-
     if (arguments != null) {
       Artistid = arguments['artist_id'];
       print("USER TYPE HERE :-  >> " + arguments.toString());
@@ -446,7 +444,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
               cateroriesComboBox(windowWidth, () {
                 //widget.redraw();
-                _redraw();
+
+                setState(() {
+                  _redraw();
+                });
               }),
               SizedBox(
                 height: 5,
@@ -461,6 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
           )));
       }
       if (row == "categoryDetails") {
+
         categoryDetails(list, windowWidth, _onProductClick, _onAddToCartClick);
       }
       /*if (row == "review") {
@@ -601,7 +603,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _dialogBody = Container();
 
   _redraw() {
-    setState(() {});
+    setState(() {
+
+    });
   }
 
   _openDialogError(String _text) {
@@ -626,9 +630,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
 
-    setState(() {
-      _show = 1;
-    });
+    // setState(() {
+    //   _show = 1;
+    // });
   }
 
   openProductDetailDialog(DishesData _addToBasketItem) {

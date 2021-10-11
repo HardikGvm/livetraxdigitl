@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:livetraxdigitl/ui/config/api.dart';
 
-changeProfile(String uid, String name, String email, String phone,
+changeProfile(String uid, String name, String email, String phone,String description,
     Function() callback, Function(String) callbackError) async {
 
   try {
@@ -13,7 +13,7 @@ changeProfile(String uid, String name, String email, String phone,
       'Authorization' : "Bearer $uid",
     };
 
-    String body = '{"name" : ${json.encode(name)}, "email": ${json.encode(email)}, "phone": ${json.encode(phone)}}';
+    String body = '{"name" : ${json.encode(name)}, "email": ${json.encode(email)}, "description": ${json.encode(description)}, "phone": ${json.encode(phone)}}';
 
     var url = "${serverPath}changeProfile";
     print("Body Here >> " + body + " URL " + url  + " <> " + uid);

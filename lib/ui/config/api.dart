@@ -6,6 +6,7 @@ final String _path = "https://www.livetraxs.gvmsoftware.in/adminPanel/";
 // final String _path = "http://10.0.2.2/vmarkets_owner/";
 
 String serverPath = "${_path}public/api/";
+String serverAudio = "${_path}public/audio/";
 String serverImages = "${_path}public/images/";
 String uploadImages="${_path}public/image/upload/store";
 String serverImgNoUserPath = "${_path}public/img/user.png";

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livetraxdigitl/payment/PaypalServices.dart';
 import 'package:livetraxdigitl/ui/server/ArtistListAPI.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
@@ -31,10 +32,6 @@ class _ArtistListState extends State<ArtistList> {
     super.initState();
     _waits(true);
 
-
-
-
-
     int pagination_index = 1;
     _artist('artist', pagination_index, 4, true);
 
@@ -44,16 +41,23 @@ class _ArtistListState extends State<ArtistList> {
   PaypalServices services = PaypalServices();
   String accessToken;
   bool _needsScroll = false;
+  bool _NoMoreData = false;
+  bool _ReadyToCall = true;
 
   CheckPaypal() async {
     final request = BraintreeCreditCardRequest(
-      cardNumber: '4115511771161116',
-      expirationMonth: '02',
-      expirationYear: '2025',
+      cardNumber: '4863379846187769',
+      expirationMonth: '01',
+      expirationYear: '2022',
     );
 
+    /*final transactions = getOrderParams();
+    final res =
+    await services.createPaypalPayment(transactions, accessToken);*/
+
     accessToken = await services.getAccessToken();
-    print("Check Payment Nonce Here accessTokens> " + accessToken);
+    print("Check Payment Nonce Here TOK > " +
+        accessToken);
     BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(
       accessToken,
       request,
@@ -68,10 +72,11 @@ class _ArtistListState extends State<ArtistList> {
   @override
   void dispose() {
     print(":::Dispose:::");
+    pagination_index = 1;
+    _needsScroll = false;
+    _NoMoreData = false;
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +85,12 @@ class _ArtistListState extends State<ArtistList> {
     windowHeight = MediaQuery.of(context).size.height;
 
     if (_needsScroll) {
-      _scrollToEnd();
+      //_scrollToEnd();
       _needsScroll = false;
     }
+
+    CheckPaypal();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -199,10 +207,13 @@ class _ArtistListState extends State<ArtistList> {
 
   _okUserEnter(List<UserData> list) {
     _waits(false);
+    setState(() {
+      _ReadyToCall = true;
+    });
     print(":::isLoadMore::" + isLoadMore.toString());
     if (isLoadMore) {
       isLoadMore = false;
-      if (list != null) {
+      if (list != null && list.length != 0) {
         print(":::list.length::" + list.length.toString());
         for (var i = 0; i < list.length; i++) {
           UserData userData = list[i];
@@ -214,12 +225,10 @@ class _ArtistListState extends State<ArtistList> {
         setState(() {});
         print(":::pagination_index::" + pagination_index.toString());
 
-
-
         _needsScroll = true;
-
-
-
+      } else {
+        _NoMoreData = true;
+        _needsScroll = false;
       }
     } else {
       this.list = list;
@@ -228,13 +237,23 @@ class _ArtistListState extends State<ArtistList> {
   }
 
   _artist(String type, int page, int limit, bool isFirst) {
-    print("Pages >> " + pagination_index.toString());
-    if (!isFirst) {
-      pagination_index = pagination_index + 1;
-      print("Pages PLUS>> " + pagination_index.toString());
+
+    if (_ReadyToCall) {
+      if (_NoMoreData) {
+        _error(strings.get(2292));
+      } else {
+        if (!isFirst) {
+          pagination_index = pagination_index + 1;
+          print("Pages PLUS>> " + pagination_index.toString());
+        }
+        _waits(true);
+        setState(() {
+          _ReadyToCall = false;
+        });
+
+        artist_list_api(type, pagination_index, limit, _okUserEnter, _error);
+      }
     }
-    _waits(true);
-    artist_list_api(type, pagination_index, limit, _okUserEnter, _error);
   }
 
   _waits(bool value) {
@@ -244,6 +263,9 @@ class _ArtistListState extends State<ArtistList> {
 
   _error(String error) {
     _waits(false);
+    setState(() {
+      _ReadyToCall = true;
+    });
     openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
   }
 
@@ -282,7 +304,8 @@ class _ArtistListState extends State<ArtistList> {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
         duration: const Duration(milliseconds: 10),
-        curve: Curves.easeOut,);
+        curve: Curves.easeOut,
+      );
     });
   }
 }

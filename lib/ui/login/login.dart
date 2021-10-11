@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/artist/ArtistDetailScreen.dart';
 import 'package:livetraxdigitl/ui/server/login.dart';
 import 'package:livetraxdigitl/ui/social/google.dart';
 import 'package:livetraxdigitl/widgets/background_image.dart';
@@ -47,10 +48,10 @@ class _LoginScreenState extends State<Login> {
     if (editControllerPassword.text.isEmpty)
       return openDialog(strings.get(12)); // "Enter Password",
     _waits(true);
-     login(editControllerName.text, editControllerPassword.text, _okUserEnter, _error);
+     login(editControllerName.text.trim(), editControllerPassword.text.trim(), _okUserEnter, _error);
   }
 
-  _okUserEnter(String name, String password, String avatar, String email,
+  _okUserEnter(String name, String password, String avatar, String description, String email,
       String token, String _phone, int i, String typeReg, String role, String uid,String referral_code) {
     _waits(false);
     if(role == "2"){
@@ -59,10 +60,24 @@ class _LoginScreenState extends State<Login> {
       role="fan";
     }
     // print("Check Login Here >> " + name + " > " + email + " > " + typeReg + " > " + role + " <uid> " + uid);
-    print(":::Teken::: "+token);
+    print(":::Teken::: " + description);
     //  account.okUserEnter(name, password, avatar, email, token, _phone, i, id);
-    account.okUserEnter(name, password, avatar, email, token, _phone, 0, uid,typeReg,role,referral_code);
-    Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
+    account.okUserEnter(name, password,description, avatar, email, token, _phone, 0, uid,typeReg,role,referral_code);
+    if (account.role == "artist") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ArtistDetailScreen(
+                artist_id: account.userId,
+                artist_name: account.userName,
+                artist_description: account.description,
+                artist_image: account.userAvatar)),
+      );
+
+    }else{
+      Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
+    }
+
   }
 
   _pressForgotPasswordButton() {

@@ -2,33 +2,24 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/ExclusiveAccess/democallpage.dart';
 import 'package:livetraxdigitl/ui/VideoCall/call.dart';
-import 'package:livetraxdigitl/ui/home/home.dart';
-import 'package:livetraxdigitl/ui/model/account.dart';
-import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
-import 'package:livetraxdigitl/widgets/background_image.dart';
+import 'package:livetraxdigitl/ui/call/videocall/pickup_screen.dart';
+import 'package:livetraxdigitl/ui/server/verifyVideoCallCode.dart';
 import 'package:livetraxdigitl/widgets/background_image_another.dart';
-import 'package:livetraxdigitl/widgets/colorloader2.dart';
-import 'package:livetraxdigitl/widgets/ibutton11.dart';
-import 'package:livetraxdigitl/widgets/ibutton2.dart';
-import 'package:livetraxdigitl/widgets/ibutton3.dart';
-import 'package:livetraxdigitl/widgets/ibutton4.dart';
-import 'package:livetraxdigitl/widgets/iinputField2.dart';
 
 class ConfirmCallScreen extends StatefulWidget {
-
   final String channelName;
 
   final String Token;
 
   /// non-modifiable client role of the page
   final ClientRole role;
+  final Data Exclusiveaccess;
 
-
-
-  const ConfirmCallScreen({Key key, this.channelName, this.role, this.Token})
+  const ConfirmCallScreen(
+      {Key key, this.channelName, this.role, this.Token, this.Exclusiveaccess})
       : super(key: key);
 
   @override
@@ -44,14 +35,17 @@ class _ConfirmCallScreenState extends State<ConfirmCallScreen> {
 
   bool _wait = false;
 
-
-
   var windowWidth;
   var windowHeight;
 
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    print("----CallDetails----");
+    print(widget.channelName);
+    print(widget.role);
+    print(widget.Token);
+    print("----CallDetails END----");
     super.initState();
   }
 
@@ -121,16 +115,25 @@ class _ConfirmCallScreenState extends State<ConfirmCallScreen> {
               IconButton(
                   color: Colors.orangeAccent,
                   iconSize: 80,
-                  icon: new Image.asset("assets/videochat.png",),
+                  icon: new Image.asset(
+                    "assets/videochat.png",
+                  ),
                   onPressed: () {
                     setState(() {
-
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CallPage(
-                            channelName: widget.channelName,
-                            role: widget.role,
-                            Token: widget.Token,
-                          )));
+                          builder: (context) =>
+                              // PickupScreen(
+                              //
+                              // )
+                          democallpage(
+                                channelName: widget.channelName,
+                                role: widget.role,
+                                Token: widget.Token,
+                                valid: widget.Exclusiveaccess.valid,
+                            code: widget.Exclusiveaccess.code,
+                            artistId:widget.Exclusiveaccess.artistname ,
+                              )
+                      ));
                     });
                   }),
             ],

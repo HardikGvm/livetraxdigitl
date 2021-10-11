@@ -4,7 +4,12 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
+import 'package:livetraxdigitl/main.dart';
+import 'package:livetraxdigitl/ui/ExclusiveAccess/ExclusiveAccessScreen.dart';
 import 'package:livetraxdigitl/ui/config/settings.dart';
+import 'package:livetraxdigitl/ui/server/verifyVideoCallCode.dart';
+import 'package:livetraxdigitl/widgets/dialog_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -14,9 +19,12 @@ class CallPage extends StatefulWidget {
 
   /// non-modifiable client role of the page
   final ClientRole role;
+  final int valid;
+  final int code;
 
   /// Creates a call page with given channel name.
-  const CallPage({Key key, this.channelName, this.role, this.Token})
+  const CallPage(
+      {Key key, this.channelName, this.role, this.Token, this.valid,this.code})
       : super(key: key);
 
   @override
@@ -39,11 +47,19 @@ class _CallPageState extends State<CallPage> {
     super.dispose();
   }
 
+  int _remoteUid;
+
+  // RtcEngine _engine;
+
   @override
   void initState() {
     super.initState();
     // initialize agora sdk
     initialize();
+    // print("=====CALL=====");
+    // print(widget.channelName);
+    // print(widget.Token);
+    // print(widget.valid);
   }
 
   Future<void> initialize() async {
@@ -77,10 +93,34 @@ class _CallPageState extends State<CallPage> {
     //await _engine.setClientRole(widget.role);
   }
 
+  callAPI() {
+    if(widget.valid==1)
+    verifyVideoCallCode(account.token, widget.code.toString(),
+        true, _onSuccessVideoCall, _error);
+  }
+  _onSuccessVideoCall(Data data) {
+
+  }
+  _error(String error) {
+    print("Get message here " + error);
+    // showDialog(
+    //     context: context,
+    //     barrierColor: Colors.black.withOpacity(0.8),
+    //     builder: (_) => DialogWidget(
+    //       title: "" + error,
+    //       button1: 'Ok',
+    //       onButton1Clicked: () {
+    //         Navigator.of(context, rootNavigator: true).pop();
+    //       },
+    //     ));
+  }
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
+    print("Video Call");
+    // callAPI();
     _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
       setState(() {
+        print("====CALL ERROR====$code");
         final info = 'onError: $code';
         _infoStrings.add(info);
       });
@@ -88,22 +128,28 @@ class _CallPageState extends State<CallPage> {
       setState(() {
         final info = 'onJoinChannel: $channel, uid: $uid';
         _infoStrings.add(info);
+        print("====joinChannel====" + uid.toString());
+        // callAPI();
       });
     }, leaveChannel: (stats) {
       setState(() {
         _infoStrings.add('onLeaveChannel');
+        print("====Leave Channel====" + stats.toString());
         _users.clear();
       });
     }, userJoined: (uid, elapsed) {
       setState(() {
         final info = 'userJoined: $uid';
+        print("====User Join Channel====" + uid.toString());
         _infoStrings.add(info);
         _users.add(uid);
+        // callAPI();
       });
     }, userOffline: (uid, elapsed) {
       setState(() {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
+        print("====User Offline Channel====" + uid.toString());
         _users.remove(uid);
       });
     }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
@@ -139,7 +185,6 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-
   Widget _expandedSmallVideoRow(List<Widget> views) {
     final wrappedViews = views.map<Widget>(_videoView).toList();
     //getFlutterView().setZOrderOnTop(true);
@@ -169,9 +214,9 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Column(
           children: <Widget>[
-            //_expandedVideoRow([views[0]]),
+            _expandedVideoRow([views[0]]),
             _expandedVideoRow([views[1]]),
-            _expandedSmallVideoRow([views[0]]),
+            //_expandedSmallVideoRow([views[0]]),
           ],
         ));
       case 3:
@@ -297,6 +342,11 @@ class _CallPageState extends State<CallPage> {
 
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExclusiveAccessScreen()),
+        ModalRoute.withName("/homescreen"));
   }
 
   void _onToggleMute() {

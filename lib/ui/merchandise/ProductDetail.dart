@@ -4,7 +4,6 @@ import 'package:livetraxdigitl/ui/model/categories.dart';
 import 'package:livetraxdigitl/ui/server/listvirtualgift.dart';
 import 'package:livetraxdigitl/ui/server/listvirtualgift_model.dart';
 import 'package:livetraxdigitl/ui/server/mainwindowdata.dart';
-import 'package:livetraxdigitl/widgets/ICard21FileCaching.dart';
 import 'package:livetraxdigitl/widgets/ICard81FileCaching.dart';
 
 import '../../main.dart';
@@ -79,7 +78,17 @@ class _ProductDetailState extends State<ProductDetails> {
   }
 
   Widget Sample() {
-    var height = windowWidth*appSettings.dishesCardHeight/100;
+    print("=========== Item Details ==========");
+    print(widget.item.name);
+    print(widget.item.desc);
+    print(widget.item.image);
+    print(widget.item.price);
+    print(widget.item.imageid);
+    print(widget.item.audio);
+    print(widget.item.lyricsid);
+    print("=========== Item Details END ==========");
+
+    var height = windowWidth * appSettings.dishesCardHeight / 100;
 
     return ICard81FileCaching(
       radius: appSettings.radius,
@@ -96,6 +105,7 @@ class _ProductDetailState extends State<ProductDetails> {
       width: windowWidth * 0.5 - 10,
       height: height,
       image: "$serverImages${widget.item.image}",
+      musicFile: "$serverImages${widget.item.image}",
       id: widget.item.id,
       price: widget.item.price.toString(),
       discountprice: (widget.item.discountprice != 0) ? "203" : "",
@@ -105,6 +115,11 @@ class _ProductDetailState extends State<ProductDetails> {
       textStyle3: theme.text16UI,
       callback: null,
       onAddToCartClick: null,
+      category: widget.item.category,
+      desc: widget.item.desc,
+      audio: widget.item.audio,
+      imageId: widget.item.imageid,
+      lyricsid: widget.item.lyricsid,
     );
   }
 }

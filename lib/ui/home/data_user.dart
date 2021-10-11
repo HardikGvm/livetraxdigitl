@@ -3,14 +3,14 @@ final List<Map> details_user = [
     "name": "Justin",
     "country": "India",
     "mobile": "\$12",
-    "image": "http://www.driftingsky.com/wp-content/uploads/2016/02/edit-2.png",
+    "image": "https://cdn.shopify.com/s/files/1/0745/3833/products/David-Band_4e8fc831-03a6-4655-9795-f0c84a4e7bd3.jpg",
     "date":"2021-06-05 02:03:05",
     "isselected":false
   },
   {
     "name": "AW",
     "country": "India",
-    "mobile": "-\$123",
+    "mobile": "\$123",
     "image": "https://cdn.shopify.com/s/files/1/0745/3833/products/David-Band_4e8fc831-03a6-4655-9795-f0c84a4e7bd3.jpg",
     "date":"2021-08-12 12:03:05",
     "isselected":false

@@ -2,9 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:livetraxdigitl/ui/config/api.dart';
+import 'package:livetraxdigitl/ui/config/constant.dart';
 import 'package:livetraxdigitl/ui/merchandise/homescreenModel.dart';
 import 'package:livetraxdigitl/ui/model/categories.dart';
 import 'package:livetraxdigitl/ui/model/foods.dart';
+import 'package:livetraxdigitl/ui/model/pref.dart';
 import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import 'package:livetraxdigitl/widgets/iinputField2.dart';
 import 'package:livetraxdigitl/widgets/iinputField21.dart';
@@ -588,7 +590,7 @@ categoryDetails(List<Widget> list, double windowWidth,
         )));
 
     list.add(t);
-    //
+
   }
   list.add(SizedBox(
     height: 20,
@@ -601,10 +603,11 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
   list.add(SizedBox(
     width: 10,
   ));
+
+
   var height = windowWidth * 50 / 100;
   for (var item in foodsAll) {
     if (item.category != categoryId) continue;
-
     list.add(ICard21FileCaching(
       radius: appSettings.radius,
       shadow: appSettings.shadow,
@@ -629,6 +632,7 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
       textStyle3: theme.text16UI,
       callback: callback,
       onAddToCartClick: _onAddToCartClick,
+      needAddToCart:  pref.get(Pref.userId)==Artistid?false:true
     ));
     list.add(SizedBox(
       width: 10,
@@ -643,12 +647,11 @@ categoryDetailsHorizontal(String categoryId, double windowWidth,
       children: list,
     ),
   );
-
-
 }
 
 // text
-formEdit(String hint, TextEditingController controller, String text, int maxLenght){
+formEdit(
+    String hint, TextEditingController controller, String text, int maxLenght) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -662,74 +665,78 @@ formEdit(String hint, TextEditingController controller, String text, int maxLeng
             colorBackground: theme.colorBackground,
             controller: controller,
           )),
-      Container(height: 0.5, color: Colors.black.withAlpha(100),),
-      SizedBox(height: 3,),
+      Container(
+        height: 0.5,
+        color: Colors.black.withAlpha(100),
+      ),
+      SizedBox(
+        height: 3,
+      ),
       if (text.isNotEmpty)
-        Text(text, style: theme.text12bold,),
+        Text(
+          text,
+          style: theme.text12bold,
+        ),
     ],
   );
 }
 
-formEditSample(String hint, TextEditingController controller, String text, int maxLenght){
+formEditSample(
+    String hint, TextEditingController controller, String text, int maxLenght) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
         height: 25,
         child: TextFormField(
-            keyboardType: TextInputType.text,
-            cursorColor: theme.colorDefaultText,
-            controller: controller,
-            onChanged: (String value) async {
-            },
-            textAlignVertical: TextAlignVertical.center,
-            maxLines: 1,
+          enableInteractiveSelection: false,
+          keyboardType: TextInputType.text,
+          cursorColor: Colors.transparent,
+          controller: controller,
+          enabled: false,
+          onChanged: (String value) async {},
+          textAlignVertical: TextAlignVertical.center,
+          maxLines: 1,
 //            maxLength: widget.maxLenght,
-            style: TextStyle(
-              color: theme.colorDefaultText,
-            ),
-            decoration: new InputDecoration(
-              counterText: "",
-              border: InputBorder.none,
-              hintText: hint,
-              hintStyle: TextStyle(
-                  color: theme.colorDefaultText,
-                  fontSize: 14.0),
-            ),
-
+          style: TextStyle(
+            color: theme.colorDefaultText,
+          ),
+          decoration: new InputDecoration(
+            counterText: "",
+            border: InputBorder.none,
+            hintText: hint,
+            hintStyle: TextStyle(color: theme.colorDefaultText, fontSize: 14.0),
+          ),
         ),
       ),
-      Container(height: 0.0, color: Colors.black.withAlpha(100),),
-      SizedBox(height: 1,),
-
-
+      Container(
+        height: 0.0,
+        color: Colors.black.withAlpha(100),
+      ),
+      SizedBox(
+        height: 1,
+      ),
     ],
   );
 }
 
-checkBox(String text, bool init, Function(bool) callback){
+checkBox(String text, bool init, Function(bool) callback) {
   return Row(
     children: <Widget>[
       Checkbox(
-          value: init,
-          activeColor: theme.colorPrimary,
-          onChanged: callback
-      ),
+          value: init, activeColor: theme.colorPrimary, onChanged: callback),
       Text(text, style: theme.text14)
     ],
   );
 }
 
-
 // price
-formEditPrice(String hint, TextEditingController controller, String text, int numberOfDigits){
+formEditPrice(String hint, TextEditingController controller, String text,
+    int numberOfDigits) {
   var regx = r'(^\d*[,.]?\d{0,2})';
-  if (numberOfDigits == 0)
-    regx = r'(^\d*)';
-  if (numberOfDigits == 1)
-    regx = r'(^\d*[,.]?\d{0,1})';
-  if (numberOfDigits == 3)
-    regx = r'(^\d*[,.]?\d{0,3})';
+  if (numberOfDigits == 0) regx = r'(^\d*)';
+  if (numberOfDigits == 1) regx = r'(^\d*[,.]?\d{0,1})';
+  if (numberOfDigits == 3) regx = r'(^\d*[,.]?\d{0,3})';
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -739,8 +746,7 @@ formEditPrice(String hint, TextEditingController controller, String text, int nu
             keyboardType: TextInputType.number,
             cursorColor: theme.colorDefaultText,
             controller: controller,
-            onChanged: (String value) async {
-            },
+            onChanged: (String value) async {},
             textAlignVertical: TextAlignVertical.center,
             maxLines: 1,
 //            maxLength: widget.maxLenght,
@@ -751,24 +757,31 @@ formEditPrice(String hint, TextEditingController controller, String text, int nu
               counterText: "",
               border: InputBorder.none,
               hintText: hint,
-              hintStyle: TextStyle(
-                  color: theme.colorDefaultText,
-                  fontSize: 13.0),
+              hintStyle:
+                  TextStyle(color: theme.colorDefaultText, fontSize: 13.0),
             ),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(regx)),
-            ]
-        ),
+            ]),
       ),
-      Container(height: 0.0, color: Colors.black.withAlpha(100),),
-      SizedBox(height: 1,),
+      Container(
+        height: 0.0,
+        color: Colors.black.withAlpha(100),
+      ),
+      SizedBox(
+        height: 1,
+      ),
       if (text.isNotEmpty)
-        Text(text, style: theme.text12bold,),                // Enter Dishes Name
+        Text(
+          text,
+          style: theme.text12bold,
+        ), // Enter Dishes Name
     ],
   );
 }
 
-oneItem(String id, String name, String lastUpdate, String image, double windowWidth, String published){
+oneItem(String id, String name, String lastUpdate, String image,
+    double windowWidth, String published) {
   return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -782,56 +795,78 @@ oneItem(String id, String name, String lastUpdate, String image, double windowWi
               blurRadius: 2,
               offset: Offset(2, 2), // changes position of shadow
             ),
-          ]
-      ),
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(id, style: theme.text16bold,),  // "ID: ",
-              Expanded(child: Text(lastUpdate, textAlign: TextAlign.end, style: theme.text14), ),
+              Text(
+                id,
+                style: theme.text16bold,
+              ), // "ID: ",
+              Expanded(
+                child: Text(lastUpdate,
+                    textAlign: TextAlign.end, style: theme.text14),
+              ),
             ],
           ),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           if (published != '')
-            Row(children: [
-              Expanded(child: Text(name, style: theme.text16bold, textAlign: TextAlign.start, maxLines: 1,)),  // name
-              if (published == '1')
-                Container(
-                  padding: EdgeInsets.all(5),
-                  color: theme.colorPrimary,
-                  child: Text(strings.get(2277), style: theme.text14boldWhite,), // "PUBLISHED",
-                ),
-              if (published == '0')
-                Container(
-                  padding: EdgeInsets.all(5),
-                  color: theme.colorRed,
-                  child: Text(strings.get(2278), style: theme.text14boldWhite,), // "HIDE",
-                ),
-            ],),
-          SizedBox(height: 5,),
+            Row(
+              children: [
+                Expanded(
+                    child: Text(
+                  name,
+                  style: theme.text16bold,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                )), // name
+                if (published == '1')
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    color: theme.colorPrimary,
+                    child: Text(
+                      strings.get(2277),
+                      style: theme.text14boldWhite,
+                    ), // "PUBLISHED",
+                  ),
+                if (published == '0')
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    color: theme.colorRed,
+                    child: Text(
+                      strings.get(2278),
+                      style: theme.text14boldWhite,
+                    ), // "HIDE",
+                  ),
+              ],
+            ),
+          SizedBox(
+            height: 5,
+          ),
           Container(
             width: windowWidth,
             height: 120,
             child: imageWidget(image),
           )
-
         ],
-      )
-  );
+      ));
 }
 
-imageWidget(String image){
+imageWidget(String image) {
   return CachedNetworkImage(
-    placeholder: (context, url) =>
-        UnconstrainedBox(child:
-        Container(
-          alignment: Alignment.center,
-          width: 30,
-          height: 30,
-          child: CircularProgressIndicator(backgroundColor: theme.colorPrimary, ),
-        )),
+    placeholder: (context, url) => UnconstrainedBox(
+        child: Container(
+      alignment: Alignment.center,
+      width: 30,
+      height: 30,
+      child: CircularProgressIndicator(
+        backgroundColor: theme.colorPrimary,
+      ),
+    )),
     imageUrl: image,
     imageBuilder: (context, imageProvider) => Container(
       decoration: BoxDecoration(
@@ -841,39 +876,39 @@ imageWidget(String image){
         ),
       ),
     ),
-    errorWidget: (context,url,error) => new Icon(Icons.error),
+    errorWidget: (context, url, error) => new Icon(Icons.error),
   );
 }
 
-
-buttonsEditOrDelete(String id, Function callback1, Function callback2, double windowWidth){
+buttonsEditOrDelete(
+    String id, Function callback1, Function callback2, double windowWidth) {
   return Container(
     alignment: Alignment.center,
     child: Row(
       children: [
         Container(
-            width: windowWidth/2-20,
+            width: windowWidth / 2 - 20,
             child: IButton3(
               color: theme.colorPrimary,
-              text: strings.get(2279),                       // EDIT
+              text: strings.get(2279), // EDIT
               textStyle: theme.text14boldWhite,
-              pressButton: (){
+              pressButton: () {
                 callback1(id);
               },
-            )
+            )),
+        SizedBox(
+          width: 10,
         ),
-        SizedBox(width: 10,),
         Container(
-            width: windowWidth/2-20,
+            width: windowWidth / 2 - 20,
             child: IButton3(
               color: theme.colorRed,
-              text: strings.get(2280),                       // DELETE
+              text: strings.get(2280), // DELETE
               textStyle: theme.text14boldWhite,
-              pressButton: (){
+              pressButton: () {
                 callback2(id);
               },
-            )
-        ),
+            )),
       ],
     ),
   );

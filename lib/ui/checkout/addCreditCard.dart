@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:livetraxdigitl/ui/checkout/paymentMethod.dart';
 import 'package:livetraxdigitl/ui/config/UserService.dart';
 import 'package:livetraxdigitl/widgets/internetConnection.dart';
 
@@ -40,7 +41,17 @@ class _AddCreditCardState extends State<AddCreditCard> {
       final FormState form = _formKey.currentState;
       if (form.validate()) {
         //await _checkoutService.newCreditCardDetails(cardNumber, expiryDate, cardHolderName);
-        Navigator.of(context).pushNamed('/checkout/paymentMethod');
+        // Navigator.of(context).pushNamed('/checkout/payment',arguments: PaymentMethod(isTopup: false,));
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => PaymentMethod(
+            productId: "",
+            price: "",
+            isTopup: false,
+            imageId: "",
+            audio: "",
+            category: "",
+          ),
+        ));
       } else {
         setState(() {
           autoValidate = true;
@@ -54,7 +65,7 @@ class _AddCreditCardState extends State<AddCreditCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CheckoutAppBar('Cancel', 'Next', this.addNewCard,""),
+      appBar: CheckoutAppBar('Cancel', 'Next', this.addNewCard, ""),
       body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),

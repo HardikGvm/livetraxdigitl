@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:livetraxdigitl/main.dart';
 import 'package:livetraxdigitl/ui/merchandise/home.dart';
 import 'package:livetraxdigitl/widgets/widgets.dart';
 
@@ -100,6 +101,8 @@ class _ICard21FileCachingState extends State<ICard21FileCaching> {
                     splashColor: Colors.grey[400],
                     onTap: () {
                       print("CLICKKK");
+                      print(widget.id);
+                      print(account.userId);
                       widget.revertFavoriteState(widget.id);
                     }, // needed
                   )),
