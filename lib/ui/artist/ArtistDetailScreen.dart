@@ -11,7 +11,6 @@ import 'package:livetraxdigitl/ui/event/EventListScreen.dart';
 import 'package:livetraxdigitl/ui/server/EventListAPI.dart';
 import 'package:livetraxdigitl/ui/server/getagoratoken.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
-import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../main.dart';
@@ -34,9 +33,9 @@ class ArtistDetailScreen extends StatefulWidget {
 class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   bool _wait = false;
-  List<EventData> list = new List();
-  double _show = 0;
-  Widget _dialogBody = Container();
+  List<EventData> list =[];
+  // double _show = 0;
+  // Widget _dialogBody = Container();
 
   var windowWidth;
   var windowHeight;
@@ -368,13 +367,13 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     print(status);
   }
 
-  String _Token;
+  // String _Token;
   ClientRole _role = ClientRole.Audience;
 
   token_success(
       String channelname, int eventId, String username, String _response) {
     _waits(false);
-    _Token = _response;
+    // _Token = _response;
     print("CALL _success Done ---> " + _response.toString());
 
     if (account.role == "artist") {
@@ -451,29 +450,29 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   }
 
   openDialog(String _text) {
-    _dialogBody = Column(
-      children: [
-        Text(
-          _text,
-          style: theme.text14,
-        ),
-        SizedBox(
-          height: 40,
-        ),
-        IButton3(
-            color: theme.colorPrimary,
-            text: strings.get(66), // Cancel
-            textStyle: theme.text14boldWhite,
-            pressButton: () {
-              setState(() {
-                _show = 0;
-              });
-            }),
-      ],
-    );
+    // _dialogBody = Column(
+    //   children: [
+    //     Text(
+    //       _text,
+    //       style: theme.text14,
+    //     ),
+    //     SizedBox(
+    //       height: 40,
+    //     ),
+    //     IButton3(
+    //         color: theme.colorPrimary,
+    //         text: strings.get(66), // Cancel
+    //         textStyle: theme.text14boldWhite,
+    //         pressButton: () {
+    //           setState(() {
+    //             // _show = 0;
+    //           });
+    //         }),
+    //   ],
+    // );
 
     setState(() {
-      _show = 1;
+      // _show = 1;
     });
   }
 }

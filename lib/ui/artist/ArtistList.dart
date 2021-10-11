@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:livetraxdigitl/payment/PaypalServices.dart';
 import 'package:livetraxdigitl/ui/server/ArtistListAPI.dart';
 import 'package:livetraxdigitl/widgets/colorloader2.dart';
-import 'package:livetraxdigitl/widgets/ibutton3.dart';
 import '../../main.dart';
 import 'ArtistDetailScreen.dart';
 
@@ -19,7 +16,7 @@ class ArtistList extends StatefulWidget {
 class _ArtistListState extends State<ArtistList> {
   bool _wait = false;
 
-  List<UserData> list = new List();
+  List<UserData> list = [];
   bool isLoadMore = false;
   static int pagination_index = 1;
   var windowWidth;
@@ -269,43 +266,43 @@ class _ArtistListState extends State<ArtistList> {
     openDialog("${strings.get(158)} $error"); // "Something went wrong. ",
   }
 
-  double _show = 0;
-  Widget _dialogBody = Container();
+  // double _show = 0;
+  // Widget _dialogBody = Container();
 
   openDialog(String _text) {
-    _dialogBody = Column(
-      children: [
-        Text(
-          _text,
-          style: theme.text14,
-        ),
-        SizedBox(
-          height: 40,
-        ),
-        IButton3(
-            color: theme.colorPrimary,
-            text: strings.get(66), // Cancel
-            textStyle: theme.text14boldWhite,
-            pressButton: () {
-              setState(() {
-                _show = 0;
-              });
-            }),
-      ],
-    );
+    // _dialogBody = Column(
+    //   children: [
+    //     Text(
+    //       _text,
+    //       style: theme.text14,
+    //     ),
+    //     SizedBox(
+    //       height: 40,
+    //     ),
+    //     IButton3(
+    //         color: theme.colorPrimary,
+    //         text: strings.get(66), // Cancel
+    //         textStyle: theme.text14boldWhite,
+    //         pressButton: () {
+    //           setState(() {
+    //             // _show = 0;
+    //           });
+    //         }),
+    //   ],
+    // );
 
     setState(() {
-      _show = 1;
+      // _show = 1;
     });
   }
 
-  _scrollToEnd() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 10),
-        curve: Curves.easeOut,
-      );
-    });
-  }
+  // _scrollToEnd() async {
+  //   SchedulerBinding.instance.addPostFrameCallback((_) {
+  //     _scrollController.animateTo(
+  //       _scrollController.position.maxScrollExtent,
+  //       duration: const Duration(milliseconds: 10),
+  //       curve: Curves.easeOut,
+  //     );
+  //   });
+  // }
 }
